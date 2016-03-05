@@ -10,14 +10,14 @@ import android.view.View;
 /**
  *
  */
-public interface Controller extends View.OnClickListener{
+public interface Controller extends View.OnClickListener, View.OnTouchListener{
 
 
 	/**
 	 * Sets the activity and listeners.
 	 * @param activity
 	 */
-	void activate(Activity activity);
+	public void activate(Activity activity);
 
 	/**
 	 * Set the listeners of activity widgets.

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
@@ -51,6 +52,16 @@ public class LoginController implements Controller{
 		activity.getBLogin().setOnClickListener(this);
 		activity.getTVRegister().setOnClickListener(this);
 	}
+
+
+
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		return false;
+	}
+
+
 
 
 	@Override

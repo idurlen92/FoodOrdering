@@ -12,92 +12,141 @@
     tools:showIn="@layout/activity_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/textViewFirstName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ime"/>
-        <EditText
-            android:id="@+id/editTextFirstName"
-            android:layout_below="@id/textViewFirstName"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/textViewLastName"
-            android:layout_below="@id/editTextFirstName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Prezime"/>
-        <EditText
-            android:id="@+id/editTextLastName"
-            android:layout_below="@id/textViewLastName"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/textViewBirthDate"
-            android:clickable="true"
-            android:layout_below="@id/editTextLastName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="15dp"
-            android:text="Datum rođenja"/>
-        <LinearLayout
-            android:id="@+id/layoutDate"
-            android:layout_below="@id/textViewBirthDate"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:visibility="gone">
-            <DatePicker
-                android:id="@+id/datePickerBirth"
-                android:layout_below="@id/textViewBirthDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:datePickerMode="calendar"/>
-        </LinearLayout>
 
-        <TextView
-            android:id="@+id/textViewEmail"
-            android:layout_below="@id/layoutDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Email"/>
-        <EditText
-            android:id="@+id/editTextEmail"
-            android:layout_below="@id/textViewEmail"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/textViewCity"
-            android:layout_below="@id/editTextEmail"
-            android:layout_width="wrap_content"
+        <!-- ########## First Name ########## -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layoutRegisterFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/etRegisterFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ime"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <!-- ########## Last Name ########## -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layoutRegisterLastName"
+            android:layout_below="@id/layoutRegisterFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/etRegisterLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Prezime"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <!-- ########## Email ########## -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layoutRegisterEmail"
+            android:layout_below="@id/layoutRegisterLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/etRegisterEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <!-- ########## Password ########## -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layoutRegisterPassword"
+            android:layout_below="@id/layoutRegisterEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/etRegisterPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Lozinka"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <!-- ########## Password repeat ########## -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layoutRegisterPasswordRepeat"
+            android:layout_below="@id/layoutRegisterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/etRegisterPasswordRepeat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ponovljena lozinka"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <!-- ##########  City  ########## -->
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvRegisterCity"
+            android:layout_below="@id/layoutRegisterPasswordRepeat"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Grad"/>
-        <EditText
-            android:id="@+id/editTextCity"
-            android:layout_below="@id/textViewCity"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/textViewAddress"
-            android:layout_below="@id/editTextCity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Adresa"/>
-        <EditText
-            android:id="@+id/editTextAddress"
-            android:layout_below="@id/textViewAddress"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"/>
-        <!--
-        <Button
+        <Spinner
+            android:id="@+id/sRegisterCity"
+            android:layout_below="@id/tvRegisterCity"
+            android:layout_marginTop="5dp"
             android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:text="TESST"/>
-            -->
-    </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:entries="@array/cities"
+            android:prompt="@string/prompt_city"/>
+        <!-- ########## Address ########## -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layoutRegisterAddress"
+            android:layout_below="@id/sRegisterCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/etRegisterAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Adresa"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <!-- ########## Birth date - datepicker popup on edittext Click ########## -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layoutRegisterBirth"
+            android:layout_below="@id/layoutRegisterAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/etRegisterBirthDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Datum rođenja"
+                android:inputType="date"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <Button
+            android:id="@+id/bRegister"
+            android:layout_below="@id/layoutRegisterBirth"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="25dp"
+            android:layout_centerHorizontal="true"
+            android:text="Registracija"
+            />
 
+    </RelativeLayout>
 </ScrollView>
