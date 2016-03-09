@@ -1,20 +1,22 @@
 package com.idurlen.foodordering.view;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.controller.ControllerFactory;
+import com.idurlen.foodordering.utils.SessionManager;
+import com.idurlen.foodordering.view.fragment.RestaurantFragment;
 
 
 
@@ -23,34 +25,46 @@ public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
 
 
+	SessionManager sessionManager;
+	Toolbar toolbar;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
+		sessionManager = SessionManager.getInstance(this);
 
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-						.setAction("Action", null).show();
-			}
-		});
+		if(!sessionManager.isLoggedIn()){
+			Log.d("USER", "Not logged in - redirecting to Login");
 
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-				this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-		drawer.setDrawerListener(toggle);
-		toggle.syncState();
+		}
+		else{
+			Log.d("USER", "Logged in");
+			setContentView(R.layout.activity_main);
+			toolbar = (Toolbar) findViewById(R.id.toolbar);
+			setSupportActionBar(toolbar);
 
-		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-		navigationView.setNavigationItemSelectedListener(this);
+			toolbar.setTitle(sessionManager.getUsername());
+			toolbar.setSubtitle(sessionManager.getUsername());
 
-		ControllerFactory.getInstance();
+			DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+			ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+					this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+			drawer.setDrawerListener(toggle);
+			toggle.syncState();
+
+			NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+			navigationView.setNavigationItemSelectedListener(this);
+
+			RestaurantFragment fragment = new RestaurantFragment();
+			FragmentManager manager = getFragmentManager();
+			FragmentTransaction transaction = manager.beginTransaction();
+			transaction.add(R.id.layout_main, fragment);
+			transaction.commit();
+
+			//ControllerFactory.getInstance(this);
+		}
 	}
-
 
 
 
@@ -101,22 +115,22 @@ public class MainActivity extends AppCompatActivity
 		// Handle navigation view item clicks here.
 		int id = item.getItemId();
 
-		if(id == R.id.nav_camera) {
-			// Handle the camera action
-		} else if(id == R.id.nav_gallery) {
-
-		} else if(id == R.id.nav_slideshow) {
-
-		} else if(id == R.id.nav_manage) {
-
-		} else if(id == R.id.nav_share) {
-
-		} else if(id == R.id.nav_send) {
-
+		//TODO
+		if(id == R.id.nav_logout) {
+			sessionManager.logUserOut();
+			redirectToLogin();
 		}
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
 	}
+
+
+	private void redirectToLogin(){
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
 }

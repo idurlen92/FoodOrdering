@@ -39,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		findWidgets();
-		ControllerFactory.getInstance().activate(this);
+		ControllerFactory.getInstance(this).activate();
 	}
 
 

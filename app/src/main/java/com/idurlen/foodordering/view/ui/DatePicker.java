@@ -1,4 +1,4 @@
-package com.idurlen.foodordering.ui;
+package com.idurlen.foodordering.view.ui;
 
 
 import android.app.DatePickerDialog;

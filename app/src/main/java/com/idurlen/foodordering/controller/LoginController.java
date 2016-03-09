@@ -1,6 +1,7 @@
 package com.idurlen.foodordering.controller;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
@@ -8,8 +9,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
-import com.idurlen.foodordering.AppController;
+import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.view.LoginActivity;
+import com.idurlen.foodordering.view.MainActivity;
+import com.idurlen.foodordering.view.RegisterActivity;
 
 
 
@@ -20,7 +23,7 @@ import com.idurlen.foodordering.view.LoginActivity;
 public class LoginController implements Controller{
 
 	private final String TEST_USERNAME = "user";
-	private final String TEST_PASSWORD = "123456";
+	private final String TEST_PASSWORD = "0000";
 	private final String MSG_EMPTY = "Unesite vrijednost";
 	private final String MSG_WRONG_USERNAME = "Korisnik nije pronađen";
 	private final String MSG_WRONG_PASSWORD = "Kriva lozinka";
@@ -34,8 +37,14 @@ public class LoginController implements Controller{
 	private LoginActivity activity;
 
 
+
+	public LoginController(Activity activity){
+		this.activity = (LoginActivity) activity;
+	}
+
+
 	@Override
-	public void activate(Activity activity) {
+	public void activate() {
 		this.activity = (LoginActivity) activity;
 		Log.d("ATTACHED", "LoginController");
 
@@ -69,7 +78,8 @@ public class LoginController implements Controller{
 		Log.d("View class: ", v.getClass().toString());
 
 		if(v instanceof AppCompatTextView){
-			AppController.changeActivity(activity, AppController.AppContext.REGISTER);
+			Intent intent = new Intent(activity, RegisterActivity.class);
+			activity.startActivity(intent);
 		}
 		else{
 			handleLogin();
@@ -89,7 +99,12 @@ public class LoginController implements Controller{
 				(isValidUsername && !isValidPassword ? MSG_WRONG_PASSWORD : null));
 
 		if(isValidPassword && isValidUsername){
-			AppController.changeActivity(activity, AppController.AppContext.MAIN, null, true);
+			SessionManager sessionManager = SessionManager.getInstance(activity);
+			sessionManager.logUserIn(strUsername,  -1);// TODO: update to real ID!
+
+			Intent intent = new Intent(activity, MainActivity.class);
+			activity.startActivity(intent);
+			activity.finish();
 		}
 	}
 

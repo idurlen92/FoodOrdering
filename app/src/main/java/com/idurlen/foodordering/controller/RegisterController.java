@@ -14,9 +14,9 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.ui.DatePicker;
 import com.idurlen.foodordering.utils.StringUtils;
 import com.idurlen.foodordering.view.RegisterActivity;
+import com.idurlen.foodordering.view.ui.DatePicker;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,8 +57,13 @@ public class RegisterController implements Controller{
 	RegisterActivity activity;
 
 
+	public RegisterController(Activity activity){
+		this.activity = (RegisterActivity) activity;
+	}
+
+
 	@Override
-	public void activate(Activity activity) {
+	public void activate() {
 		this.activity = (RegisterActivity) activity;
 		Log.d("ATTACHED", "RegisterController");
 
