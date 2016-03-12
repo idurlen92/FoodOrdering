@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.controller.ControllerFactory;
+import com.idurlen.foodordering.factory.ControllerFactory;
 
 
 /**

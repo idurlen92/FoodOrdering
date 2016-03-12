@@ -1,16 +1,16 @@
-package com.idurlen.foodordering.controller;
+package com.idurlen.foodordering.factory;
 
 import android.app.Activity;
 import android.util.Log;
 
-import com.idurlen.foodordering.utils.StringUtils;
+import com.idurlen.foodordering.controller.Controller;
 
 import java.lang.reflect.Constructor;
 
 
 
 
-public class ControllerFactory {
+public class ControllerFactory extends  FactoryMethod{
 
 
 	/**
@@ -19,21 +19,16 @@ public class ControllerFactory {
 	 * @return
 	 */
 	public static Controller getInstance(Activity activity){
-		String className = activity.getClass().getSimpleName();
-		String contextName = className.substring(0, className.indexOf("Activity"));
-
-		String strClassPath = "com.idurlen.foodordering.controller." +
-				StringUtils.upperToName(contextName) + "Controller";
-
 		Controller controller = null;
+
 		try{
-			Class controllerClass = Class.forName(strClassPath);
+			Class controllerClass = getComponentClass(activity.getClass().getSimpleName(), "activity", "controller", "controller");
 			Constructor constructor = controllerClass.getConstructor(new Class[]{Activity.class});
 			controller = (Controller) constructor.newInstance(activity);
 			Log.d("REFLECTION", "Created: " + controller.getClass().getSimpleName());
 		}
 		catch(Exception e){
-			Log.e("REFLECTION", "Class " + strClassPath + " not found");
+			Log.e("REFLECTION", "Class not found");
 			e.printStackTrace();
 		}
 

@@ -34,12 +34,15 @@ public class LoginController implements Controller{
 	private TextInputLayout layoutUsername;
 	private TextInputLayout layoutPassword;
 
+	SessionManager sessionManager;
+
 	private LoginActivity activity;
 
 
 
 	public LoginController(Activity activity){
 		this.activity = (LoginActivity) activity;
+		sessionManager = SessionManager.getInstance(activity);
 	}
 
 
@@ -96,16 +99,19 @@ public class LoginController implements Controller{
 		layoutUsername.setError(strUsername.isEmpty() ? MSG_EMPTY :
 				(isValidUsername ? null : MSG_WRONG_USERNAME));
 		layoutPassword.setError(strPassword.isEmpty() ? MSG_EMPTY :
-				(isValidUsername && !isValidPassword ? MSG_WRONG_PASSWORD : null));
+				(isValidUsername && ! isValidPassword ? MSG_WRONG_PASSWORD : null));
 
 		if(isValidPassword && isValidUsername){
-			SessionManager sessionManager = SessionManager.getInstance(activity);
-			sessionManager.logUserIn(strUsername,  -1);// TODO: update to real ID!
-
-			Intent intent = new Intent(activity, MainActivity.class);
-			activity.startActivity(intent);
-			activity.finish();
+			sessionManager.createSession(strUsername, - 1);// TODO: update to real ID!
+			redirectToMain();
 		}
+	}
+
+
+	private void redirectToMain(){
+		Intent intent = new Intent(activity, MainActivity.class);
+		activity.startActivity(intent);
+		activity.finish();
 	}
 
 

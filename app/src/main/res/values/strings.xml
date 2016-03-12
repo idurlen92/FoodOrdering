@@ -1,15 +1,17 @@
 <resources>
-    <string name="app_name">FoodOrdering</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="app_name">Food Ordering</string>
 
-    <!-- Strings related to login -->
-    <string name="action_register">Not registered? Register</string>
+    <!-- Login -->
+    <string name="title_activity_login">Prijava</string>
+    <string name="action_register">Niste korisnik?\nRegistrirajte se</string>
     <string name="action_sign_in">Prijava</string>
     <string name="prompt_city">Odaberite grad</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Lozinka</string>
-    <!-- ?? -->
-    <string name="title_activity_register">RegisterActivity</string>
+    <!-- Register -->
+    <string name="title_activity_register">Registracija</string>
+
+    <!-- Main Activity -->
     <string name="title_activity_main">MainActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -19,4 +21,5 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 </resources>
