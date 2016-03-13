@@ -1,8 +1,8 @@
 package com.idurlen.foodordering.controller;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -40,7 +40,7 @@ public class LoginController implements Controller{
 
 
 
-	public LoginController(Activity activity){
+	public LoginController(AppCompatActivity activity){
 		this.activity = (LoginActivity) activity;
 		sessionManager = SessionManager.getInstance(activity);
 	}

@@ -1,8 +1,8 @@
 package com.idurlen.foodordering.controller;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -57,7 +57,7 @@ public class RegisterController implements Controller{
 	RegisterActivity activity;
 
 
-	public RegisterController(Activity activity){
+	public RegisterController(AppCompatActivity activity){
 		this.activity = (RegisterActivity) activity;
 	}
 

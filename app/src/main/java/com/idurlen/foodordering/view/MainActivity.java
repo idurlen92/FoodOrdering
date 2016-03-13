@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.idurlen.foodordering.R;
 import com.idurlen.foodordering.controller.MenuController;
@@ -43,11 +45,11 @@ public class MainActivity extends AppCompatActivity {
 			findWidgets();
 			setSupportActionBar(toolbar);
 
-			MenuController menuController = new MenuController(this);
-
 			toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 			drawer.setDrawerListener(toggle);
 			toggle.syncState();
+
+			MenuController menuController = new MenuController(this);
 		}
 	}
 
@@ -72,10 +74,14 @@ public class MainActivity extends AppCompatActivity {
 	public Toolbar getToolbar(){ return toolbar; }
 
 
+
 	private void findWidgets(){
 		drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		navigationView = (NavigationView) findViewById(R.id.nav_view);
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+		View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+		((TextView) headerView.findViewById(R.id.tvMenuUsername)).setText(sessionManager.getName());
 	}
 
 

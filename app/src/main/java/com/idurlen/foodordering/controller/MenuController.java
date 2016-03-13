@@ -1,6 +1,5 @@
 package com.idurlen.foodordering.controller;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -8,6 +7,7 @@ import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -16,6 +16,7 @@ import com.idurlen.foodordering.factory.FragmentFactory;
 import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.view.LoginActivity;
 import com.idurlen.foodordering.view.MainActivity;
+import com.idurlen.foodordering.view.SettingsActivity;
 
 
 
@@ -35,33 +36,34 @@ public class MenuController implements NavigationView.OnNavigationItemSelectedLi
 	MainActivity activity;
 
 
-	public MenuController(Activity activity){
+	public MenuController(AppCompatActivity activity){
 		this.activity = (MainActivity) activity;
 		sessionManager = SessionManager.getInstance(activity);
-		drawer = this.activity.getDrawer();
-		navigation = this.activity.getNavigationView();
-
-		navigation.setNavigationItemSelectedListener(this);
+		setWidgets();
 		setFragment(OPTION_HOME);
-		//TODO: set username in drawer menu
+	}
+
+
+	private void setWidgets(){
+		drawer = activity.getDrawer();
+		navigation = activity.getNavigationView();
+		navigation.setNavigationItemSelectedListener(this);
 	}
 
 
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item) {
-		int id = item.getItemId();
+		String itemName = activity.getResources().getResourceName(item.getItemId());
+		Log.d("OPTION", itemName);
 
-		Log.w("PERO", activity.getResources().getResourceName(id));
-		if(id == R.id.logoutOption) {
+		if(item.getItemId() == R.id.logoutOption) {
 			sessionManager.destroySession();
-			redirectToActivity(LoginActivity.class);
+			redirectToActivity(LoginActivity.class, true);
 		}
-		else if(id == R.id.settingsOption){
-			//TODO:
+		else if(item.getItemId() == R.id.settingsOption){
+			redirectToActivity(SettingsActivity.class, false);
 		}
 		else{
-			String itemName = activity.getResources().getResourceName(id);
-			itemName = itemName.substring(itemName.lastIndexOf("/") + 1);
 			setFragment(itemName);
 		}
 
@@ -71,16 +73,16 @@ public class MenuController implements NavigationView.OnNavigationItemSelectedLi
 
 
 
-	private void redirectToActivity(Class redirectActivityClass){
+	private void redirectToActivity(Class redirectActivityClass, boolean isFinish){
 		Intent intent = new Intent(activity, redirectActivityClass);
 		activity.startActivity(intent);
-		activity.finish();
+		if(isFinish) {
+			activity.finish();
+		}
 	}
 
 
 	private void setFragment(String itemName){
-		Log.d("ITEM", itemName);
-
 		Fragment fragment = FragmentFactory.getInstance(itemName);
 		if(fragment == null){
 			Log.e("NO FRAGMENT", "No Fragment for: " + itemName);
@@ -89,7 +91,7 @@ public class MenuController implements NavigationView.OnNavigationItemSelectedLi
 
 		FragmentManager manager = activity.getFragmentManager();
 		FragmentTransaction transaction = manager.beginTransaction();
-		transaction.add(R.id.layout_main, fragment);
+		transaction.replace(R.id.layout_main, fragment);
 		transaction.commit();
 	}
 

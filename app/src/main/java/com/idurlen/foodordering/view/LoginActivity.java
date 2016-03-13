@@ -15,7 +15,7 @@ import com.idurlen.foodordering.factory.ControllerFactory;
 /**
  * A login screen that offers login via username/password.
  */
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
 
 	private AppCompatTextView tvRegister;
 	private Button bLogin;

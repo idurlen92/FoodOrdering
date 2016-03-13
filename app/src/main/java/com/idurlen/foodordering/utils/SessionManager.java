@@ -9,8 +9,7 @@ import android.content.SharedPreferences.Editor;
 
 
 /**
- * Simple class for managing user session:
- *      - Login/Logout
+ * Simple class for managing user session - Login/Logout
  * @author Ivan Durlen
  */
 public class SessionManager {
@@ -21,6 +20,8 @@ public class SessionManager {
 
 	private static String lastActivityName = "";
 
+	private final String KEY_FIRST_NAME = "first_name";
+	private final String KEY_LAST_NAME = "last_name";
 	private final String KEY_LOGGED_IN = "is_logged_in";
 	private final String KEY_USERNAME = "username";
 	private final String KEY_USER_ID = "user_id";
@@ -67,6 +68,25 @@ public class SessionManager {
 		return preferences.getBoolean(KEY_LOGGED_IN, false);
 	}
 
+
+	/**
+	 * Returns First Name of user, if logged in.
+	 * @return String
+	 */
+	public String getFirstName(){ return preferences.getString(KEY_FIRST_NAME, "none"); }
+
+	/**
+	 * Returns Last Name of user, if logged in.
+	 * @return
+	 */
+	public String getLastName(){ return preferences.getString(KEY_LAST_NAME, "none"); }
+
+	/**
+	 * Returns First and Last Name of user, if logged in.
+	 * @return String
+	 */
+	public String getName(){ return getFirstName() + " " + getLastName(); }
+
 	/**
 	 * If the user is logged in, returns his username.
 	 * @return
@@ -106,7 +126,10 @@ public class SessionManager {
 	public void destroySession(){
 		Editor editor = preferences.edit();
 		editor.putBoolean(KEY_LOGGED_IN, false);
-		editor.remove(KEY_USER_ID).remove(KEY_USERNAME);
+		editor.remove(KEY_FIRST_NAME);
+		editor.remove(KEY_USER_ID);
+		editor.remove(KEY_USERNAME);
+		editor.remove(KEY_LAST_NAME);
 		editor.commit();
 	}
 

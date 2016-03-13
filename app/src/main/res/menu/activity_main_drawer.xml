@@ -5,19 +5,23 @@
         <item
             android:id="@+id/homeOption"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Home"/>
+            android:title="@string/item_home"/>
+        <item
+            android:id="@+id/orderOption"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/item_order"/>
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="">
         <menu>
             <item
                 android:id="@+id/settingsOption"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="Postavke"/>
+                android:title="@string/item_settings"/>
             <item
                 android:id="@+id/logoutOption"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Odjava"/>
+                android:title="@string/item_logout"/>
         </menu>
     </item>
 
