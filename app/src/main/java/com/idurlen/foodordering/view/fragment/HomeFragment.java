@@ -8,16 +8,31 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.idurlen.foodordering.R;
+import com.idurlen.foodordering.view.ui.adapter.RestaurantsAdapter;
 
 
 
-
+/**
+ * @author Ivan Durlen
+ */
 public class HomeFragment extends Fragment{
 
 
-	public HomeFragment() {
-		// Required empty public constructor
+	public HomeFragment() { }
+
+
+
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		RestaurantsAdapter adapter = new RestaurantsAdapter(this, null);
+
+		//TODO
 	}
+
+
 
 
 	@Override

@@ -19,7 +19,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="item_home">Početna</string>
-    <string name="item_order">Narudžba</string>
     <string name="item_settings">Postavke</string>
     <string name="item_logout">Odjava</string>
 

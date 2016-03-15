@@ -6,10 +6,6 @@
             android:id="@+id/homeOption"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/item_home"/>
-        <item
-            android:id="@+id/orderOption"
-            android:icon="@drawable/ic_menu_send"
-            android:title="@string/item_order"/>
     </group>
 
     <item android:title="">

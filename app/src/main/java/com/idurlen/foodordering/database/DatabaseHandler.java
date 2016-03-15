@@ -3,6 +3,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.idurlen.foodordering.database.schema.Dishes;
+import com.idurlen.foodordering.database.schema.OrderItems;
+import com.idurlen.foodordering.database.schema.Orders;
+import com.idurlen.foodordering.database.schema.Restaurants;
+import com.idurlen.foodordering.database.schema.Users;
+
 
 
 
@@ -13,7 +19,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	private static DatabaseHandler instance = null;
 
-
 	private DatabaseHandler(Context context){
 		super(context, DB_NAME, null, DB_VERSION);
 	}
@@ -21,24 +26,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(SchemaDefinition.createTableUsers);
-		db.execSQL(SchemaDefinition.createTableRestaurants);
-		db.execSQL(SchemaDefinition.createTableMenus);
-		db.execSQL(SchemaDefinition.createTableOrders);
-		db.execSQL(SchemaDefinition.createTableOrderItems);
+		db.execSQL(Users.getCreateTableStatement());
+		db.execSQL(Restaurants.getCreateTableStatement());
+		db.execSQL(Dishes.getCreateTableStatement());
+		db.execSQL(Orders.getCreateTableStatement());
+		//TODO: food types table
+		db.execSQL(OrderItems.getCreateTableStatement());
 	}
 
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		for(String table : SchemaDefinition.getTableNames()) {
-			db.execSQL("DROP TABLE IF EXISTS " + table);
+		String[] tableNames = new String[]{
+				Users.TABLE_NAME, Restaurants.TABLE_NAME, Dishes.TABLE_NAME, Orders.TABLE_NAME, OrderItems.TABLE_NAME  };//TODO: food types table
+		for(String tableName : tableNames){
+			db.execSQL("DROP TABLE IF EXISTS " + tableName);
 		}
 		onCreate(db);
 	}
 
 
-	public static DatabaseHandler getInsance(Context context){
+	public static synchronized DatabaseHandler getInstance(Context context){
 		if(instance == null)
 			instance = new DatabaseHandler(context);
 		return instance;
