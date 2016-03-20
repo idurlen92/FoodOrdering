@@ -3,23 +3,24 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.idurlen.foodordering.database.schema.Dishes;
-import com.idurlen.foodordering.database.schema.OrderItems;
-import com.idurlen.foodordering.database.schema.Orders;
-import com.idurlen.foodordering.database.schema.Restaurants;
-import com.idurlen.foodordering.database.schema.Users;
+import com.idurlen.foodordering.database.helper.DishTypes;
+import com.idurlen.foodordering.database.helper.Dishes;
+import com.idurlen.foodordering.database.helper.OrderItems;
+import com.idurlen.foodordering.database.helper.Orders;
+import com.idurlen.foodordering.database.helper.Restaurants;
+import com.idurlen.foodordering.database.helper.Users;
 
 
 
 
-public class DatabaseHandler extends SQLiteOpenHelper {
+public class DatabaseManager extends SQLiteOpenHelper {
 
 	private static final String DB_NAME = "orders.db";
 	private static final int DB_VERSION = 1;
 
-	private static DatabaseHandler instance = null;
+	private static DatabaseManager instance = null;
 
-	private DatabaseHandler(Context context){
+	private DatabaseManager(Context context){
 		super(context, DB_NAME, null, DB_VERSION);
 	}
 
@@ -28,10 +29,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(Users.getCreateTableStatement());
 		db.execSQL(Restaurants.getCreateTableStatement());
+		db.execSQL(DishTypes.getCreateTableStatement());
 		db.execSQL(Dishes.getCreateTableStatement());
 		db.execSQL(Orders.getCreateTableStatement());
-		//TODO: food types table
 		db.execSQL(OrderItems.getCreateTableStatement());
+		Restaurants.prepareTestData(db);
+		DishTypes.prepareTestData(db);
+		Dishes.prepareTestData(db);
 	}
 
 
@@ -46,9 +50,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	}
 
 
-	public static synchronized DatabaseHandler getInstance(Context context){
+	public static synchronized DatabaseManager getInstance(Context context){
 		if(instance == null)
-			instance = new DatabaseHandler(context);
+			instance = new DatabaseManager(context);
 		return instance;
 	}
 

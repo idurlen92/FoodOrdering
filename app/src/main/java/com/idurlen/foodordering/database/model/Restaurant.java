@@ -13,10 +13,10 @@ public class Restaurant {
 	private String description;
 	private String email;
 	private String phone;
-	private String works_from;
-	private String works_to;
-	private String orders_from;
-	private String orders_to;
+	private String worksFrom;
+	private String worksTo;
+	private String ordersFrom;
+	private String ordersTo;
 
 
 	public Restaurant(){}
@@ -72,29 +72,29 @@ public class Restaurant {
 
 
 
-	public String getWorks_from() {
-		return works_from;
+	public String getWorksFrom() {
+		return worksFrom;
 	}
 
 
 
 
-	public String getWorks_to() {
-		return works_to;
+	public String getWorksTo() {
+		return worksTo;
 	}
 
 
 
 
-	public String getOrders_from() {
-		return orders_from;
+	public String getOrdersFrom() {
+		return ordersFrom;
 	}
 
 
 
 
-	public String getOrders_to() {
-		return orders_to;
+	public String getOrdersTo() {
+		return ordersTo;
 	}
 
 
@@ -149,28 +149,28 @@ public class Restaurant {
 
 
 
-	public void setWorks_from(String works_from) {
-		this.works_from = works_from;
+	public void setWorksFrom(String worksFrom) {
+		this.worksFrom = worksFrom;
 	}
 
 
 
 
-	public void setWorks_to(String works_to) {
-		this.works_to = works_to;
+	public void setWorksTo(String worksTo) {
+		this.worksTo = worksTo;
 	}
 
 
 
 
-	public void setOrders_from(String orders_from) {
-		this.orders_from = orders_from;
+	public void setOrdersFrom(String ordersFrom) {
+		this.ordersFrom = ordersFrom;
 	}
 
 
 
 
-	public void setOrders_to(String orders_to) {
-		this.orders_to = orders_to;
+	public void setOrdersTo(String ordersTo) {
+		this.ordersTo = ordersTo;
 	}
 }

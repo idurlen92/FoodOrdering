@@ -1,8 +1,5 @@
 package com.idurlen.foodordering.controller;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,10 +7,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.factory.FragmentFactory;
 import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.view.LoginActivity;
 import com.idurlen.foodordering.view.MainActivity;
@@ -27,8 +22,6 @@ import com.idurlen.foodordering.view.SettingsActivity;
  */
 public class MenuController implements NavigationView.OnNavigationItemSelectedListener {
 
-	public static final String OPTION_HOME = "homeOption";
-
 	SessionManager sessionManager;
 
 	DrawerLayout drawer;
@@ -41,7 +34,6 @@ public class MenuController implements NavigationView.OnNavigationItemSelectedLi
 		this.activity = (MainActivity) activity;
 		sessionManager = SessionManager.getInstance(activity);
 		setWidgets();
-		setFragment(OPTION_HOME);
 	}
 
 
@@ -65,7 +57,7 @@ public class MenuController implements NavigationView.OnNavigationItemSelectedLi
 			redirectToActivity(SettingsActivity.class, false);
 		}
 		else{
-			setFragment(itemName);
+			activity.pushFragment(itemName);
 		}
 
 		drawer.closeDrawer(GravityCompat.START);
@@ -81,22 +73,6 @@ public class MenuController implements NavigationView.OnNavigationItemSelectedLi
 			activity.finish();
 		}
 	}
-
-
-	private void setFragment(String itemName){
-		Fragment fragment = FragmentFactory.newInstance(itemName);
-		if(fragment == null){
-			Log.e("NO FRAGMENT", "No Fragment for: " + itemName);
-			Toast.makeText(activity, "Nije implementirano", Toast.LENGTH_SHORT).show();
-			return;
-		}
-
-		FragmentManager manager = activity.getFragmentManager();
-		FragmentTransaction transaction = manager.beginTransaction();
-		transaction.replace(R.id.layout_main, fragment);
-		transaction.commit();
-	}
-
 
 
 }

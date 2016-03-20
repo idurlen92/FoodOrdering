@@ -53,6 +53,15 @@ public class StringUtils{
 	}
 
 
+
+
+	/**
+	 * Formats date String from given parameters.
+	 * @param hour
+	 * @param minute
+	 * @param second
+	 * @return
+	 */
 	public static String getTimeString(int hour, int minute, int second){
 		StringBuilder builder = new StringBuilder();
 		builder.append((hour < 9 ? "0" : "") + hour);
@@ -61,5 +70,28 @@ public class StringUtils{
 		return builder.toString();
 	}
 
+
+	/**
+	 * Capitalizes the String.
+	 * @param arg
+	 * @return
+	 */
+	public static String capitalize(String arg){
+		return arg.substring(0, 1).toUpperCase() + arg.substring(1, arg.length());
+	}
+
+
+	/**
+	 * Concatenates String array, where each chunk is first capitalized.
+	 * @param args
+	 * @return
+	 */
+	public static String concatCamelCase(String[] args){
+		StringBuilder builder = new StringBuilder();
+		for(String arg : args){
+			builder.append(capitalize(arg));
+		}
+		return builder.toString();
+	}
 
 }

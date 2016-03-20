@@ -1,5 +1,8 @@
 package com.idurlen.foodordering.view;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -14,12 +17,18 @@ import android.widget.TextView;
 
 import com.idurlen.foodordering.R;
 import com.idurlen.foodordering.controller.MenuController;
+import com.idurlen.foodordering.factory.FragmentFactory;
 import com.idurlen.foodordering.utils.SessionManager;
 
 
 
 
 public class MainActivity extends AppCompatActivity {
+
+	public static final String OPTION_HOME = "homeOption";
+	public static final String OPTION_ORDER = "orderOption";
+
+	boolean isPopRequired = false;
 
 	SessionManager sessionManager;
 
@@ -50,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 			toggle.syncState();
 
 			MenuController menuController = new MenuController(this);
+			pushFragment(OPTION_HOME);
 		}
 	}
 
@@ -58,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
 	public void onBackPressed() {
 		if(drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
+		}
+		else if(isPopRequired){
+			getFragmentManager().popBackStack();
+			isPopRequired = false;
 		}
 		else {
 			super.onBackPressed();
@@ -92,5 +106,23 @@ public class MainActivity extends AppCompatActivity {
 		finish();
 	}
 
+
+	public void pushFragment(String itemName){
+		FragmentManager manager = getFragmentManager();
+		Fragment fragment = FragmentFactory.newInstance(itemName);
+		if(fragment == null){
+			Log.e("NO FRAGMENT", "No Fragment for: " + itemName);
+			return;
+		}
+
+		FragmentTransaction transaction = manager.beginTransaction();
+		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		transaction.replace(R.id.layout_main, fragment);
+		if(itemName.contains("order")) {
+			transaction.addToBackStack(null);
+			isPopRequired = true;
+		}
+		transaction.commit();
+	}
 
 }

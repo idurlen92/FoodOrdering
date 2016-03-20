@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.idurlen.foodordering.R;
@@ -26,7 +28,9 @@ public class HomeFragment extends Fragment{
 	HomeController controller;
 	MainActivity activity;
 
+	LinearLayout layoutHome;
 	ListView lvRestaurants;
+	ProgressBar pbHome;
 	TextView tvTitle;
 
 
@@ -56,16 +60,29 @@ public class HomeFragment extends Fragment{
 	}
 
 
-
+	public LinearLayout getLayoutHome() {
+		return layoutHome;
+	}
 
 	public ListView getLvRestaurants() {
 		return lvRestaurants;
 	}
 
+	public ProgressBar getPbHome() {
+		return pbHome;
+	}
+
+	public TextView getTvTitle() {
+		return tvTitle;
+	}
+
 
 	private void findViews(){
+		layoutHome = (LinearLayout) getView().findViewById(R.id.layoutHome);
 		lvRestaurants = (ListView) getView().findViewById(R.id.lvRestaurants);
+		pbHome = (ProgressBar) getView().findViewById(R.id.pbHome);
 		tvTitle = (TextView) getView().findViewById(R.id.tvHomeTitle);
+
 		tvTitle.setText("Restorani za grad: " /*TODO: + sessionManager.getCity()*/);
 	}
 

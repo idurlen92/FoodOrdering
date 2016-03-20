@@ -14,7 +14,7 @@ public abstract class FactoryMethod {
 
 	/**
 	 * Returns Class instance by specified parameters.
-	 * @param componentName Activity/Fragment/Id component name
+	 * @param componentName Activity/Fragment component name or String Id of Option in Menu
 	 * @param filter Superclass of first param component or "option" for menu options
 	 * @param packageSubPath Package of new component without base package name and start/end dots
 	 * @param superClass (Fragment/Controller etc.) superclass of new component
@@ -23,14 +23,12 @@ public abstract class FactoryMethod {
 	 */
 	protected static Class getComponentClass(String componentName, String filter, String packageSubPath,
 	                                         Class superClass)throws Exception{
-		componentName = componentName.toLowerCase();
 		String componentSubName = componentName.substring(0, 1).toUpperCase() +
-				componentName.substring(1, componentName.indexOf(filter.toLowerCase()));
-
-		String strClassPath = "com.idurlen.foodordering." + packageSubPath + "." +
+				componentName.substring(1, componentName.toLowerCase().indexOf(filter.toLowerCase()));
+		String strClassPath = "com.idurlen.foodordering." + packageSubPath.toLowerCase() + "." +
 				componentSubName + superClass.getSimpleName();
-		Log.d("COMPONENT", strClassPath);
 
+		Log.d("COMPONENT", strClassPath);
 		return Class.forName(strClassPath);
 	}
 

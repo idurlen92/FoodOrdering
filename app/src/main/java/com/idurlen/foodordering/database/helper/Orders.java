@@ -1,4 +1,4 @@
-package com.idurlen.foodordering.database.schema;
+package com.idurlen.foodordering.database.helper;
 
 /**
  * @author Ivan Durlen

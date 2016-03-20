@@ -17,7 +17,9 @@ public class FragmentFactory extends FactoryMethod{
 	 * @return {@link Fragment}
 	 */
 	public static Fragment newInstance(String itemName){
-		itemName = itemName.substring(itemName.lastIndexOf("/") + 1);
+		if(itemName.contains("/")) {
+			itemName = itemName.substring(itemName.lastIndexOf("/") + 1);
+		}
 		Fragment fragment = null;
 
 		try {
