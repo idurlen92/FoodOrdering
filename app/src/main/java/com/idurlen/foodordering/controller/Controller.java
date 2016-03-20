@@ -7,9 +7,10 @@ import android.view.View;
 
 
 /**
- *
+ * Controller interface of MVC Controller component.
+ * TODO: refactor!!
  */
-public interface Controller extends View.OnClickListener, View.OnTouchListener{
+public interface Controller extends View.OnClickListener{
 
 
 	/**

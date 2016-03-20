@@ -9,16 +9,22 @@
     <string name="prompt_city">Odaberite grad</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Lozinka</string>
+
     <!-- ######### Register ######### -->
     <string name="title_activity_register">Registracija</string>
+
     <!-- ######### Settings ######### -->
     <string name="title_activity_settings">Postavke</string>
+
     <!-- ######### Main Activity ######### -->
     <string name="title_activity_main"></string>
+
     <!-- ######### Navigation drawer ######### -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="item_home">Početna</string>
+    <string name="item_orders">Moje narudžbe</string>
+    <string name="item_map">Mapa</string>
     <string name="item_settings">Postavke</string>
     <string name="item_logout">Odjava</string>
 

@@ -1,13 +1,16 @@
 package com.idurlen.foodordering.utils;
 
-public class StringUtils {
+/**
+ * Contains methods for oprerating Strings.
+ * @author Ivan Durlen
+ */
+public class StringUtils{
 
 
 	/**
-	 * TODO: description
 	 * Formats Uppercase String as Name format i.e.
 	 * @param upperCaseString
-	 * @return
+	 * @return String
 	 */
 	public static String upperToName(String upperCaseString){
 		String newString = upperCaseString.substring(0, 1);
@@ -17,20 +20,20 @@ public class StringUtils {
 
 
 	/**
-	 * TODO: Description
+	 * Formats year, month and day as date string.
 	 * @param year
 	 * @param month
 	 * @param day
-	 * @param isFromZero
-	 * @param isMonthAsString
-	 * @return
+	 * @param isFromZero if month in range [0, 11] instead of [1, 12]
+	 * @param isMonthAsString if month should be formatted as a string, instead of number in range [1, 12]
+	 * @return Date String
 	 */
 	public static String getDateString(int year, int month, int day, boolean isFromZero, boolean isMonthAsString){
 		String[] strMonths = new String[]{
 				"Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj",
 				"Srpanj", "Kolovoz", "Rujan", "Listopad", "Studeni", "Prosinac" };
-
 		StringBuilder builder = new StringBuilder();
+
 		if(isMonthAsString){
 			builder.append(day + ". ");
 			builder.append(strMonths[isFromZero ? month :  month - 1] + " ") ;
@@ -38,9 +41,23 @@ public class StringUtils {
 		}
 		else{
 			builder.append((day < 10 ? "0" : "") + day + "/");
-			builder.append((month < 10 ? "0" : "") + month + "/" + year);
+			if(isFromZero) {
+				builder.append((month < 10 ? "0" : "") + month + "/" + year);
+			}
+			else{
+				builder.append((month + 1 < 10 ? "0" : "") + (month + 1) + "/" + year);
+			}
 		}
 
+		return builder.toString();
+	}
+
+
+	public static String getTimeString(int hour, int minute, int second){
+		StringBuilder builder = new StringBuilder();
+		builder.append((hour < 9 ? "0" : "") + hour);
+		builder.append((minute < 9 ? "0" : "") + minute);
+		builder.append((second < 9 ? "0" : "") + second);
 		return builder.toString();
 	}
 

@@ -30,16 +30,16 @@ public class RegisterActivity extends AppCompatActivity {
 	EditText etBirthDate;
 
 	Spinner sCity;
+	Toolbar toolbar;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
 		findWidgets();
-		ControllerFactory.getInstance(this).activate();
+		setSupportActionBar(toolbar);
+		ControllerFactory.newInstance(this).activate();
 	}
 
 
@@ -53,6 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
 		etAddress = (EditText) findViewById(R.id.etRegisterAddress);
 		etBirthDate = (EditText) findViewById(R.id.etRegisterBirthDate);
 		sCity = (Spinner) findViewById(R.id.sRegisterCity);
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 		etPassword.setTransformationMethod(new PasswordTransformationMethod());
 		etPasswordRepeat.setTransformationMethod(new PasswordTransformationMethod());

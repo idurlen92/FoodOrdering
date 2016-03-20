@@ -1,6 +1,5 @@
 package com.idurlen.foodordering.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -29,36 +28,23 @@ public class SessionManager {
 	private SharedPreferences preferences;
 
 
-	private SessionManager(){ /* Private Constructor */}
+	private SessionManager(Context context){
+		preferences = context.getApplicationContext().getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+	}
 
 
 	/**
 	 * Returns instance of SessionManager object, with opened prefrences file.
-	 * @param activity
+	 * @param context
 	 * @return
 	 */
-	public static SessionManager getInstance(Activity activity){
+	public static SessionManager getInstance(Context context){
 		if(instance == null) {
-			instance = new SessionManager();
+			instance = new SessionManager(context);
 		}
-		instance.getPreferencesFile(activity);
-
 		return instance;
 	}
 
-
-
-
-	/**
-	 * Gets preferences file for the activity, if context is changed.
-	 * @param activity
-	 */
-	private void getPreferencesFile(Activity activity){
-		if(lastActivityName.compareTo(activity.getClass().getSimpleName()) != 0){
-			lastActivityName = activity.getClass().getSimpleName();
-			preferences = activity.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
-		}
-	}
 
 	/**
 	 * Returns true if user is logged in.

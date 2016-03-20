@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.idurlen.foodordering.R;
 import com.idurlen.foodordering.factory.FragmentFactory;
@@ -83,9 +84,10 @@ public class MenuController implements NavigationView.OnNavigationItemSelectedLi
 
 
 	private void setFragment(String itemName){
-		Fragment fragment = FragmentFactory.getInstance(itemName);
+		Fragment fragment = FragmentFactory.newInstance(itemName);
 		if(fragment == null){
 			Log.e("NO FRAGMENT", "No Fragment for: " + itemName);
+			Toast.makeText(activity, "Nije implementirano", Toast.LENGTH_SHORT).show();
 			return;
 		}
 

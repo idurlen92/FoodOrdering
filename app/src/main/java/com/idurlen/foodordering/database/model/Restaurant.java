@@ -19,6 +19,8 @@ public class Restaurant {
 	private String orders_to;
 
 
+	public Restaurant(){}
+
 
 
 	public int getId() {

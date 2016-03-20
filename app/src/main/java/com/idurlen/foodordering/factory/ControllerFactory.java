@@ -19,7 +19,7 @@ public class ControllerFactory extends  FactoryMethod{
 	 * @param component Activity or Fragment
 	 * @return {@link Controller}
 	 */
-	 public static Controller getInstance(Object component){
+	 public static Controller newInstance(Object component){
 		Controller controller = null;
 
 		try{
@@ -30,6 +30,14 @@ public class ControllerFactory extends  FactoryMethod{
 			Constructor constructor = controllerClass.getConstructor(new Class[]{ component.getClass().getSuperclass() });
 			controller = (Controller) constructor.newInstance(component);
 			Log.d("REFLECTION", "Created: " + controller.getClass().getSimpleName());
+		}
+		catch(IllegalAccessException e){
+			Log.e("REFLECTION", "No Constructor for Controller of " + component.getClass().getSimpleName());
+			e.printStackTrace();
+		}
+		catch (IllegalArgumentException e){
+			Log.e("REFLECTION", "Wrong number of params for Controller of " + component.getClass().getSimpleName());
+			e.printStackTrace();
 		}
 		catch(Exception e){
 			Log.e("REFLECTION", "Controller class not found for " + component.getClass().getSimpleName());

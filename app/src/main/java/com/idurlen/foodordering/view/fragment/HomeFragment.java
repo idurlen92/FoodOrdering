@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.view.ui.adapter.RestaurantsAdapter;
-
+import com.idurlen.foodordering.controller.HomeController;
+import com.idurlen.foodordering.factory.ControllerFactory;
+import com.idurlen.foodordering.utils.SessionManager;
+import com.idurlen.foodordering.view.MainActivity;
 
 
 /**
@@ -17,29 +21,52 @@ import com.idurlen.foodordering.view.ui.adapter.RestaurantsAdapter;
  */
 public class HomeFragment extends Fragment{
 
+	SessionManager sessionManager;
 
-	public HomeFragment() { }
+	HomeController controller;
+	MainActivity activity;
+
+	ListView lvRestaurants;
+	TextView tvTitle;
 
 
+	public HomeFragment() {
 
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		RestaurantsAdapter adapter = new RestaurantsAdapter(this, null);
-
-		//TODO
 	}
-
 
 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_home, container, false);
+		View view = inflater.inflate(R.layout.fragment_home, container, false);
+		return view;
+	}
+
+
+
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		sessionManager = SessionManager.getInstance(getActivity());
+		findViews();
+		controller = (HomeController) ControllerFactory.newInstance(this);
+		controller.activate();
+	}
+
+
+
+
+	public ListView getLvRestaurants() {
+		return lvRestaurants;
+	}
+
+
+	private void findViews(){
+		lvRestaurants = (ListView) getView().findViewById(R.id.lvRestaurants);
+		tvTitle = (TextView) getView().findViewById(R.id.tvHomeTitle);
+		tvTitle.setText("Restorani za grad: " /*TODO: + sessionManager.getCity()*/);
 	}
 
 

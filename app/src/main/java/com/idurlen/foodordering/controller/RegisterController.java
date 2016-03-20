@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 /**
  * MVC Controller component for RegisterActivity
  */
-public class RegisterController implements Controller{
+public class RegisterController implements Controller, View.OnTouchListener{
 
 	private final String ERROR_EMPTY = "Ispunite ovo polje";
 	private final String ERROR_EMAIL = "Nevažeća adresa pošte";
@@ -64,7 +64,6 @@ public class RegisterController implements Controller{
 
 	@Override
 	public void activate() {
-		this.activity = (RegisterActivity) activity;
 		Log.d("ATTACHED", "RegisterController");
 
 		setWidgets();

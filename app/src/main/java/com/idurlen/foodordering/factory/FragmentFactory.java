@@ -16,19 +16,25 @@ public class FragmentFactory extends FactoryMethod{
 	 * @param itemName name of Option in Navigation Drawer Menu.
 	 * @return {@link Fragment}
 	 */
-	public static Fragment getInstance(String itemName){
+	public static Fragment newInstance(String itemName){
 		itemName = itemName.substring(itemName.lastIndexOf("/") + 1);
 		Fragment fragment = null;
 
 		try {
 			Class fragmentClass = getComponentClass(itemName, "option", "view.fragment", Fragment.class);
 			fragment = (Fragment) fragmentClass.newInstance();
-		} catch (Exception e) {
-			Log.e("REFLECTION", "Fragment class not found for " + itemName);
+		}
+		catch (IllegalAccessException e) {
+			Log.e("REFLECTION", "Default constructor not found for Fragment class " + itemName);
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			Log.e("REFLECTION", "Default constructor not found for Fragment class " + itemName);
 			e.printStackTrace();
 		}
 
 		return  fragment;
 	}
+
 
 }
