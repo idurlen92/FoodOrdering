@@ -23,6 +23,8 @@ public class HelperMethods {
 	 * @return
 	 */
 	protected static Object extractFields(Cursor cursor, Object obj){
+		String methodName = "";
+
 		for(int i = 0; i < cursor.getColumnCount(); i++) {
 			if(cursor.isNull(i)){
 				Log.d("NULL COL", cursor.getColumnName(i) + "(" + i + ")" );
@@ -30,8 +32,9 @@ public class HelperMethods {
 			}
 
 			try {
+				methodName = "set";
 				String columnName = cursor.getColumnName(i);
-				String methodName = "set";
+
 				if(columnName.contains("_")){
 					methodName += StringUtils.concatCamelCase(columnName.split("_"));
 				}
@@ -55,15 +58,14 @@ public class HelperMethods {
 
 			}
 			catch(NoSuchMethodException e){
-				Log.e("REFLECTION", "Method not found");
+				Log.e("REFLECTION", "Method " + methodName + " not found ");
 				e.printStackTrace();
 			}
 			catch(IllegalArgumentException e){
-				Log.e("REFLECTION", "Wrong method args");
+				Log.e("REFLECTION", "Wrong method args (" + methodName + ")");
 				e.printStackTrace();
 			}
 			catch(Exception e){
-				Log.e("REFLECTION", "Class not found");
 				e.printStackTrace();
 			}
 		}// for(...)

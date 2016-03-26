@@ -1,7 +1,6 @@
 package com.idurlen.foodordering.factory;
 
 import android.app.Fragment;
-import android.util.Log;
 
 
 
@@ -10,6 +9,7 @@ import android.util.Log;
  * @author Ivan Durlen
  */
 public class FragmentFactory extends FactoryMethod{
+
 
 	/**
 	 * Creates Fragment for specified Option. Caches Fragments in Map.
@@ -20,19 +20,21 @@ public class FragmentFactory extends FactoryMethod{
 		if(itemName.contains("/")) {
 			itemName = itemName.substring(itemName.lastIndexOf("/") + 1);
 		}
+
 		Fragment fragment = null;
 
 		try {
-			Class fragmentClass = getComponentClass(itemName, "option", "view.fragment", Fragment.class);
+			Class fragmentClass = getComponentClass(itemName, "view.fragment", "Fragment");
 			fragment = (Fragment) fragmentClass.newInstance();
 		}
-		catch (IllegalAccessException e) {
-			Log.e("REFLECTION", "Default constructor not found for Fragment class " + itemName);
-			e.printStackTrace();
+		catch (ClassNotFoundException e){
+			logError(e, "Class not found");
+		}
+		catch(IllegalAccessException e) {
+			logError(e, "No Constructor");
 		}
 		catch(Exception e){
-			Log.e("REFLECTION", "Default constructor not found for Fragment class " + itemName);
-			e.printStackTrace();
+			logError(e, "");
 		}
 
 		return  fragment;

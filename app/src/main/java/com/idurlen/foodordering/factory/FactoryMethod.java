@@ -2,6 +2,9 @@ package com.idurlen.foodordering.factory;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 
@@ -9,27 +12,47 @@ import android.util.Log;
  * Contains methods for factories.
  * @author Ivan Durlen
  */
-public abstract class FactoryMethod {
+public class FactoryMethod {
+
+	protected static String strClassName = "";
+
+
+	private static List<String> getFiltersList(){
+		List<String> lFilters = new ArrayList<>();
+		lFilters.add("option");
+		lFilters.add("fragment");
+		lFilters.add("activity");
+		return lFilters;
+	}
+
+
+	protected static void logError(Exception e, String message){
+		Log.e("FACTORY", message  + " (" + strClassName + ")");
+		e.printStackTrace();
+	}
 
 
 	/**
-	 * Returns Class instance by specified parameters.
-	 * @param componentName Activity/Fragment component name or String Id of Option in Menu
-	 * @param filter Superclass of first param component or "option" for menu options
-	 * @param packageSubPath Package of new component without base package name and start/end dots
-	 * @param superClass (Fragment/Controller etc.) superclass of new component
+	 *
+	 * @param arg Object witch calls Factory Method or String option for Fragments
+	 * @param subPackage Subpackage name without start and end dots
+	 * @param suffix Instance Class suffix e.g. Controller, Fragment
 	 * @return {@link Class} of new Component
 	 * @throws Exception
 	 */
-	protected static Class getComponentClass(String componentName, String filter, String packageSubPath,
-	                                         Class superClass)throws Exception{
-		String componentSubName = componentName.substring(0, 1).toUpperCase() +
-				componentName.substring(1, componentName.toLowerCase().indexOf(filter.toLowerCase()));
-		String strClassPath = "com.idurlen.foodordering." + packageSubPath.toLowerCase() + "." +
-				componentSubName + superClass.getSimpleName();
+	protected static Class getComponentClass(Object arg, String subPackage, String suffix) throws Exception{
+		String strArg = (arg instanceof String) ? (String) arg : arg.getClass().getSimpleName();
 
-		Log.d("COMPONENT", strClassPath);
-		return Class.forName(strClassPath);
+		strClassName = "com.idurlen.foodordering." + subPackage + "." + strArg.substring(0, 1).toUpperCase();
+
+		for(String strFilter : getFiltersList()){
+			if(strArg.toLowerCase().contains(strFilter)) {
+				strClassName += strArg.substring(1, strArg.toLowerCase().indexOf(strFilter.toLowerCase())) + suffix;
+				break;
+			}
+		}
+
+		return Class.forName(strClassName);
 	}
 
 
