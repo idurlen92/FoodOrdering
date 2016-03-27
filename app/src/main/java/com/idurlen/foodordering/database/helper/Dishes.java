@@ -1,7 +1,13 @@
 package com.idurlen.foodordering.database.helper;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.idurlen.foodordering.database.model.Dish;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -9,7 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 /**
  * @author Ivan Durlen
  */
-public class Dishes {
+public class Dishes extends HelperMethods{
 
 	public static final String TABLE_NAME = "dishes";
 
@@ -22,7 +28,6 @@ public class Dishes {
 
 
 	public static String getCreateTableStatement(){
-		//TODO: categories
 		return "CREATE TABLE " + TABLE_NAME + "(" +
 				COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 				COL_DISH_TYPE + " INTEGER REFERENCES " + DishTypes.TABLE_NAME +
@@ -55,12 +60,31 @@ public class Dishes {
 				values.put(COL_TITLE, astrTitles[j % astrTitles.length]);
 				values.put(COL_DISH_TYPE, (j % 6) + 1);
 				values.put(COL_PRICE, aintPrices[j % 7]);
+				values.put(COL_RESTAURANT_ID, i);
 				values.put(COL_DESCRIPTION, "Jako fino i pikantno jelo " + j);
 				db.insert(TABLE_NAME, null, values);
 			}
 		}
 		db.setTransactionSuccessful();
 		db.endTransaction();
+	}
+
+
+	public static List<Dish> getDishesOfRestaurant(SQLiteDatabase db, int restaurantId){
+		final String strStatement = "SELECT * FROM " + TABLE_NAME +
+				" WHERE " + COL_RESTAURANT_ID + " = ? " +
+				" ORDER BY " + COL_DISH_TYPE + ", " + COL_TITLE;
+
+		ArrayList<Dish> lDishes = new ArrayList<Dish>();
+		Cursor cursor = db.rawQuery(strStatement,  new String[]{Integer.toString(restaurantId)} );
+
+		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+			Dish dish = new Dish();
+			lDishes.add((Dish) extractFields(cursor, dish));
+		}
+
+		cursor.close();
+		return lDishes;
 	}
 
 

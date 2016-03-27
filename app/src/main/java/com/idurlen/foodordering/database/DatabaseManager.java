@@ -16,7 +16,7 @@ import com.idurlen.foodordering.database.helper.Users;
 public class DatabaseManager extends SQLiteOpenHelper {
 
 	private static final String DB_NAME = "orders.db";
-	private static final int DB_VERSION = 1;
+	private static final int DB_VERSION = 5;
 
 	private static DatabaseManager instance = null;
 
@@ -39,10 +39,23 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	}
 
 
+
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		recreateTables(db);
+	}
+
+
+	@Override
+	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		recreateTables(db);
+	}
+
+
+
+	private void recreateTables(SQLiteDatabase db){
 		String[] tableNames = new String[]{
-				Users.TABLE_NAME, Restaurants.TABLE_NAME, Dishes.TABLE_NAME, Orders.TABLE_NAME, OrderItems.TABLE_NAME  };//TODO: food types table
+				OrderItems.TABLE_NAME, Orders.TABLE_NAME, Dishes.TABLE_NAME, DishTypes.TABLE_NAME, Restaurants.TABLE_NAME, Users.TABLE_NAME};
 		for(String tableName : tableNames){
 			db.execSQL("DROP TABLE IF EXISTS " + tableName);
 		}
@@ -50,9 +63,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	}
 
 
+
+
 	public static synchronized DatabaseManager getInstance(Context context){
 		if(instance == null)
-			instance = new DatabaseManager(context);
+			instance = new DatabaseManager(context.getApplicationContext());
 		return instance;
 	}
 

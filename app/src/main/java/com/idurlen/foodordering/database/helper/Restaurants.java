@@ -3,7 +3,6 @@ package com.idurlen.foodordering.database.helper;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.idurlen.foodordering.database.model.Restaurant;
 
@@ -92,7 +91,6 @@ public class Restaurants extends HelperMethods{
 		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
 			Restaurant restaurant = new Restaurant();
 			lRestaurants.add((Restaurant) extractFields(cursor, restaurant));
-			Log.d("VALUE", restaurant.getId() + ": " + restaurant.getName());
 		}
 
 		cursor.close();

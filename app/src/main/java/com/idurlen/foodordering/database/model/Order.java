@@ -5,7 +5,7 @@ package com.idurlen.foodordering.database.model;
  */
 public class Order {
 
-	private boolean canceled;
+	private boolean isCanceled;
 
 	private int id;
 	private int userId;
@@ -18,39 +18,24 @@ public class Order {
 
 
 	public boolean isCanceled() {
-		return canceled;
+		return isCanceled;
 	}
-
-
-
 
 	public int getId() {
 		return id;
 	}
 
-
-
-
 	public int getUserId() {
 		return userId;
 	}
-
-
-
 
 	public int getRestaurantId() {
 		return restaurantId;
 	}
 
-
-
-
 	public String getOrderTime() {
 		return orderTime;
 	}
-
-
-
 
 	public String getOrderAddress() {
 		return orderAddress;
@@ -58,43 +43,26 @@ public class Order {
 
 
 
-
-	public void setCanceled(boolean canceled) {
-		this.canceled = canceled;
-	}
-
-
-
+	public void setIsCanceled(boolean isCanceled) { this.isCanceled = isCanceled; }
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
-
-
-
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-
-
-
 
 	public void setRestaurantId(int restaurantId) {
 		this.restaurantId = restaurantId;
 	}
 
-
-
-
 	public void setOrderTime(String orderTime) {
 		this.orderTime = orderTime;
 	}
 
-
-
-
 	public void setOrderAddress(String orderAddress) {
 		this.orderAddress = orderAddress;
 	}
+
 }

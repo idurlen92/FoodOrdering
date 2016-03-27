@@ -16,15 +16,9 @@ public class OrderItem {
 		return id;
 	}
 
-
-
-
 	public int getMenuId() {
 		return menuId;
 	}
-
-
-
 
 	public int getQuantity() {
 		return quantity;
@@ -32,22 +26,14 @@ public class OrderItem {
 
 
 
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-
-
+	public void setId(int id) {	this.id = id; }
 
 	public void setMenuId(int menuId) {
 		this.menuId = menuId;
 	}
 
-
-
-
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+
 }

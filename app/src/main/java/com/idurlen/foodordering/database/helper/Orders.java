@@ -12,7 +12,7 @@ public class Orders {
 	public static final String COL_RESTAURANT_ID = "restaurant_id";
 	public static final String COL_ORDER_TIME = "order_time";
 	public static final String COL_ORDER_ADDRESS = "order_address";
-	public static final String COL_CANCELED = "canceled";
+	public static final String COL_CANCELED = "is_canceled";
 
 
 	public static String getCreateTableStatement(){
