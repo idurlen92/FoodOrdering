@@ -22,6 +22,11 @@ import com.idurlen.foodordering.view.SettingsActivity;
  */
 public class MenuController implements NavigationView.OnNavigationItemSelectedListener {
 
+	public static final String[] OPTIONS_ADD_TO_STACK = new String[]{"restaurant"};
+
+	public static final String OPTION_HOME = "homeOption";
+	public static final String OPTION_RESTAURANT = "restaurantOption";
+
 	SessionManager sessionManager;
 
 	DrawerLayout drawer;

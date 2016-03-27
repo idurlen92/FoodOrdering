@@ -4,29 +4,22 @@
              android:layout_height="match_parent"
              android:orientation="vertical"
              android:gravity="center"
-             tools:context=".view.fragment.HomeFragment">
+             tools:context="com.idurlen.foodordering.view.fragment.RestaurantFragment">
+
     <ProgressBar
-        android:id="@+id/pbHome"
+        android:id="@+id/pbRestaurant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"/>
     <LinearLayout
-        android:id="@+id/layoutHome"
+        android:id="@+id/layoutRestaurant"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="gone">
         <TextView
-            android:id="@+id/tvHomeTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="PERO"/>
-        <ListView
-            android:id="@+id/lvRestaurants"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 

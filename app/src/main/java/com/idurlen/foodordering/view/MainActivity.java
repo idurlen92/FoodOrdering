@@ -25,9 +25,6 @@ import com.idurlen.foodordering.utils.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
 
-	public static final String OPTION_HOME = "homeOption";
-	public static final String OPTION_ORDER = "orderOption";
-
 	boolean isPopRequired = false;
 
 	SessionManager sessionManager;
@@ -59,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 			toggle.syncState();
 
 			MenuController menuController = new MenuController(this);
-			pushFragment(OPTION_HOME);
+			pushFragment(MenuController.OPTION_HOME);
 		}
 	}
 
@@ -118,9 +115,12 @@ public class MainActivity extends AppCompatActivity {
 		FragmentTransaction transaction = manager.beginTransaction();
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		transaction.replace(R.id.layout_main, fragment);
-		if(itemName.contains("order")) {
-			transaction.addToBackStack(null);
-			isPopRequired = true;
+
+		for(String sOption : MenuController.OPTIONS_ADD_TO_STACK){
+			if(itemName.contains(sOption)) {
+				transaction.addToBackStack(null);
+				isPopRequired = true;
+			}
 		}
 		transaction.commit();
 	}

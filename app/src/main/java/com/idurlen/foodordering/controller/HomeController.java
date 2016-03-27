@@ -1,19 +1,19 @@
 package com.idurlen.foodordering.controller;
 import android.app.Fragment;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ProgressBar;
+import android.widget.ListView;
 
 import com.idurlen.foodordering.database.DatabaseManager;
 import com.idurlen.foodordering.database.helper.Restaurants;
 import com.idurlen.foodordering.database.model.Restaurant;
+import com.idurlen.foodordering.utils.async.BackgroundOperation;
+import com.idurlen.foodordering.utils.async.BackgroundTask;
 import com.idurlen.foodordering.view.MainActivity;
 import com.idurlen.foodordering.view.fragment.HomeFragment;
 import com.idurlen.foodordering.view.ui.adapter.RestaurantsAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,12 +21,14 @@ import java.util.List;
 
 public class HomeController implements Controller, AdapterView.OnItemClickListener {
 
-	List<Restaurant> lRestaurants = new ArrayList<Restaurant>();
+	ListView lvRestaurants;
 
-	LoadRestaurants loadRestaurants;
+	BackgroundTask loadRestaurantsTask;
 	RestaurantsAdapter adapter;
 
 	DatabaseManager databaseManager;
+	SQLiteDatabase db;
+
 	MainActivity activity;
 	HomeFragment fragment;
 
@@ -34,19 +36,33 @@ public class HomeController implements Controller, AdapterView.OnItemClickListen
 	public HomeController(Fragment fragment){
 		this.fragment = (HomeFragment) fragment;
 		this.activity = (MainActivity) fragment.getActivity();
-		adapter = new RestaurantsAdapter(fragment);
 	}
 
 
 	@Override
 	public void activate() {
+		lvRestaurants = fragment.getLvRestaurants();
+
 		databaseManager = DatabaseManager.getInstance(activity);
-		SQLiteDatabase database = databaseManager.getReadableDatabase();
-		loadRestaurants = new LoadRestaurants(database, fragment.getLayoutHome(), fragment.getPbHome(), "Zagreb");
-		loadRestaurants.execute(null, null, null);
-		adapter.setList(loadRestaurants.lRestaurants);
-		fragment.getLvRestaurants().setAdapter(adapter);
-		setListeners();
+		db = databaseManager.getReadableDatabase();
+
+		loadRestaurantsTask = new BackgroundTask(fragment.getPbHome(), fragment.getLayoutHome(), new BackgroundOperation() {
+			@Override
+			public Object execInBackground() {
+				//TODO: Hardcoded!!!!
+				return Restaurants.getRetaurantsByCity(db, "Zagreb");
+			}
+
+			@Override
+			public void execAfter(Object object) {
+				adapter = new RestaurantsAdapter(fragment);
+				adapter.setList((List<Restaurant>) object);
+				fragment.getLvRestaurants().setAdapter(adapter);
+				setListeners();
+			}
+		});
+
+		loadRestaurantsTask.execute();
 	}
 
 
@@ -54,7 +70,7 @@ public class HomeController implements Controller, AdapterView.OnItemClickListen
 
 	@Override
 	public void setListeners() {
-		fragment.getLvRestaurants().setOnItemClickListener(this);
+		lvRestaurants.setOnItemClickListener(this);
 	}
 
 
@@ -64,54 +80,9 @@ public class HomeController implements Controller, AdapterView.OnItemClickListen
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		OrderController.restaurant = (Restaurant) adapter.getItem(position);
-		activity.pushFragment(MainActivity.OPTION_ORDER);
+		Restaurant restaurant = (Restaurant) adapter.getItem(position);
+		Messenger.getBundle().putInt(Messenger.KEY_RESTAURANT_ID, restaurant.getId());
+		activity.pushFragment(MenuController.OPTION_RESTAURANT);
 	}
-
-
-	/**
-	 * AsyncTask class for async loading of restaurants.
-	 * @author Ivan Durlen
-	 */
-	private class LoadRestaurants extends AsyncTask<Void, Void, Void> {
-
-		SQLiteDatabase db;
-		ProgressBar pb;
-		View view;
-		String cityName;
-
-		public List<Restaurant> lRestaurants = new ArrayList<Restaurant>();
-
-		public LoadRestaurants(SQLiteDatabase db, View view, ProgressBar pb, String cityName){
-			this.db = db;
-			this.view = view;
-			this.pb = pb;
-			this.cityName = cityName;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			pb.setVisibility(View.VISIBLE);
-			view.setVisibility(View.GONE);
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			lRestaurants.addAll(Restaurants.getRetaurantsByCity(db,  cityName));
-			return null;
-		}
-
-
-
-
-		@Override
-		protected void onPostExecute(Void aVoid) {
-			super.onPostExecute(aVoid);
-			pb.setVisibility(View.GONE);
-			view.setVisibility(View.VISIBLE);
-		}
-	}
-
 
 }
