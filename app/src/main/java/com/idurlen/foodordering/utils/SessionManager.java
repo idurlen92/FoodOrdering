@@ -17,13 +17,12 @@ public class SessionManager {
 
 	private static final String PREFERENCES_FILE_NAME = "session";
 
-	private static String lastActivityName = "";
-
 	private final String KEY_FIRST_NAME = "first_name";
 	private final String KEY_LAST_NAME = "last_name";
-	private final String KEY_LOGGED_IN = "is_logged_in";
+	private final String KEY_EMAIL = "email";
 	private final String KEY_USERNAME = "username";
 	private final String KEY_USER_ID = "user_id";
+	private final String KEY_LOGGED_IN = "is_logged_in";
 
 	private SharedPreferences preferences;
 

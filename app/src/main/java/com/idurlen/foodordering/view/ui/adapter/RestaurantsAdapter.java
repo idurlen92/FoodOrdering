@@ -78,7 +78,7 @@ public class RestaurantsAdapter extends BaseAdapter{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if(convertView == null)
-			convertView = inflater.inflate(R.layout.restaurant_item, null);
+			convertView = inflater.inflate(R.layout.list_restaurant, null);
 
 		TextView tvTitle = (TextView) convertView.findViewById(R.id.tvRestaurantItemTitle);
 		TextView tvWorking = (TextView) convertView.findViewById(R.id.tvRestaurantItemWorking);

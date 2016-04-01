@@ -43,15 +43,15 @@ public class HelperMethods {
 				}
 
 				if(cursor.getType(i) == Cursor.FIELD_TYPE_INTEGER){
-					Log.d("REFLECTION", "Integer setter called: " + methodName);
+					//Log.d("REFLECTION", "Integer setter called: " + methodName);
 					obj.getClass().getDeclaredMethod(methodName, int.class).invoke(obj, cursor.getInt(i));
 				}
 				else if(cursor.getType(i) == Cursor.FIELD_TYPE_FLOAT) {
-					Log.d("REFLECTION", "Float setter called: " + methodName);
+					//Log.d("REFLECTION", "Float setter called: " + methodName);
 					obj.getClass().getDeclaredMethod(methodName, float.class).invoke(obj, cursor.getFloat(i));
 				}
 				else if(cursor.getType(i) == Cursor.FIELD_TYPE_STRING) {
-					Log.d("REFLECTION", "String setter called: " + methodName);
+					//Log.d("REFLECTION", "String setter called: " + methodName);
 					obj.getClass().getDeclaredMethod(methodName, String.class).invoke(obj, cursor.getString(i));
 				}
 

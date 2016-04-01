@@ -55,10 +55,10 @@ public class Dishes extends HelperMethods{
 		ContentValues values = new ContentValues();
 
 		for(int i = 1; i < 41; i++) {
-			for(int j = 1; j < 16; j++) {
+			for(int j = 1; j < astrTitles.length; j++) {
 				values.clear();
 				values.put(COL_TITLE, astrTitles[j % astrTitles.length]);
-				values.put(COL_DISH_TYPE, (j % 6) + 1);
+				values.put(COL_DISH_TYPE, (j % 8) + 1);
 				values.put(COL_PRICE, aintPrices[j % 7]);
 				values.put(COL_RESTAURANT_ID, i);
 				values.put(COL_DESCRIPTION, "Jako fino i pikantno jelo " + j);

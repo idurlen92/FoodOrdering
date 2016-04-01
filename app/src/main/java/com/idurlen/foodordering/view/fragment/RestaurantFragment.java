@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.idurlen.foodordering.R;
@@ -23,6 +24,7 @@ public class RestaurantFragment extends Fragment {
 
 	LinearLayout layoutRestaurant;
 	ProgressBar pbRestaurant;
+	ListView lvMeals;
 
 
 	public RestaurantFragment() {
@@ -47,10 +49,14 @@ public class RestaurantFragment extends Fragment {
 
 
 	private void findViews(){
+		lvMeals = (ListView) getView().findViewById(R.id.lvMeals);
 		layoutRestaurant = (LinearLayout) getView().findViewById(R.id.layoutRestaurant);
 		pbRestaurant = (ProgressBar) getView().findViewById(R.id.pbRestaurant);
 	}
 
+	public ListView getLvMeals(){
+		return lvMeals;
+	}
 
 	public LinearLayout getLayoutRestaurant() {
 		return layoutRestaurant;

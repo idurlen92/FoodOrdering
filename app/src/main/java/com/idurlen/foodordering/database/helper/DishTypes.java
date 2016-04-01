@@ -1,7 +1,13 @@
 package com.idurlen.foodordering.database.helper;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.idurlen.foodordering.database.model.DishType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -9,7 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 /**
  * @author Ivan Durlen
  */
-public class DishTypes {
+public class DishTypes extends HelperMethods{
 
 	public static final String TABLE_NAME = "dish_types";
 
@@ -40,5 +46,27 @@ public class DishTypes {
 		db.setTransactionSuccessful();
 		db.endTransaction();
 	}
+
+
+	public static List<DishType> getDishTypesOfRestaurant(SQLiteDatabase db, int restaurantId){
+		final String strStatement = "SELECT * FROM " + TABLE_NAME +
+				" WHERE " + COL_ID + " IN " +
+					"(SELECT DISTINCT " + Dishes.COL_DISH_TYPE + " FROM " + Dishes.TABLE_NAME +
+					" WHERE " + Dishes.COL_RESTAURANT_ID + " = ?)" +
+				" ORDER BY " + COL_TYPE_NAME;
+
+		ArrayList<DishType> lDishTypes = new ArrayList<DishType>();
+		Cursor cursor = db.rawQuery(strStatement,  new String[]{Integer.toString(restaurantId)} );
+
+		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+			DishType type = new DishType();
+			lDishTypes.add((DishType) extractFields(cursor, type));
+		}
+
+		cursor.close();
+		return lDishTypes;
+	}
+
+
 
 }
