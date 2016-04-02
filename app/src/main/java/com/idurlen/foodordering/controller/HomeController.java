@@ -8,6 +8,7 @@ import android.widget.ListView;
 import com.idurlen.foodordering.database.DatabaseManager;
 import com.idurlen.foodordering.database.helper.Restaurants;
 import com.idurlen.foodordering.database.model.Restaurant;
+import com.idurlen.foodordering.utils.Messenger;
 import com.idurlen.foodordering.utils.async.BackgroundOperation;
 import com.idurlen.foodordering.utils.async.BackgroundTask;
 import com.idurlen.foodordering.view.MainActivity;
@@ -21,12 +22,13 @@ import java.util.List;
 
 public class HomeController implements Controller, AdapterView.OnItemClickListener {
 
+	private static String TITLE = "Restorani";
+
 	ListView lvRestaurants;
 
 	BackgroundTask loadRestaurantsTask;
 	RestaurantsAdapter adapter;
 
-	DatabaseManager databaseManager;
 	SQLiteDatabase db;
 
 	MainActivity activity;
@@ -41,12 +43,12 @@ public class HomeController implements Controller, AdapterView.OnItemClickListen
 
 	@Override
 	public void activate() {
-		lvRestaurants = fragment.getLvRestaurants();
+		activity.getSupportActionBar().setTitle(TITLE);
+		db = DatabaseManager.getInstance(activity).getReadableDatabase();
 
-		databaseManager = DatabaseManager.getInstance(activity);
-		db = databaseManager.getReadableDatabase();
+		lvRestaurants = fragment.getListView();
 
-		loadRestaurantsTask = new BackgroundTask(fragment.getPbHome(), fragment.getLayoutHome(), new BackgroundOperation() {
+		loadRestaurantsTask = new BackgroundTask(fragment.getProgressBar(), fragment.getLayoutContainer(), new BackgroundOperation() {
 			@Override
 			public Object execInBackground() {
 				//TODO: Hardcoded!!!!
@@ -55,9 +57,10 @@ public class HomeController implements Controller, AdapterView.OnItemClickListen
 
 			@Override
 			public void execAfter(Object object) {
+				db.close();
 				adapter = new RestaurantsAdapter(fragment);
 				adapter.setList((List<Restaurant>) object);
-				fragment.getLvRestaurants().setAdapter(adapter);
+				fragment.getListView().setAdapter(adapter);
 				setListeners();
 			}
 		});
@@ -81,7 +84,8 @@ public class HomeController implements Controller, AdapterView.OnItemClickListen
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Restaurant restaurant = (Restaurant) adapter.getItem(position);
-		Messenger.getBundle().putInt(Messenger.KEY_RESTAURANT_ID, restaurant.getId());
+		Messenger.clearAll();
+		Messenger.putObject(Messenger.KEY_RESTAURANT_OBJECT, restaurant);
 		activity.pushFragment(MenuController.OPTION_RESTAURANT);
 	}
 

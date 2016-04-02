@@ -19,6 +19,9 @@
     <!-- ######### Main Activity ######### -->
     <string name="title_activity_main"></string>
 
+    <!-- ########## Fragment Restaurant ########## -->
+    <string name="action_order">Naruči</string>
+
     <!-- ######### Navigation drawer ######### -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

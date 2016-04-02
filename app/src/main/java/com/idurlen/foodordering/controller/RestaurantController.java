@@ -12,8 +12,11 @@ import com.idurlen.foodordering.database.helper.DishTypes;
 import com.idurlen.foodordering.database.helper.Dishes;
 import com.idurlen.foodordering.database.model.Dish;
 import com.idurlen.foodordering.database.model.DishType;
+import com.idurlen.foodordering.database.model.Restaurant;
+import com.idurlen.foodordering.utils.Messenger;
 import com.idurlen.foodordering.utils.async.BackgroundOperation;
 import com.idurlen.foodordering.utils.async.BackgroundTask;
+import com.idurlen.foodordering.view.MainActivity;
 import com.idurlen.foodordering.view.fragment.RestaurantFragment;
 import com.idurlen.foodordering.view.ui.adapter.DishesAdapter;
 
@@ -30,31 +33,32 @@ import java.util.Map;
  */
 public class RestaurantController implements Controller{
 
-	int restaurantId;
+	private Restaurant restaurant;
 
 	DishesAdapter adapter;
-
-	DatabaseManager databaseManager;
 	SQLiteDatabase db;
+
+	MainActivity activity;
 	RestaurantFragment fragment;
 
 	public RestaurantController(Fragment fragment){
 		this.fragment = (RestaurantFragment) fragment;
-		restaurantId = Messenger.getBundle().getInt(Messenger.KEY_RESTAURANT_ID);
-		Log.d("RESTAURANT ID", Integer.toString(restaurantId));
+		this.activity = (MainActivity) fragment.getActivity();
+		restaurant = (Restaurant) Messenger.getObject(Messenger.KEY_RESTAURANT_OBJECT);
+		Log.d("RESTAURANT ID", Integer.toString(restaurant.getId()));
 	}
 
 
 	@Override
 	public void activate() {
-		databaseManager = DatabaseManager.getInstance(fragment.getActivity());
-		db = databaseManager.getReadableDatabase();
+		activity.getSupportActionBar().setTitle(restaurant.getName());
+		db = DatabaseManager.getInstance(fragment.getActivity()).getReadableDatabase();
 
-		BackgroundTask task = new BackgroundTask(fragment.getPbRestaurant(), fragment.getLayoutRestaurant(), new BackgroundOperation() {
+		BackgroundTask task = new BackgroundTask(fragment.getProgressBar(), fragment.getLayoutContainer(), new BackgroundOperation() {
 			@Override
 			public Object execInBackground() {
-				List<DishType> lDishTypes = DishTypes.getDishTypesOfRestaurant(db, restaurantId);
-				List<Dish> lDishes = Dishes.getDishesOfRestaurant(db, restaurantId);
+				List<DishType> lDishTypes = DishTypes.getDishTypesOfRestaurant(db, restaurant.getId());
+				List<Dish> lDishes = Dishes.getDishesOfRestaurant(db, restaurant.getId());
 				return arrangeInMap(lDishTypes, lDishes);
 			}
 
@@ -63,7 +67,7 @@ public class RestaurantController implements Controller{
 				db.close();
 				adapter = new DishesAdapter((LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE),
 						(Map<DishType, List<Dish>>) object);
-				fragment.getLvMeals().setAdapter(adapter);
+				setListeners();
 			}
 		});
 
@@ -71,18 +75,18 @@ public class RestaurantController implements Controller{
 	}
 
 
-
-
 	@Override
 	public void setListeners() {
-
+		fragment.getBOrder().setOnClickListener(this);
+		fragment.getListView().setAdapter(adapter);
 	}
-
-
 
 
 	@Override
 	public void onClick(View v) {
+		Messenger.clearAll();
+		Messenger.putObject(Messenger.KEY_SELECTED_DISHES_MAP, adapter.getMDishQuantities());
+		((MainActivity) fragment.getActivity()).pushFragment(MenuController.OPTION_CONFIRM_ORDER);
 	}
 
 

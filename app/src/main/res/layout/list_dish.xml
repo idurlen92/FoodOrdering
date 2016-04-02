@@ -19,13 +19,13 @@
             android:textColor="@color/colorPrimary"
             android:text="Chimichunga con pollo\n35.00kn"/>
         <ImageButton
-            android:id="@+id/bAdd"
+            android:id="@+id/ibAdd"
             android:src="@drawable/ic_add"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <ImageButton
-            android:id="@+id/bRemove"
+            android:id="@+id/ibRemove"
             android:src="@drawable/ic_remove"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"

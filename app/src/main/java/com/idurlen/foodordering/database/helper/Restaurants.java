@@ -81,12 +81,12 @@ public class Restaurants extends HelperMethods{
 
 
 	public static List<Restaurant> getRetaurantsByCity(SQLiteDatabase db, String city){
-		final String strStatement = "SELECT * FROM " + TABLE_NAME +
+		final String sQuery = "SELECT * FROM " + TABLE_NAME +
 				" WHERE " + COL_CITY + " LIKE ? " +
 				" ORDER BY " + COL_NAME;
 
 		ArrayList<Restaurant> lRestaurants = new ArrayList<Restaurant>();
-		Cursor cursor = db.rawQuery(strStatement,  new String[]{"%" + city + "%"});
+		Cursor cursor = db.rawQuery(sQuery,  new String[]{"%" + city + "%"});
 
 		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
 			Restaurant restaurant = new Restaurant();
@@ -95,6 +95,21 @@ public class Restaurants extends HelperMethods{
 
 		cursor.close();
 		return lRestaurants;
+	}
+
+
+
+	public static Restaurant getRestaurantById(SQLiteDatabase db, int id){
+		final String sQuery = "SELECT * FROM " + TABLE_NAME +
+				"WHERE " + COL_ID + " = ?";
+
+		Cursor cursor = db.rawQuery(sQuery,  new String[]{Integer.toString(id)});
+		cursor.moveToFirst();
+
+		Restaurant restaurant = (Restaurant) extractFields(cursor, new Restaurant());
+
+		cursor.close();
+		return restaurant;
 	}
 
 }

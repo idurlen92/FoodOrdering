@@ -8,6 +8,7 @@ import com.idurlen.foodordering.database.model.Dish;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 
@@ -86,6 +87,33 @@ public class Dishes extends HelperMethods{
 		cursor.close();
 		return lDishes;
 	}
+
+
+	public static List<Dish> getDishesById(SQLiteDatabase db, Set<Integer> sDishIds){
+		final String strStatement = "SELECT * FROM " + TABLE_NAME +
+				" WHERE " + COL_ID + " IN(?)" +
+				" ORDER BY " + COL_DISH_TYPE + ", " + COL_TITLE;
+
+
+		String strDishIds = "";
+		int k = 0;
+		for(Integer id : sDishIds){
+			strDishIds += Integer.toString(id) + ( k++ < (sDishIds.size() - 1) ? ", " : "");
+		}
+
+		ArrayList<Dish> lDishes = new ArrayList<Dish>();
+		Cursor cursor = db.rawQuery(strStatement,  new String[]{ strDishIds });
+
+		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+			Dish dish = new Dish();
+			lDishes.add((Dish) extractFields(cursor, dish));
+		}
+
+		cursor.close();
+		return lDishes;
+	}
+
+
 
 
 }

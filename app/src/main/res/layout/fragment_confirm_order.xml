@@ -4,30 +4,21 @@
              android:layout_height="match_parent"
              android:orientation="vertical"
              android:gravity="center"
-             tools:context="com.idurlen.foodordering.view.fragment.RestaurantFragment">
+             tools:context="com.idurlen.foodordering.view.fragment.ConfirmOrderFragment">
 
     <ProgressBar
-        android:id="@+id/pbRestaurant"
+        android:id="@+id/pbConfirmOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"/>
     <LinearLayout
-        android:id="@+id/layoutRestaurant"
+        android:id="@+id/layoutConfirmOrder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="visible">
-        <ListView
-            android:id="@+id/lvMeals"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-        <Button
-            android:id="@+id/bOrder"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:text="@string/action_order"/>
+        android:visibility="gone">
+        <!-- TODO !!!!! -->
     </LinearLayout>
 
 </LinearLayout>

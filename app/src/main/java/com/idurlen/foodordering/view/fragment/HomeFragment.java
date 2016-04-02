@@ -15,7 +15,6 @@ import com.idurlen.foodordering.R;
 import com.idurlen.foodordering.controller.HomeController;
 import com.idurlen.foodordering.factory.ControllerFactory;
 import com.idurlen.foodordering.utils.SessionManager;
-import com.idurlen.foodordering.view.MainActivity;
 
 
 /**
@@ -26,18 +25,15 @@ public class HomeFragment extends Fragment{
 	SessionManager sessionManager;
 
 	HomeController controller;
-	MainActivity activity;
 
-	LinearLayout layoutHome;
-	ListView lvRestaurants;
-	ProgressBar pbHome;
+	LinearLayout layoutContainer;
+	ListView listView;
+	ProgressBar progressBar;
 	TextView tvTitle;
 
 
 	public HomeFragment() {
-
 	}
-
 
 
 	@Override
@@ -46,8 +42,6 @@ public class HomeFragment extends Fragment{
 		View view = inflater.inflate(R.layout.fragment_home, container, false);
 		return view;
 	}
-
-
 
 
 	@Override
@@ -60,16 +54,16 @@ public class HomeFragment extends Fragment{
 	}
 
 
-	public LinearLayout getLayoutHome() {
-		return layoutHome;
+	public LinearLayout getLayoutContainer() {
+		return layoutContainer;
 	}
 
-	public ListView getLvRestaurants() {
-		return lvRestaurants;
+	public ListView getListView() {
+		return listView;
 	}
 
-	public ProgressBar getPbHome() {
-		return pbHome;
+	public ProgressBar getProgressBar() {
+		return progressBar;
 	}
 
 	public TextView getTvTitle() {
@@ -78,9 +72,9 @@ public class HomeFragment extends Fragment{
 
 
 	private void findViews(){
-		layoutHome = (LinearLayout) getView().findViewById(R.id.layoutHome);
-		lvRestaurants = (ListView) getView().findViewById(R.id.lvRestaurants);
-		pbHome = (ProgressBar) getView().findViewById(R.id.pbHome);
+		layoutContainer = (LinearLayout) getView().findViewById(R.id.layoutHome);
+		listView = (ListView) getView().findViewById(R.id.lvRestaurants);
+		progressBar = (ProgressBar) getView().findViewById(R.id.pbHome);
 		tvTitle = (TextView) getView().findViewById(R.id.tvHomeTitle);
 
 		tvTitle.setText("Restorani za grad: " /*TODO: + sessionManager.getCity()*/);

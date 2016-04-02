@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -22,9 +23,10 @@ import com.idurlen.foodordering.factory.ControllerFactory;
  */
 public class RestaurantFragment extends Fragment {
 
-	LinearLayout layoutRestaurant;
-	ProgressBar pbRestaurant;
-	ListView lvMeals;
+	Button bOrder;
+	LinearLayout layoutContainer;
+	ProgressBar progressBar;
+	ListView listView;
 
 
 	public RestaurantFragment() {
@@ -49,21 +51,24 @@ public class RestaurantFragment extends Fragment {
 
 
 	private void findViews(){
-		lvMeals = (ListView) getView().findViewById(R.id.lvMeals);
-		layoutRestaurant = (LinearLayout) getView().findViewById(R.id.layoutRestaurant);
-		pbRestaurant = (ProgressBar) getView().findViewById(R.id.pbRestaurant);
+		bOrder = (Button) getView().findViewById(R.id.bOrder);
+		listView = (ListView) getView().findViewById(R.id.lvMeals);
+		layoutContainer = (LinearLayout) getView().findViewById(R.id.layoutRestaurant);
+		progressBar = (ProgressBar) getView().findViewById(R.id.pbRestaurant);
 	}
 
-	public ListView getLvMeals(){
-		return lvMeals;
+	public Button getBOrder(){ return bOrder; }
+
+	public ListView getListView(){
+		return listView;
 	}
 
-	public LinearLayout getLayoutRestaurant() {
-		return layoutRestaurant;
+	public LinearLayout getLayoutContainer() {
+		return layoutContainer;
 	}
 
-	public ProgressBar getPbRestaurant() {
-		return pbRestaurant;
+	public ProgressBar getProgressBar() {
+		return progressBar;
 	}
 
 }
