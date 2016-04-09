@@ -11,6 +11,7 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String password;
 	private String birthDate;
 	private String city;
 	private String address;
@@ -31,6 +32,10 @@ public class User {
 
 	public String getEmail() {
 		return email;
+	}
+
+	public String getPassword(){
+		return password;
 	}
 
 	public String getBirthDate() {
@@ -61,6 +66,10 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public void setPassword(String password){
+		this.password = password;
 	}
 
 	public void setBirthDate(String birthDate) {

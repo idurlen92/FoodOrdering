@@ -8,7 +8,7 @@ public class OrderItems {
 	public static final String TABLE_NAME = "order_items";
 
 	public static final String COL_ORDER_ID = "order_id";
-	public static final String COL_MENU_ID = "menu_id";
+	public static final String COL_MENU_ID = "dish_id";
 	public static final String COL_QUANTITY = "quantity";
 
 

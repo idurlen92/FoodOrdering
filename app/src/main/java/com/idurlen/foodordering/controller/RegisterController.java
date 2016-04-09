@@ -14,7 +14,12 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.idurlen.foodordering.R;
+import com.idurlen.foodordering.database.model.User;
+import com.idurlen.foodordering.net.RestService;
+import com.idurlen.foodordering.net.UsersRequest;
 import com.idurlen.foodordering.utils.StringUtils;
+import com.idurlen.foodordering.utils.async.BackgroundOperation;
+import com.idurlen.foodordering.utils.async.BackgroundTask;
 import com.idurlen.foodordering.view.RegisterActivity;
 import com.idurlen.foodordering.view.ui.DatePicker;
 
@@ -53,7 +58,7 @@ public class RegisterController implements Controller, View.OnTouchListener{
 
 	Spinner sCity;
 
-
+	BackgroundTask registerTask;
 	RegisterActivity activity;
 
 
@@ -195,11 +200,48 @@ public class RegisterController implements Controller, View.OnTouchListener{
 		}
 
 		if(isDataValid){
-			Snackbar.make(view, "Ispravni podaci!", Snackbar.LENGTH_SHORT).show();
+			User user = new User();
+			user.setFirstName(etFirstName.getText().toString());
+			user.setLastName(etLastName.getText().toString());
+			user.setEmail(etEmail.getText().toString());
+			user.setPassword(etPassword.getText().toString());
+			user.setCity(sCity.getSelectedItem().toString());
+			user.setAddress(etAddress.getText().toString());
+			//TODO user.setBirthDate(etBirthDate.getText().toString());
+			registerUser(user);
 		}
 		else {
 			Snackbar.make(view, MESSAGE_ERROR, Snackbar.LENGTH_SHORT).show();
 		}
+	}
+
+
+	private void registerUser(final User user){
+		registerTask = new BackgroundTask(activity, "Registracija", new BackgroundOperation() {
+			@Override
+			public Object execInBackground() {
+				int result = RestService.REST_INSERT_ERROR;
+				try{
+					result = UsersRequest.insertUser(user);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+				return result;
+			}
+
+			@Override
+			public void execAfter(Object object) {
+				if((int) object == RestService.REST_INSERT_ERROR){
+					Snackbar.make(bRegister, "Greška, pokušajte ponovno!", Snackbar.LENGTH_SHORT).show();
+				}
+				else{
+					Snackbar.make(bRegister, "Registracija uspješna!", Snackbar.LENGTH_SHORT).show();
+				}
+			}
+		});
+
+		registerTask.execute();
 	}
 
 }

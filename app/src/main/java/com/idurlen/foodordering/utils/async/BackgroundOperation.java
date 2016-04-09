@@ -4,19 +4,24 @@ package com.idurlen.foodordering.utils.async;
  * Interface witch is used to define background operation in {@link BackgroundTask}
  * @author Ivan Durlen
  */
-public interface BackgroundOperation {
+public abstract class BackgroundOperation {
 
+
+	/**
+	 * Optional method witch is called in {@link BackgroundTask} method onPreExecute.
+	 */
+	public void execBefore(){/* Not implemented */}
 
 	/**
 	 * Method witch is called in {@link BackgroundTask} method doInBackground.
 	 * @return
 	 */
-	Object execInBackground();
+	 public abstract Object execInBackground();
 
 	/**
 	 * Method witch is called in {@link BackgroundTask} method onPostExecute.
 	 * @param object
 	 */
-	void execAfter(Object object);
+	public void execAfter(Object object){/* NOT implemented */}
 
 }

@@ -26,10 +26,10 @@ public class Restaurants extends HelperMethods{
 	public static final String COL_DESCRIPTION = "description";
 	public static final String COL_EMAIL = "email";
 	public static final String COL_PHONE = "phone";
-	public static final String COL_WORKS_FROM = "works_from";
-	public static final String COL_WORKS_TO = "works_to";
-	public static final String COL_ORDERS_FROM = "orders_from";
-	public static final String COL_ORDERS_TO = "orders_to";
+	public static final String COL_WORKS_FROM = "working_from";
+	public static final String COL_WORKS_TO = "working_until";
+	public static final String COL_ORDERS_FROM = "ordering_from";
+	public static final String COL_ORDERS_TO = "ordering_until";
 
 
 	public static String getCreateTableStatement(){

@@ -2,6 +2,7 @@ package com.idurlen.foodordering.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.idurlen.foodordering.database.helper.DishTypes;
 import com.idurlen.foodordering.database.helper.Dishes;
@@ -16,7 +17,7 @@ import com.idurlen.foodordering.database.helper.Users;
 public class DatabaseManager extends SQLiteOpenHelper {
 
 	private static final String DB_NAME = "orders.db";
-	private static final int DB_VERSION = 5;
+	private static final int DB_VERSION = 2;
 
 	private static DatabaseManager instance = null;
 
@@ -42,12 +43,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.d("DB MANGER", "Upgrading database");
 		recreateTables(db);
 	}
 
 
 	@Override
 	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.d("DB MANGER", "Downgrading database");
 		recreateTables(db);
 	}
 
@@ -65,6 +68,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
 
+	/**
+	 * Returns {@code DatabaseManager} instance.
+	 * @param context current Context.
+	 * @return {@code DatabaseManager}
+	 */
 	public static synchronized DatabaseManager getInstance(Context context){
 		if(instance == null)
 			instance = new DatabaseManager(context.getApplicationContext());

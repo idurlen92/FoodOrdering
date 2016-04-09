@@ -25,6 +25,7 @@ import com.idurlen.foodordering.utils.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
 
+	final String BACK_STACK_NAME = "food_ordering_back_stack_1992";
 	final String OPTION_HOME = "homeOption";
 
 	boolean isPopRequired = false;
@@ -106,22 +107,43 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 
+
+	/**
+	 * Calls {@code pushFragment(String itemName, boolean isClearBackStack)} with {@code isClearBackStack}
+	 * set to false
+	 * @param itemName
+	 */
 	public void pushFragment(String itemName){
-		FragmentManager manager = getFragmentManager();
+		pushFragment(itemName, false);
+	}
+
+
+	/**
+	 * Adds fragment to Back stack and replaces current fragment with new one.
+	 * @param itemName
+	 * @param isClearBackStack if true back stack will be cleared
+	 */
+	public void pushFragment(String itemName, boolean isClearBackStack){
 		Fragment fragment = FragmentFactory.newInstance(itemName);
 		if(fragment == null){
 			Log.e("NO FRAGMENT", "No Fragment for: " + itemName);
 			return;
 		}
 
-		FragmentTransaction transaction = manager.beginTransaction();
+		FragmentManager fragmentManager = getFragmentManager();
+
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
 		transaction.replace(R.id.layout_main, fragment);
 
-		if(!itemName.contains(OPTION_HOME)) {
-				transaction.addToBackStack(null);
+		if(isClearBackStack){
+			fragmentManager.popBackStack(BACK_STACK_NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		}
+		else if(!itemName.contains(OPTION_HOME)) {
+				transaction.addToBackStack(BACK_STACK_NAME);
 				isPopRequired = true;
 		}
+
 		transaction.commit();
 	}
 

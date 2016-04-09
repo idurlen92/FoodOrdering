@@ -2,7 +2,7 @@ package com.idurlen.foodordering.controller;
 
 import android.app.Fragment;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.idurlen.foodordering.database.DatabaseManager;
@@ -26,6 +26,8 @@ import java.util.Map;
  */
 public class ConfirmOrderController implements Controller {
 
+	final String TITLE_ACTIONBAR = "Potvrda narudžbe";
+
 	SQLiteDatabase db;
 
 	List<Dish> lSelectedDishes;
@@ -44,17 +46,14 @@ public class ConfirmOrderController implements Controller {
 
 	@Override
 	public void activate() {
+		((AppCompatActivity) fragment.getActivity()).getSupportActionBar().setTitle(TITLE_ACTIONBAR);
 		db = DatabaseManager.getInstance(fragment.getActivity()).getReadableDatabase();
 
 		task = new BackgroundTask(fragment.getProgressBar(), fragment.getLayoutContainer(),
 				new BackgroundOperation() {
 					@Override
 					public Object execInBackground() {
-						lSelectedDishes.addAll(Dishes.getDishesById(db, mDishQuantities.keySet()));
-						for(Dish dish : lSelectedDishes){
-							Log.e("DISH", dish.getTitle() + ": " + mDishQuantities.get(dish.getId()));
-						}
-						return null;
+						return Dishes.getDishesById(db, mDishQuantities.keySet());
 					}
 
 					@Override

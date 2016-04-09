@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.controller.HomeController;
 import com.idurlen.foodordering.factory.ControllerFactory;
 import com.idurlen.foodordering.utils.SessionManager;
 
@@ -23,8 +22,6 @@ import com.idurlen.foodordering.utils.SessionManager;
 public class HomeFragment extends Fragment{
 
 	SessionManager sessionManager;
-
-	HomeController controller;
 
 	LinearLayout layoutContainer;
 	ListView listView;
@@ -49,8 +46,7 @@ public class HomeFragment extends Fragment{
 		super.onActivityCreated(savedInstanceState);
 		sessionManager = SessionManager.getInstance(getActivity());
 		findViews();
-		controller = (HomeController) ControllerFactory.newInstance(this);
-		controller.activate();
+		ControllerFactory.newInstance(this).activate();
 	}
 
 

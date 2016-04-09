@@ -53,8 +53,6 @@ public class StringUtils{
 	}
 
 
-
-
 	/**
 	 * Formats date String from given parameters.
 	 * @param hour

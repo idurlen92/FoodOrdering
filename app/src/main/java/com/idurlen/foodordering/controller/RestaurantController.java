@@ -101,7 +101,7 @@ public class RestaurantController implements Controller{
 		Log.d("DISH TYPES", Integer.toString(mDishesByType.keySet().size()));
 
 		for(Dish dish : lDishes){
-			mDishesByType.get(mIdToDishType.get(dish.getDishType())).add(dish);
+			mDishesByType.get(mIdToDishType.get(dish.getDishTypeId())).add(dish);
 		}
 		Log.d("DISHES", Integer.toString(lDishes.size()));
 

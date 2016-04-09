@@ -2,14 +2,11 @@ package com.idurlen.foodordering.net;
 
 import android.util.Log;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
+import com.idurlen.foodordering.database.helper.Users;
 import com.idurlen.foodordering.database.model.User;
 
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 
 
@@ -20,37 +17,58 @@ import java.net.URL;
 public class UsersRequest {
 
 
-	public static User getUser(String email, String password){
-		//TODO: business logic
-		User user = new User();
-		user.setId(5);
-		user.setEmail("ivan@example.com");
-		user.setFirstName("Ivan");
-		user.setLastName("Durlen");
-		user.setAddress("Savska cesta 106");
-		user.setCity("Zagreb");
-		user.setBirthDate("1992-10-30");
+	/**
+	 *
+	 * @param email
+	 * @param password
+	 * @return
+	 * @throws Exception
+	 */
+	public static User getUser(String email, String password) throws Exception{
+		final String SERVICE_URL = "users.php";
+		final String ELEMENT_USER = "user";
 
-		return user;
+		Map<String, String> mRequestParams = new HashMap<>();
+		mRequestParams.put(Users.COL_EMAIL, email);
+		mRequestParams.put(Users.COL_PASSWORD, password);
+
+		RestService service = new RestService(RestService.HttpMethod.GET, SERVICE_URL, mRequestParams);
+		service.call();
+
+		JSONResponse jsonResponse = service.getJSONResponse();
+		service.close();
+
+		if(jsonResponse.isError()){
+			Log.e("REST", jsonResponse.getErrorMessage());
+			return null;
+		}
+		return (User) jsonResponse.getDataObject(ELEMENT_USER, User.class);
 	}
 
 
-	public static void test(){
-		try {
-			URL url = new URL("http://httpbin.org/get");
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("GET");
-			connection.connect();
+	public static int insertUser(User user) throws Exception{
+		final String SERVICE_URL = "users.php";
 
-			if(connection.getResponseCode() == 200){
-				JsonReader reader = new JsonReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-				JsonElement elem = new JsonParser().parse(reader);
-				Log.d("JSON", elem.toString());
-			}
+		Map<String, String> mRequestParams = new HashMap<>();
+		mRequestParams.put(Users.COL_FIRST_NAME, user.getFirstName());
+		mRequestParams.put(Users.COL_LAST_NAME, user.getLastName());
+		mRequestParams.put(Users.COL_EMAIL, user.getEmail());
+		mRequestParams.put(Users.COL_PASSWORD, user.getPassword());
+		mRequestParams.put(Users.COL_CITY, user.getCity());
+		mRequestParams.put(Users.COL_ADDRESS, user.getAddress());
+		//TODO: mRequestParams.put(Users.COL_BIRTH_DATE, user.getBirthDate());
+
+		RestService service = new RestService(RestService.HttpMethod.POST, SERVICE_URL, mRequestParams);
+		service.call();
+
+		JSONResponse jsonResponse = service.getJSONResponse();
+		service.close();
+
+		if(jsonResponse.isError()){
+			Log.e("REST", jsonResponse.getErrorMessage());
+			return RestService.REST_INSERT_ERROR;
 		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
+		return (int) jsonResponse.getDataObject(JSONResponse.KEY_INSERT_ID, int.class);
 	}
 
 

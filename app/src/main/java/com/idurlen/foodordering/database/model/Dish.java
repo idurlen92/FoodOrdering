@@ -6,7 +6,7 @@ package com.idurlen.foodordering.database.model;
 public class Dish {
 
 	private int id;
-	private int dishType;
+	private int dishTypeId;
 	private int restaurantId;
 
 	private float price;
@@ -20,7 +20,7 @@ public class Dish {
 		return id;
 	}
 
-	public int getDishType() { return dishType; }
+	public int getDishTypeId() { return dishTypeId; }
 
 	public int getRestaurantId() {
 		return restaurantId;
@@ -44,7 +44,7 @@ public class Dish {
 		this.id = id;
 	}
 
-	public void setDishType(int dishType) { this.dishType = dishType; }
+	public void setDishTypeId(int dishTypeId) { this.dishTypeId = dishTypeId; }
 
 	public void setRestaurantId(int restaurantId) {
 		this.restaurantId = restaurantId;

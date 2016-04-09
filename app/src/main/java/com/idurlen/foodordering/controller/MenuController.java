@@ -61,7 +61,7 @@ public class MenuController implements NavigationView.OnNavigationItemSelectedLi
 			redirectToActivity(SettingsActivity.class, false);
 		}
 		else{
-			activity.pushFragment(itemName);
+			activity.pushFragment(itemName, true);
 		}
 
 		drawer.closeDrawer(GravityCompat.START);

@@ -14,6 +14,7 @@ public class Users {
 	public static final String COL_CITY = "city";
 	public static final String COL_ADDRESS = "address";
 	public static final String COL_EMAIL = "email";
+	public static final String COL_PASSWORD = "password";
 
 	public static String getCreateTableStatement(){
 		return "CREATE TABLE " + TABLE_NAME + "(" +

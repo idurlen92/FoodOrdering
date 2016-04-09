@@ -12,14 +12,12 @@ public class Order {
 	private int restaurantId;
 
 	private String orderTime;
+	private String orderCity;
 	private String orderAddress;
 
 
 
-
-	public boolean isCanceled() {
-		return isCanceled;
-	}
+	public boolean isCanceled() { return isCanceled; }
 
 	public int getId() {
 		return id;
@@ -36,6 +34,8 @@ public class Order {
 	public String getOrderTime() {
 		return orderTime;
 	}
+
+	public String getOrderCity() { return orderCity; }
 
 	public String getOrderAddress() {
 		return orderAddress;
@@ -60,6 +60,8 @@ public class Order {
 	public void setOrderTime(String orderTime) {
 		this.orderTime = orderTime;
 	}
+
+	public void setOrderCity(String orderCity) { this.orderCity = orderCity; }
 
 	public void setOrderAddress(String orderAddress) {
 		this.orderAddress = orderAddress;

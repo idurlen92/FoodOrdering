@@ -21,7 +21,7 @@ public class Dishes extends HelperMethods{
 	public static final String TABLE_NAME = "dishes";
 
 	public static final String COL_ID = "id";
-	public static final String COL_DISH_TYPE = "dish_type";
+	public static final String COL_DISH_TYPE = "dish_type_id";
 	public static final String COL_RESTAURANT_ID = "restaurant_id";
 	public static final String COL_TITLE = "title";
 	public static final String COL_PRICE = "price";

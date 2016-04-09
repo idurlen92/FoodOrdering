@@ -1,6 +1,7 @@
 package com.idurlen.foodordering.controller;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
@@ -8,7 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.idurlen.foodordering.database.model.User;
+import com.idurlen.foodordering.net.UsersRequest;
 import com.idurlen.foodordering.utils.SessionManager;
+import com.idurlen.foodordering.utils.async.BackgroundOperation;
+import com.idurlen.foodordering.utils.async.BackgroundTask;
 import com.idurlen.foodordering.view.LoginActivity;
 import com.idurlen.foodordering.view.MainActivity;
 import com.idurlen.foodordering.view.RegisterActivity;
@@ -21,11 +26,8 @@ import com.idurlen.foodordering.view.RegisterActivity;
  */
 public class LoginController implements Controller{
 
-	private final String TEST_USERNAME = "user";
-	private final String TEST_PASSWORD = "0000";
 	private final String MSG_EMPTY = "Unesite vrijednost";
-	private final String MSG_WRONG_USERNAME = "Korisnik nije pronađen";
-	private final String MSG_WRONG_PASSWORD = "Kriva lozinka";
+	private final String MSG_NOT_FOUND = "Krivo kor. ime ili lozinka";
 
 	private EditText etUsername;
 	private EditText etPassword;
@@ -33,7 +35,8 @@ public class LoginController implements Controller{
 	private TextInputLayout layoutUsername;
 	private TextInputLayout layoutPassword;
 
-	SessionManager sessionManager;
+	private BackgroundTask loginTask;
+	private SessionManager sessionManager;
 
 	private LoginActivity activity;
 
@@ -80,20 +83,43 @@ public class LoginController implements Controller{
 
 
 	private void handleLogin(){
-		String strUsername = etUsername.getText().toString();
-		String strPassword = etPassword.getText().toString();
-		boolean isValidUsername = (etUsername.getText().toString().compareTo(TEST_USERNAME) == 0);
-		boolean isValidPassword = (etPassword.getText().toString().compareTo(TEST_PASSWORD) == 0);
+		//TODO: errors!!!
+		final String sUsername = etUsername.getText().toString();
+		final String sPassword = etPassword.getText().toString();
 
-		layoutUsername.setError(strUsername.isEmpty() ? MSG_EMPTY :
-				(isValidUsername ? null : MSG_WRONG_USERNAME));
-		layoutPassword.setError(strPassword.isEmpty() ? MSG_EMPTY :
-				(isValidUsername && ! isValidPassword ? MSG_WRONG_PASSWORD : null));
+		layoutUsername.setError(sUsername.isEmpty() ? MSG_EMPTY : null);
+		layoutPassword.setError(sPassword.isEmpty() ? MSG_EMPTY : null);
 
-		if(isValidPassword && isValidUsername){
-			sessionManager.createSession(strUsername, - 1);// TODO: update to real ID!
-			redirectToMain();
-		}
+		if(!sUsername.isEmpty() && !sPassword.isEmpty()){
+			//if
+			loginTask = new BackgroundTask(activity, "Prijava", new BackgroundOperation() {
+				@Override
+				public Object execInBackground() {
+					User user = null;
+					try{
+						user = UsersRequest.getUser(sUsername, sPassword);
+					}
+					catch(Exception e){
+						Log.e("REST", "error");
+						e.printStackTrace();
+					}
+					return user;
+				}
+
+				@Override
+				public void execAfter(Object object) {
+					if(object == null){
+						Snackbar.make(layoutPassword, MSG_NOT_FOUND, Snackbar.LENGTH_SHORT).show();
+					}
+					else {
+						sessionManager.createSession((User) object);
+						redirectToMain();
+					}
+				}
+			});
+
+			loginTask.execute();
+		}//if
 	}
 
 
