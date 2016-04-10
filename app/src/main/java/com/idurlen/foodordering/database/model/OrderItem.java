@@ -5,19 +5,17 @@ package com.idurlen.foodordering.database.model;
  */
 public class OrderItem {
 
-	private int id;
 	private int dishId;
+	private int orderId;
 	private int quantity;
 
 
-
-
-	public int getId() {
-		return id;
-	}
-
 	public int getDishId() {
 		return dishId;
+	}
+
+	public int getOrderId() {
+		return orderId;
 	}
 
 	public int getQuantity() {
@@ -25,11 +23,12 @@ public class OrderItem {
 	}
 
 
-
-	public void setId(int id) {	this.id = id; }
-
 	public void setDishId(int dishId) {
 		this.dishId = dishId;
+	}
+
+	public void setOrderId(int orderId){
+		this.orderId = orderId;
 	}
 
 	public void setQuantity(int quantity) {

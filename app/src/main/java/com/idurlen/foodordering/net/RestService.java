@@ -2,7 +2,6 @@ package com.idurlen.foodordering.net;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -19,6 +18,7 @@ import java.util.Map;
  */
 public class RestService {
 
+	public static int REST_NO_INSERT = 0;
 	public static int REST_INSERT_ERROR = -1;
 
 	public enum HttpMethod { GET, POST, PUT, DELETE };
@@ -59,14 +59,13 @@ public class RestService {
 
 	/**
 	 * Performs Web-service call.
-	 * @throws Exception
+	 * @throws IOException
 	 */
 	public void call() throws Exception{
-		URL url = new URL(hasGETParams() ? (sServiceUrl + '?' + createQueryString()) : sServiceUrl);
+		URL url = url = new URL(hasGETParams() ? (sServiceUrl + '?' + createQueryString()) : sServiceUrl);
 		connection = (HttpURLConnection) url.openConnection();
-
 		connection.setRequestMethod(method.toString());
-		if(hasParams()){
+		if(hasParams()) {
 			connection.setDoOutput(true);
 			createParams(connection.getOutputStream());
 		}
@@ -76,15 +75,15 @@ public class RestService {
 
 
 	/**
-	 * Returns response as {@link  JSONResponse} or <strong>null</strong> if error occurred.
+	 * Returns response as {@link  JSONResponse} or {@link IOException} if error occurred.
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public JSONResponse getJSONResponse() throws Exception{
+	public JSONResponse getJSONResponse() throws IOException{
 		if(connection.getResponseCode() != HttpURLConnection.HTTP_OK){
-			throw new Exception("HTTP request error: " + connection.getResponseMessage());
+			throw new IOException("HTTP request error: " + connection.getResponseMessage());
 		}
-		return  new JSONResponse(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+		return  new JSONResponse(connection.getInputStream());
 	}
 
 
@@ -92,7 +91,9 @@ public class RestService {
 	 * Closes HttpUrlConnection. Mandatory!
 	 */
 	public void close(){
-		connection.disconnect();
+		if(connection != null) {
+			connection.disconnect();
+		}
 	}
 
 

@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.idurlen.foodordering.database.model.OrderItem;
 import com.idurlen.foodordering.database.model.User;
+import com.idurlen.foodordering.net.OrderItemsRequest;
 import com.idurlen.foodordering.net.UsersRequest;
 import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.utils.async.BackgroundOperation;
@@ -28,6 +30,7 @@ public class LoginController implements Controller{
 
 	private final String MSG_EMPTY = "Unesite vrijednost";
 	private final String MSG_NOT_FOUND = "Krivo kor. ime ili lozinka";
+	private final String MSG_NETWORK_ERROR = "Mrežna Greška";
 
 	private EditText etUsername;
 	private EditText etPassword;
@@ -37,6 +40,7 @@ public class LoginController implements Controller{
 
 	private BackgroundTask loginTask;
 	private SessionManager sessionManager;
+	private User user = null;
 
 	private LoginActivity activity;
 
@@ -95,24 +99,36 @@ public class LoginController implements Controller{
 			loginTask = new BackgroundTask(activity, "Prijava", new BackgroundOperation() {
 				@Override
 				public Object execInBackground() {
-					User user = null;
+					boolean isError = false;
 					try{
 						user = UsersRequest.getUser(sUsername, sPassword);
+						//---------- TODO: remove ----------
+						OrderItem item = new OrderItem();
+						item.setOrderId(1);
+						item.setQuantity(3);
+						item.setDishId(2);
+						OrderItemsRequest.insertOrderItem(item);
+						//---------- TODO: remove end ----------
 					}
 					catch(Exception e){
 						Log.e("REST", "error");
 						e.printStackTrace();
+						isError = true;
 					}
-					return user;
+					return isError;
 				}
 
 				@Override
 				public void execAfter(Object object) {
-					if(object == null){
+					boolean isError = (boolean) object;
+					if(isError) {
+						Snackbar.make(layoutPassword, MSG_NETWORK_ERROR, Snackbar.LENGTH_SHORT).show();
+					}
+					else if(user == null){
 						Snackbar.make(layoutPassword, MSG_NOT_FOUND, Snackbar.LENGTH_SHORT).show();
 					}
 					else {
-						sessionManager.createSession((User) object);
+						sessionManager.createSession(user);
 						redirectToMain();
 					}
 				}

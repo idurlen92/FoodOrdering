@@ -22,20 +22,20 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <ListView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></ListView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NArudžba"/>
+            </LinearLayout>
         </ScrollView>
         <Button
             android:id="@+id/bConfirmOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="250dp"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
             android:text="POTVRDI"
             />
     </LinearLayout>

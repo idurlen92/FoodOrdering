@@ -38,11 +38,16 @@ public class RegisterController implements Controller, View.OnTouchListener{
 	private final String ERROR_EMAIL = "Nevažeća adresa pošte";
 	private final String ERROR_PASSWORD = "Loznika mora biti barem 6 znakova";
 	private final String ERROR_MATCH = "Lozinke se ne podudaraju";
-	private final String MESSAGE_ERROR = "Podaci nisu ispravni, popravite greške";
+	private final String MESSAGE_DATA_ERROR = "Podaci nisu ispravni, popravite greške";
+	private final String MESSAGE_NETWORK_ERROR = "Mrežna greška";
+	private final String MESSAGE_REGISTER_SUCCESS = "Uspješna registracija!";
+	private final String MESSAGE_REGISTER_ERROR = "Greška u registraciji!";
 
 	boolean isEmailValid = false;
 	boolean isPassValid = false;
 	boolean isPassRepValid = false;
+
+	int insertStatus = RestService.REST_NO_INSERT;
 
 	DatePicker datePicker;
 
@@ -64,6 +69,7 @@ public class RegisterController implements Controller, View.OnTouchListener{
 
 	public RegisterController(AppCompatActivity activity){
 		this.activity = (RegisterActivity) activity;
+		//TODO: check network state ConnectivityManager manager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 	}
 
 
@@ -211,7 +217,7 @@ public class RegisterController implements Controller, View.OnTouchListener{
 			registerUser(user);
 		}
 		else {
-			Snackbar.make(view, MESSAGE_ERROR, Snackbar.LENGTH_SHORT).show();
+			Snackbar.make(view, MESSAGE_DATA_ERROR, Snackbar.LENGTH_SHORT).show();
 		}
 	}
 
@@ -220,23 +226,30 @@ public class RegisterController implements Controller, View.OnTouchListener{
 		registerTask = new BackgroundTask(activity, "Registracija", new BackgroundOperation() {
 			@Override
 			public Object execInBackground() {
-				int result = RestService.REST_INSERT_ERROR;
+				boolean isError = false;
 				try{
-					result = UsersRequest.insertUser(user);
+					insertStatus = UsersRequest.insertUser(user);
 				}
 				catch(Exception e){
 					e.printStackTrace();
+					isError = true;
 				}
-				return result;
+				return isError;
 			}
 
 			@Override
 			public void execAfter(Object object) {
-				if((int) object == RestService.REST_INSERT_ERROR){
-					Snackbar.make(bRegister, "Greška, pokušajte ponovno!", Snackbar.LENGTH_SHORT).show();
+				boolean isError = (boolean) object;
+
+				if(isError){
+					Snackbar.make(bRegister, MESSAGE_NETWORK_ERROR, Snackbar.LENGTH_SHORT).show();
+				}
+				else if(insertStatus == RestService.REST_INSERT_ERROR || insertStatus == RestService.REST_NO_INSERT){
+					Snackbar.make(bRegister, MESSAGE_REGISTER_ERROR, Snackbar.LENGTH_SHORT).show();
 				}
 				else{
-					Snackbar.make(bRegister, "Registracija uspješna!", Snackbar.LENGTH_SHORT).show();
+					Snackbar.make(bRegister, MESSAGE_REGISTER_SUCCESS, Snackbar.LENGTH_SHORT).show();
+					activity.finish();
 				}
 			}
 		});
