@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
 	final String BACK_STACK_NAME = "food_ordering_back_stack_1992";
 	final String OPTION_HOME = "homeOption";
 
-	boolean isPopRequired = false;
-
 	SessionManager sessionManager;
 
 	ActionBarDrawerToggle toggle;
@@ -69,9 +67,8 @@ public class MainActivity extends AppCompatActivity {
 		if(drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
 		}
-		else if(isPopRequired){
+		else if(getFragmentManager().getBackStackEntryCount() > 0){
 			getFragmentManager().popBackStack();
-			isPopRequired = false;
 		}
 		else {
 			super.onBackPressed();
@@ -140,8 +137,7 @@ public class MainActivity extends AppCompatActivity {
 			fragmentManager.popBackStack(BACK_STACK_NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		}
 		else if(!itemName.contains(OPTION_HOME)) {
-				transaction.addToBackStack(BACK_STACK_NAME);
-				isPopRequired = true;
+			transaction.addToBackStack(BACK_STACK_NAME);
 		}
 
 		transaction.commit();

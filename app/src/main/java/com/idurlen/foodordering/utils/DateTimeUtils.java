@@ -12,7 +12,11 @@ import java.util.Calendar;
 public class DateTimeUtils {
 
 
-	public static String getCurrentTimeStamp(){
+	/**
+	 * Returns current timestamp as a string.
+	 * @return
+	 */
+	public static String getCurrentTimeStampString(){
 		Calendar calendar = Calendar.getInstance();
 		StringBuilder builder = new StringBuilder();
 
@@ -25,6 +29,21 @@ public class DateTimeUtils {
 		builder.append(StringUtils.getTimeString(timeValues[0], timeValues[1], timeValues[2]));
 
 		return builder.toString();
+	}
+
+
+
+
+	/**
+	 * Returns current date as String.
+	 * @return
+	 */
+	public static String getCurrentDateString(){
+		Calendar calendar = Calendar.getInstance();
+		return StringUtils.getDateString(calendar.get(Calendar.YEAR),
+				calendar.get(Calendar.MONTH),
+				calendar.get(Calendar.DAY_OF_MONTH),
+				false, true);
 	}
 
 

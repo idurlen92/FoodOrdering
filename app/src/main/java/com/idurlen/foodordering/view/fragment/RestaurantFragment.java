@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.idurlen.foodordering.R;
+import com.idurlen.foodordering.controller.Controller;
 import com.idurlen.foodordering.factory.ControllerFactory;
 
 
@@ -23,15 +24,29 @@ import com.idurlen.foodordering.factory.ControllerFactory;
  */
 public class RestaurantFragment extends Fragment {
 
+	private static final String KEY_RESTORED_STATE = "restored_state";
+
 	Button bOrder;
 	LinearLayout layoutContainer;
 	ProgressBar progressBar;
 	ListView listView;
 
+	Controller controller;
+
 
 	public RestaurantFragment() {
 		// Required empty public constructor
 	}
+
+
+
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		controller = ControllerFactory.newInstance(this);
+	}
+
 
 
 
@@ -47,9 +62,19 @@ public class RestaurantFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		findViews();
-		//TODO: NullPointerException here!!!
-		ControllerFactory.newInstance(this).activate();
+		if(savedInstanceState == null || !savedInstanceState.containsKey(KEY_RESTORED_STATE)){
+			findViews();
+			controller.activate();
+		}
+	}
+
+
+
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(KEY_RESTORED_STATE, true);
 	}
 
 

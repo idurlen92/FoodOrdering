@@ -30,7 +30,7 @@ public class Dishes extends HelperMethods{
 
 	public static String getCreateTableStatement(){
 		return "CREATE TABLE " + TABLE_NAME + "(" +
-				COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				COL_ID + " INTEGER PRIMARY KEY, " +
 				COL_DISH_TYPE + " INTEGER REFERENCES " + DishTypes.TABLE_NAME +
 					"(" + DishTypes.COL_ID + ") ON DELETE CASCADE ON UPDATE CASCADE, " +
 				COL_RESTAURANT_ID + " INTEGER REFERENCES " + Restaurants.TABLE_NAME +
@@ -55,9 +55,11 @@ public class Dishes extends HelperMethods{
 		db.beginTransactionNonExclusive();
 		ContentValues values = new ContentValues();
 
+		int k=1;
 		for(int i = 1; i < 41; i++) {
 			for(int j = 1; j < astrTitles.length; j++) {
 				values.clear();
+				values.put(COL_ID, k++);
 				values.put(COL_TITLE, astrTitles[j % astrTitles.length]);
 				values.put(COL_DISH_TYPE, (j % 8) + 1);
 				values.put(COL_PRICE, aintPrices[j % 7]);
@@ -71,6 +73,14 @@ public class Dishes extends HelperMethods{
 	}
 
 
+
+
+	/**
+	 *
+	 * @param db
+	 * @param restaurantId
+	 * @return
+	 */
 	public static List<Dish> getDishesOfRestaurant(SQLiteDatabase db, int restaurantId){
 		final String strStatement = "SELECT * FROM " + TABLE_NAME +
 				" WHERE " + COL_RESTAURANT_ID + " = ? " +
@@ -89,20 +99,22 @@ public class Dishes extends HelperMethods{
 	}
 
 
+
+
+	/**
+	 *
+	 * @param db
+	 * @param sDishIds
+	 * @return
+	 */
 	public static List<Dish> getDishesById(SQLiteDatabase db, Set<Integer> sDishIds){
 		final String strStatement = "SELECT * FROM " + TABLE_NAME +
-				" WHERE " + COL_ID + " IN(?)" +
+				" WHERE " + COL_ID + " IN(" +  getInStatementQueryParams(sDishIds) + ")" +
 				" ORDER BY " + COL_DISH_TYPE + ", " + COL_TITLE;
 
 
-		String strDishIds = "";
-		int k = 0;
-		for(Integer id : sDishIds){
-			strDishIds += Integer.toString(id) + ( k++ < (sDishIds.size() - 1) ? ", " : "");
-		}
-
+		Cursor cursor = db.rawQuery(strStatement, getSetAsStringArray(sDishIds));
 		ArrayList<Dish> lDishes = new ArrayList<Dish>();
-		Cursor cursor = db.rawQuery(strStatement,  new String[]{ strDishIds });
 
 		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
 			Dish dish = new Dish();

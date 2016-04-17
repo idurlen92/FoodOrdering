@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.idurlen.foodordering.R;
+import com.idurlen.foodordering.controller.RestaurantController;
 import com.idurlen.foodordering.database.model.Dish;
 import com.idurlen.foodordering.database.model.DishType;
 
@@ -27,21 +28,24 @@ public class DishesAdapter extends BaseAdapter{
 	private final int TYPE_GROUP_TITLE = 0;
 	private final int TYPE_DISH = 1;
 
-	private int size = 0;
+	private final int size;
 
 	private Map<Integer, DishType> mPosToDishType;
 	private Map<Integer, Dish> mPosToDish;
+	/** Reference to the map from the Controller */
 	private Map<Integer, Integer> mDishQuantities;
 
+	RestaurantController controller;
 	LayoutInflater inflater;
 
 
-	public DishesAdapter(LayoutInflater inflater,  Map<DishType, List<Dish>> mDishesByType){
+	public DishesAdapter(RestaurantController controller,  LayoutInflater inflater, Map<DishType, List<Dish>> mDishesByType, Map<Integer, Integer> mDishQuantities){
+		this.controller = controller;
+		this.mDishQuantities = mDishQuantities;
 		this.inflater = inflater;
 
 		mPosToDishType = new HashMap<Integer, DishType>();
-		mPosToDish = new HashMap<>();
-		mDishQuantities = new HashMap<>();
+		mPosToDish = new HashMap<Integer, Dish>();
 
 		int k = 0;
 		for(DishType key : mDishesByType.keySet()){
@@ -51,6 +55,8 @@ public class DishesAdapter extends BaseAdapter{
 			}
 		}
 		size = k;
+
+		mDishesByType.clear();
 	}
 
 
@@ -84,6 +90,7 @@ public class DishesAdapter extends BaseAdapter{
 	}
 
 
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if(getItemViewType(position) == TYPE_GROUP_TITLE){
@@ -104,6 +111,11 @@ public class DishesAdapter extends BaseAdapter{
 
 
 
+	/**
+	 * Sets content and listeners for ListView item.
+	 * @param position
+	 * @param convertView
+	 */
 	private void setDataAndListeners(final int position, View convertView){
 		Dish currentDish = mPosToDish.get(position);
 
@@ -117,7 +129,10 @@ public class DishesAdapter extends BaseAdapter{
 		View.OnClickListener clickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				clickHandler(mPosToDish.get(position), (ImageButton) v, tvCount);
+				Dish clickedDish = mPosToDish.get(position);
+				controller.listItemButtonClick(clickedDish,  (v.getId() == R.id.ibAdd));
+				tvCount.setText(mDishQuantities.containsKey(clickedDish.getId()) ?
+						Integer.toString(mDishQuantities.get(clickedDish.getId())) : "0");
 			}
 		};
 		ibAdd.setOnClickListener(clickListener);
@@ -128,30 +143,6 @@ public class DishesAdapter extends BaseAdapter{
 		tvCount.setText(mDishQuantities.containsKey(currentDish.getId()) ?
 				Integer.toString(mDishQuantities.get(currentDish.getId())) : "0");
 	}
-
-
-
-	private void clickHandler(Dish dish, ImageButton ibClicked, TextView tvCount){
-		boolean isAdd = (ibClicked.getId() == R.id.ibAdd);
-
-		int iQuantity = mDishQuantities.containsKey(dish.getId()) ? mDishQuantities.get(dish.getId()) : 0;
-		iQuantity += (isAdd ? (iQuantity < 30 ? 1 : 0) : (iQuantity > 0 ? -1 : 0));
-
-		if(iQuantity > 0) {
-			mDishQuantities.put(dish.getId(), iQuantity);
-		}
-		else if(mDishQuantities.containsKey(dish.getId())){
-			mDishQuantities.remove(dish.getId());
-		}
-
-		tvCount.setText(Integer.toString(iQuantity));
-	}
-
-
-	public Map<Integer, Integer> getMDishQuantities(){
-		return mDishQuantities;
-	}
-
 
 
 }

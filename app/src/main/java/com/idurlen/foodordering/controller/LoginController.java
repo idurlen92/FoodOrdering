@@ -102,13 +102,6 @@ public class LoginController implements Controller{
 					boolean isError = false;
 					try{
 						user = UsersRequest.getUser(sUsername, sPassword);
-						//---------- TODO: remove ----------
-						OrderItem item = new OrderItem();
-						item.setOrderId(1);
-						item.setQuantity(3);
-						item.setDishId(2);
-						OrderItemsRequest.insertOrderItem(item);
-						//---------- TODO: remove end ----------
 					}
 					catch(Exception e){
 						Log.e("REST", "error");

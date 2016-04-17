@@ -3,11 +3,17 @@ package com.idurlen.foodordering.view.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.idurlen.foodordering.R;
 import com.idurlen.foodordering.factory.ControllerFactory;
@@ -17,8 +23,21 @@ import com.idurlen.foodordering.factory.ControllerFactory;
 
 public class ConfirmOrderFragment extends Fragment {
 
+	private Button bConfirmOrder;
+
+	private EditText etOrderAltAddress;
+	private EditText etDeliveryTime;
+	private LinearLayout layoutOrderItems;
+	private Spinner spOrderAddress;
+	private TextView tvOrderDate;
+	private TextView tvOrderTotal;
+
+	TextInputLayout layoutOrderAltAddress;
+
 	private ProgressBar progressBar;
-	private LinearLayout layoutContainer;
+	private ScrollView layoutContainer;
+
+
 
 	public ConfirmOrderFragment() {
 		// Required empty public constructor
@@ -41,13 +60,38 @@ public class ConfirmOrderFragment extends Fragment {
 
 
 	private void findViews(){
-		layoutContainer = (LinearLayout) getView().findViewById(R.id.layoutConfirmOrder);
+		layoutContainer = (ScrollView) getView().findViewById(R.id.layoutConfirmOrder);
 		progressBar = (ProgressBar) getView().findViewById(R.id.pbConfirmOrder);
+		layoutOrderItems = (LinearLayout) getView().findViewById(R.id.layoutOrderItems);
+		layoutOrderAltAddress = (TextInputLayout) getView().findViewById(R.id.layoutOrderAltAddress);
+
+		bConfirmOrder = (Button) getView().findViewById(R.id.bConfirmOrder);
+		etOrderAltAddress = (EditText) getView().findViewById(R.id.etOrderAltAddress);
+		etDeliveryTime = (EditText) getView().findViewById(R.id.etOrderDeliveryTime);
+		spOrderAddress = (Spinner) getView().findViewById(R.id.spOrderAddress);
+		tvOrderDate = (TextView) getView().findViewById(R.id.tvOrderDate);
+		tvOrderTotal = (TextView) getView().findViewById(R.id.tvOrderTotal);
 	}
 
 
 	public ProgressBar getProgressBar() { return progressBar; }
 
-	public LinearLayout getLayoutContainer() { return layoutContainer; }
+	public ScrollView getLayoutContainer() { return layoutContainer; }
+
+	public TextInputLayout getLayoutOrderAltAddress() { return layoutOrderAltAddress; }
+
+	public LinearLayout getLayoutOrderItems() { return layoutOrderItems; }
+
+	public Button getBConfirmOrder() { return bConfirmOrder; }
+
+	public EditText getEtOrderAltAddress() { return etOrderAltAddress; }
+
+	public EditText getEtDeliveryTime() { return etDeliveryTime; }
+
+	public Spinner getSpOrderAddress() { return spOrderAddress; }
+
+	public TextView getTvOrderDate() { return tvOrderDate; }
+
+	public TextView getTvOrderTotal() { return tvOrderTotal; }
 
 }

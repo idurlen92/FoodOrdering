@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.idurlen.foodordering.utils.StringUtils;
 
+import java.util.Set;
+
 
 
 
@@ -71,5 +73,38 @@ public class HelperMethods {
 
 		return obj;
 	}
+
+
+	/**
+	 * Returns "?"s as param for IN operator in query.
+	 * @param sParams
+	 * @return
+	 */
+	protected static <T> String getInStatementQueryParams(Set<T> sParams){
+		StringBuilder queryBuilder = new StringBuilder();
+		for(int i=0; i < sParams.size(); i++){
+			queryBuilder.append("?" + (i < (sParams.size() - 1) ? ", " : ""));
+		}
+		return queryBuilder.toString();
+	}
+
+
+
+
+	/**
+	 * Converts Set of primitve types to String array.
+	 * @param sParams
+	 * @param <T>
+	 * @return
+	 */
+	protected static <T> String[] getSetAsStringArray(Set<T> sParams){
+		String[] asParams = new String[sParams.size()];
+		int j=0;
+		for(Object param : sParams){
+			asParams[j++] = String.valueOf(param);
+		}
+		return asParams;
+	}
+
 
 }

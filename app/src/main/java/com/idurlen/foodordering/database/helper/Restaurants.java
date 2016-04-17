@@ -34,7 +34,7 @@ public class Restaurants extends HelperMethods{
 
 	public static String getCreateTableStatement(){
 		return "CREATE TABLE " + TABLE_NAME +"(" +
-				COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				COL_ID + " INTEGER PRIMARY KEY, " +
 				COL_NAME + " VARCHAR(30) NOT NULL, " +
 				COL_CITY + " VARCHAR(45) NOT NULL, " +
 				COL_ADDRESS + " VARCHAR(45) NOT NULL, " +

@@ -17,7 +17,7 @@ import com.idurlen.foodordering.database.helper.Users;
 public class DatabaseManager extends SQLiteOpenHelper {
 
 	private static final String DB_NAME = "orders.db";
-	private static final int DB_VERSION = 2;
+	private static final int DB_VERSION = 4;
 
 	private static DatabaseManager instance = null;
 

@@ -1,7 +1,5 @@
 package com.idurlen.foodordering.view.ui.adapter;
 
-import android.app.Fragment;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +21,12 @@ import java.util.List;
 public class RestaurantsAdapter extends BaseAdapter{
 
 	List<Restaurant> lRestaurants;
-
-	Fragment fragment;
 	LayoutInflater inflater;
 
 
-	public RestaurantsAdapter(Fragment fragment){
-		this.fragment = fragment;
-		this.inflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	public RestaurantsAdapter(LayoutInflater inflater, List<Restaurant> lRestaurants){
+		this.inflater = inflater;
+		this.lRestaurants = lRestaurants;
 	}
 
 
@@ -40,38 +36,16 @@ public class RestaurantsAdapter extends BaseAdapter{
 	}
 
 
-
-
 	@Override
 	public Object getItem(int position) {
 		return lRestaurants.get(position);
 	}
 
 
-
-
 	@Override
 	public long getItemId(int position) {
 		return position;
 	}
-
-
-
-
-	@Override
-	public int getItemViewType(int position) {
-		//TODO:
-		return super.getItemViewType(position);
-	}
-
-
-
-	@Override
-	public int getViewTypeCount() {
-		//TODO:
-		return super.getViewTypeCount();
-	}
-
 
 
 
@@ -92,12 +66,6 @@ public class RestaurantsAdapter extends BaseAdapter{
 		tvAddress.setText(restaurant.getAddress());
 
 		return convertView;
-	}
-
-
-
-	public void setList(List<Restaurant> lRestaurants){
-		this.lRestaurants = lRestaurants;
 	}
 
 

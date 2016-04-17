@@ -54,7 +54,7 @@ public class AppSettings {
 	private void populateValues(){
 		Editor editor = preferences.edit();
 		editor.putBoolean(KEY_SYNC, true);
-		editor.putString(KEY_LAST_SYNC, DateTimeUtils.getCurrentTimeStamp());
+		editor.putString(KEY_LAST_SYNC, DateTimeUtils.getCurrentTimeStampString());
 		editor.commit();
 	}
 

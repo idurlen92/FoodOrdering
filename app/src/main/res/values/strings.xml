@@ -22,6 +22,14 @@
     <!-- ########## Fragment Restaurant ########## -->
     <string name="action_order">Naruči</string>
 
+    <!-- ########## Fragment ConfirmOrder ########## -->
+    <string name="title_order_date">Datum narudžbe:</string>
+    <string name="title_order_time">Vrijeme dostave</string>
+    <string name="title_order_total">Ukupna cijena:</string>
+    <string name="title_order_address">Adresa dostave</string>
+    <string name="title_order_alt_address">Alt. adresa</string>
+    <string name="action_confirm_order">Potvrdi narudžbu</string>
+
     <!-- ######### Navigation drawer ######### -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

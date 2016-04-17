@@ -1,6 +1,8 @@
 package com.idurlen.foodordering.controller;
 import android.app.Fragment;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -9,13 +11,14 @@ import com.idurlen.foodordering.database.DatabaseManager;
 import com.idurlen.foodordering.database.helper.Restaurants;
 import com.idurlen.foodordering.database.model.Restaurant;
 import com.idurlen.foodordering.utils.Messenger;
+import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.utils.async.BackgroundOperation;
 import com.idurlen.foodordering.utils.async.BackgroundTask;
 import com.idurlen.foodordering.view.MainActivity;
 import com.idurlen.foodordering.view.fragment.HomeFragment;
 import com.idurlen.foodordering.view.ui.adapter.RestaurantsAdapter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 
@@ -31,6 +34,7 @@ public class HomeController implements Controller, AdapterView.OnItemClickListen
 
 	SQLiteDatabase db;
 
+	SessionManager session;
 	MainActivity activity;
 	HomeFragment fragment;
 
@@ -38,6 +42,7 @@ public class HomeController implements Controller, AdapterView.OnItemClickListen
 	public HomeController(Fragment fragment){
 		this.fragment = (HomeFragment) fragment;
 		this.activity = (MainActivity) fragment.getActivity();
+		session = SessionManager.getInstance(activity);
 	}
 
 
@@ -51,15 +56,14 @@ public class HomeController implements Controller, AdapterView.OnItemClickListen
 		loadRestaurantsTask = new BackgroundTask(fragment.getProgressBar(), fragment.getLayoutContainer(), new BackgroundOperation() {
 			@Override
 			public Object execInBackground() {
-				//TODO: Hardcoded!!!!
-				return Restaurants.getRetaurantsByCity(db, "Zagreb");
+				return Restaurants.getRetaurantsByCity(db, session.getCity());
 			}
 
 			@Override
 			public void execAfter(Object object) {
 				db.close();
-				adapter = new RestaurantsAdapter(fragment);
-				adapter.setList((List<Restaurant>) object);
+				adapter = new RestaurantsAdapter((LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE),
+						(ArrayList<Restaurant>) object);
 				fragment.getListView().setAdapter(adapter);
 				setListeners();
 			}

@@ -18,7 +18,7 @@ public class Orders {
 
 	public static String getCreateTableStatement(){
 		return "CREATE TABLE " + TABLE_NAME + "(" +
-				COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				COL_ID + " INTEGER PRIMARY KEY, " +
 				COL_USER_ID + " INTEGER REFERENCES " + Users.TABLE_NAME +
 					"(" + Users.COL_ID + ") ON DELETE CASCADE ON UPDATE CASCADE, " +
 				COL_RESTAURANT_ID + " INTEGER REFERENCES " + Restaurants.TABLE_NAME +

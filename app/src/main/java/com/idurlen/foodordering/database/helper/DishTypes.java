@@ -24,7 +24,7 @@ public class DishTypes extends HelperMethods{
 
 	public static String getCreateTableStatement(){
 		return "CREATE TABLE " + TABLE_NAME + "(" +
-				COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				COL_ID + " INTEGER PRIMARY KEY, " +
 				COL_TYPE_NAME + " VARCHAR(45) NOT NULL )";
 	}
 

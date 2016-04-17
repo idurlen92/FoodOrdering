@@ -22,6 +22,7 @@ import com.idurlen.foodordering.view.ui.adapter.DishesAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,12 @@ import java.util.Map;
  */
 public class RestaurantController implements Controller{
 
+	private int iNumSelectedDishes = 0;
+
+	private Map<Integer, Integer> mDishQuantities;
 	private Restaurant restaurant;
+
+	LayoutInflater inflater;
 
 	DishesAdapter adapter;
 	SQLiteDatabase db;
@@ -45,6 +51,8 @@ public class RestaurantController implements Controller{
 		this.fragment = (RestaurantFragment) fragment;
 		this.activity = (MainActivity) fragment.getActivity();
 		restaurant = (Restaurant) Messenger.getObject(Messenger.KEY_RESTAURANT_OBJECT);
+
+		mDishQuantities = new HashMap<>();
 		Log.d("RESTAURANT ID", Integer.toString(restaurant.getId()));
 	}
 
@@ -57,16 +65,17 @@ public class RestaurantController implements Controller{
 		BackgroundTask task = new BackgroundTask(fragment.getProgressBar(), fragment.getLayoutContainer(), new BackgroundOperation() {
 			@Override
 			public Object execInBackground() {
-				List<DishType> lDishTypes = DishTypes.getDishTypesOfRestaurant(db, restaurant.getId());
-				List<Dish> lDishes = Dishes.getDishesOfRestaurant(db, restaurant.getId());
+				List<DishType> lDishTypes = new ArrayList(DishTypes.getDishTypesOfRestaurant(db, restaurant.getId()));
+				List<Dish> lDishes = new ArrayList<>(Dishes.getDishesOfRestaurant(db, restaurant.getId()));
 				return arrangeInMap(lDishTypes, lDishes);
 			}
 
 			@Override
 			public void execAfter(Object object) {
 				db.close();
-				adapter = new DishesAdapter((LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE),
-						(Map<DishType, List<Dish>>) object);
+				adapter = new DishesAdapter(RestaurantController.this,
+						(LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE),
+						(Map<DishType, List<Dish>>) object, mDishQuantities);
 				setListeners();
 			}
 		});
@@ -84,28 +93,71 @@ public class RestaurantController implements Controller{
 
 	@Override
 	public void onClick(View v) {
+		// clicking confirm button - put info and create fragment
 		Messenger.clearAll();
-		Messenger.putObject(Messenger.KEY_SELECTED_DISHES_MAP, adapter.getMDishQuantities());
+		Messenger.putObject(Messenger.KEY_SELECTED_DISHES_MAP, mDishQuantities);
+		Messenger.putObject(Messenger.KEY_RESTAURANT_OBJECT, restaurant);
 		((MainActivity) fragment.getActivity()).pushFragment(MenuController.OPTION_CONFIRM_ORDER);
 	}
 
 
+
+	/**
+	 * Arranges Dishes in a Map according to relevent DishType.
+	 * @param lDishTypes
+	 * @param lDishes
+	 * @return
+	 */
 	private Map<DishType, List<Dish>> arrangeInMap(List<DishType> lDishTypes, List<Dish> lDishes){
-		Map<DishType, List<Dish>> mDishesByType = new HashMap<DishType, List<Dish>>();
-		Map<Integer, DishType> mIdToDishType = new HashMap<Integer, DishType>();
+		Map<DishType, List<Dish>> mDishesByType = new LinkedHashMap<>();
+		Map<Integer, DishType> mIdToDishType = new LinkedHashMap<>();
 
 		for(DishType dishType : lDishTypes){
 			mIdToDishType.put(dishType.getId(), dishType);
 			mDishesByType.put(dishType, new ArrayList<Dish>());
 		}
-		Log.d("DISH TYPES", Integer.toString(mDishesByType.keySet().size()));
 
 		for(Dish dish : lDishes){
 			mDishesByType.get(mIdToDishType.get(dish.getDishTypeId())).add(dish);
 		}
-		Log.d("DISHES", Integer.toString(lDishes.size()));
 
 		return mDishesByType;
+	}
+
+
+	public LayoutInflater getLayoutInflater(){
+		if(inflater == null){
+			inflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		}
+		return inflater;
+	}
+
+
+
+	/**
+    *  Used in {@link DishesAdapter} to handle add/substract buttons of list item.
+	* @param dish
+	* @param isAdd
+	*/
+	public void listItemButtonClick(Dish dish, boolean isAdd){
+		int iQuantity = mDishQuantities.containsKey(dish.getId()) ? mDishQuantities.get(dish.getId()) : 0;
+		if(isAdd && iNumSelectedDishes < 30){
+			iQuantity++;
+			iNumSelectedDishes++;
+		}
+		else if(!isAdd && iNumSelectedDishes > 0 && iQuantity > 0){
+			iQuantity--;
+			iNumSelectedDishes--;
+		}
+
+		if(iQuantity > 0) {
+			mDishQuantities.put(dish.getId(), iQuantity);
+		}
+		else if(mDishQuantities.containsKey(dish.getId())){
+			mDishQuantities.remove(dish.getId());
+		}
+
+		fragment.getBOrder().setEnabled(iNumSelectedDishes > 0);
 	}
 
 
