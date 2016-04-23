@@ -2,13 +2,16 @@ package com.idurlen.foodordering.controller;
 import android.app.Fragment;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
 import com.idurlen.foodordering.database.DatabaseManager;
 import com.idurlen.foodordering.database.helper.Restaurants;
+import com.idurlen.foodordering.database.model.OrderItem;
 import com.idurlen.foodordering.database.model.Restaurant;
 import com.idurlen.foodordering.utils.Messenger;
 import com.idurlen.foodordering.utils.SessionManager;
@@ -19,6 +22,7 @@ import com.idurlen.foodordering.view.fragment.HomeFragment;
 import com.idurlen.foodordering.view.ui.adapter.RestaurantsAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -56,6 +60,12 @@ public class HomeController implements Controller, AdapterView.OnItemClickListen
 		loadRestaurantsTask = new BackgroundTask(fragment.getProgressBar(), fragment.getLayoutContainer(), new BackgroundOperation() {
 			@Override
 			public Object execInBackground() {
+				List<OrderItem> lOrderItems = new ArrayList<>();
+				for(int i = 0; i < 10; i++){
+					lOrderItems.add(new OrderItem(i+1, i+1, 1));
+				}
+				String json = new Gson().toJson(lOrderItems);
+				Log.d("ORDER ITSM", json);
 				return Restaurants.getRetaurantsByCity(db, session.getCity());
 			}
 

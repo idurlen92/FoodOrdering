@@ -9,9 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.idurlen.foodordering.database.model.OrderItem;
 import com.idurlen.foodordering.database.model.User;
-import com.idurlen.foodordering.net.OrderItemsRequest;
 import com.idurlen.foodordering.net.UsersRequest;
 import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.utils.async.BackgroundOperation;
@@ -40,6 +38,8 @@ public class LoginController implements Controller{
 
 	private BackgroundTask loginTask;
 	private SessionManager sessionManager;
+	UsersRequest request;
+
 	private User user = null;
 
 	private LoginActivity activity;
@@ -49,6 +49,7 @@ public class LoginController implements Controller{
 	public LoginController(AppCompatActivity activity){
 		this.activity = (LoginActivity) activity;
 		sessionManager = SessionManager.getInstance(activity);
+		request = new UsersRequest();
 	}
 
 
@@ -101,7 +102,7 @@ public class LoginController implements Controller{
 				public Object execInBackground() {
 					boolean isError = false;
 					try{
-						user = UsersRequest.getUser(sUsername, sPassword);
+						user = request.getUser(sUsername, sPassword);
 					}
 					catch(Exception e){
 						Log.e("REST", "error");

@@ -6,6 +6,7 @@ import com.idurlen.foodordering.database.helper.Orders;
 import com.idurlen.foodordering.database.model.Order;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -14,27 +15,37 @@ import java.util.Map;
 /**
  * @author Ivan Durlen
  */
-public class OrdersRequest {
+public class OrdersRequest extends RestClient{
 
 
-	/**
-	 * Performs Web-service call to insert an Order.
-	 * @param order
-	 * @return
-	 * @throws Exception
-	 */
-	public static int insertOrder(Order order) throws Exception{
-		final String SERVICE_URL = "orders.php";
+	public OrdersRequest() {
+		super("orders.php");
+	}
+
+
+
+
+	@Override
+	public List<Object> getAll() throws Exception {
+		return null;
+	}
+
+
+
+	@Override
+	public int insert(Object theObject) throws Exception {
+		Order order = (Order) theObject;
 
 		Map<String, String> mRequestParams = new HashMap<>();
 		mRequestParams.put(Orders.COL_USER_ID, Integer.toString(order.getUserId()));
 		mRequestParams.put(Orders.COL_RESTAURANT_ID, Integer.toString(order.getRestaurantId()));
+		mRequestParams.put(Orders.COL_ORDER_TIME, order.getOrderTime());
+		mRequestParams.put(Orders.COL_DELIVERY_TIME, order.getDeliveryTime());
 		mRequestParams.put(Orders.COL_ORDER_CITY, order.getOrderCity());
 		mRequestParams.put(Orders.COL_ORDER_ADDRESS, order.getOrderAddress());
-		mRequestParams.put(Orders.COL_ORDER_TIME, order.getOrderTime());
 
-		int iResult = RestService.REST_NO_INSERT;
-		RestService service = new RestService(RestService.HttpMethod.POST, SERVICE_URL, mRequestParams);
+		int iResult = REST_NO_INSERT;
+		RestService service = new RestService(RestService.HttpMethod.POST, ENDPOINT_ADDRESS, mRequestParams);
 
 		try {
 			service.call();
@@ -55,6 +66,22 @@ public class OrdersRequest {
 		}
 
 		return iResult;
+	}
+
+
+
+
+	@Override
+	public List<Integer> insertAll(List<Object> lObjects) throws Exception {
+		return null;
+	}
+
+
+
+
+	@Override
+	public int update(Object theObject) throws Exception {
+		return REST_NO_UPDATE;
 	}
 
 

@@ -17,7 +17,7 @@ import com.idurlen.foodordering.database.helper.Users;
 public class DatabaseManager extends SQLiteOpenHelper {
 
 	private static final String DB_NAME = "orders.db";
-	private static final int DB_VERSION = 4;
+	private static final int DB_VERSION = 2;
 
 	private static DatabaseManager instance = null;
 
@@ -28,7 +28,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(Users.getCreateTableStatement());
 		db.execSQL(Restaurants.getCreateTableStatement());
 		db.execSQL(DishTypes.getCreateTableStatement());
 		db.execSQL(Dishes.getCreateTableStatement());

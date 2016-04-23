@@ -10,29 +10,33 @@ public class OrderItem {
 	private int quantity;
 
 
-	public int getDishId() {
-		return dishId;
-	}
+	public OrderItem(){/* Required empty constructor*/}
 
-	public int getOrderId() {
-		return orderId;
-	}
 
-	public int getQuantity() {
-		return quantity;
+	public OrderItem(int dishId, int quantity){
+		this(-1, dishId, quantity);
 	}
 
 
-	public void setDishId(int dishId) {
-		this.dishId = dishId;
-	}
-
-	public void setOrderId(int orderId){
+	public OrderItem(int orderId, int dishId, int quantity){
 		this.orderId = orderId;
-	}
-
-	public void setQuantity(int quantity) {
+		this.dishId = dishId;
 		this.quantity = quantity;
 	}
+
+
+
+	public int getDishId() { return dishId; }
+
+	public int getOrderId() { return orderId; }
+
+	public int getQuantity() { return quantity; }
+
+
+	public void setDishId(int dishId) { this.dishId = dishId; }
+
+	public void setOrderId(int orderId){ this.orderId = orderId; }
+
+	public void setQuantity(int quantity) { this.quantity = quantity; }
 
 }

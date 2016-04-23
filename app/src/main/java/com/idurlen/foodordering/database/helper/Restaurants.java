@@ -3,6 +3,7 @@ package com.idurlen.foodordering.database.helper;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 
 import com.idurlen.foodordering.database.model.Restaurant;
 
@@ -110,6 +111,34 @@ public class Restaurants extends HelperMethods{
 
 		cursor.close();
 		return restaurant;
+	}
+
+
+	public static void insertRestaurants(SQLiteDatabase db, List<Object> lRestaurants){
+		/*
+		public static final String COL_ID = "id";
+	public static final String COL_NAME = "name";
+	public static final String COL_CITY = "city";
+	public static final String COL_ADDRESS = "address";
+	public static final String COL_DESCRIPTION = "description";
+	public static final String COL_EMAIL = "email";
+	public static final String COL_PHONE = "phone";
+	public static final String COL_WORKS_FROM = "working_from";
+	public static final String COL_WORKS_TO = "working_until";
+	public static final String COL_ORDERS_FROM = "ordering_from";
+	public static final String COL_ORDERS_TO = "ordering_until";
+		 */
+		String sInsertStatement = "INSERT INTO " + TABLE_NAME + "(" +
+				COL_ID + "," + COL_NAME + "," + COL_CITY + "," +
+				COL_ADDRESS + "," + COL_DESCRIPTION + "," + COL_EMAIL + "," +
+				COL_PHONE + "," + COL_WORKS_FROM + "," + COL_WORKS_TO + "," +
+				COL_ORDERS_FROM + "," + COL_ORDERS_TO +
+				" VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+		SQLiteStatement statement = db.compileStatement(sInsertStatement);
+		//for(Object obj : lRestaurants){
+
+		//}
 	}
 
 }

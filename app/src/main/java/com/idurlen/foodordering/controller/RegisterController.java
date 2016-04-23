@@ -64,11 +64,14 @@ public class RegisterController implements Controller, View.OnTouchListener{
 	Spinner sCity;
 
 	BackgroundTask registerTask;
+	UsersRequest request;
+
 	RegisterActivity activity;
 
 
 	public RegisterController(AppCompatActivity activity){
 		this.activity = (RegisterActivity) activity;
+		request = new UsersRequest();
 		//TODO: check network state ConnectivityManager manager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 	}
 
@@ -228,7 +231,7 @@ public class RegisterController implements Controller, View.OnTouchListener{
 			public Object execInBackground() {
 				boolean isError = false;
 				try{
-					insertStatus = UsersRequest.insertUser(user);
+					insertStatus = request.insert(user);
 				}
 				catch(Exception e){
 					e.printStackTrace();

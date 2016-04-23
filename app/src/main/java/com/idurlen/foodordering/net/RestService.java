@@ -25,9 +25,12 @@ public class RestService {
 
 	private static final String DOMAIN_URL = "http://www.nikola-markotic.from.hr/food_ordering/service/";
 
-	private final HttpMethod method;
 	private final String sServiceUrl;
-	private final Map<String, String> mRequestParams;
+
+	private String sJsonParams;
+
+	private HttpMethod method;
+	private Map<String, String> mRequestParams;
 
 	private HttpURLConnection connection;
 
@@ -35,25 +38,53 @@ public class RestService {
 
 
 	/**
-	 * Calls {@code  RestService(HttpMethod, String, Map<String, String>)} with last param null.
+	 * Calls {@code  RestService(HttpMethod, String, Map<String, String>)} with no HTTP parameters.
 	 * @param method
 	 * @param sServiceUrl
 	 */
 	public RestService(HttpMethod method, String sServiceUrl){
-		this(method, sServiceUrl, null);
+		this(method, sServiceUrl, null, null);
 	}
 
 
 	/**
 	 *
 	 * @param method
-	 * @param sServiceUrl
+	 * @param sEndpointAddress
 	 * @param mRequestParams
 	 */
-	public RestService(HttpMethod method, String sServiceUrl, Map<String, String> mRequestParams){
+	public RestService(HttpMethod method, String sEndpointAddress, Map<String, String> mRequestParams){
+		this(method, sEndpointAddress, mRequestParams, null);
+	}
+
+
+
+
+	/**
+	 *
+	 * @param method
+	 * @param sEndpointAddress
+	 * @param sJsonParams
+	 */
+	public RestService(HttpMethod method, String sEndpointAddress, String sJsonParams){
+		this(method, sEndpointAddress, null, sJsonParams);
+	}
+
+
+
+
+	/**
+	 *
+	 * @param method
+	 * @param sEndpointAddress
+	 * @param mRequestParams
+	 * @param sJsonParams
+	 */
+	public RestService(HttpMethod method, String sEndpointAddress, Map<String, String> mRequestParams, String sJsonParams){
 		this.method = method;
-		this.sServiceUrl = DOMAIN_URL + sServiceUrl;
+		this.sServiceUrl = DOMAIN_URL + sEndpointAddress;
 		this.mRequestParams = mRequestParams;
+		this.sJsonParams = sJsonParams;
 	}
 
 
@@ -102,7 +133,7 @@ public class RestService {
 	 * @return
 	 */
 	private boolean hasGETParams(){
-		return (HttpMethod.GET.equals(method) && mRequestParams != null && mRequestParams.size() > 0);
+		return (HttpMethod.GET.equals(method) && mRequestParams != null && !mRequestParams.isEmpty());
 	}
 
 
@@ -111,7 +142,9 @@ public class RestService {
 	 * @return
 	 */
 	private boolean hasParams() {
-		return (! HttpMethod.GET.equals(method) && mRequestParams != null && mRequestParams.size() > 0);
+		return (!HttpMethod.GET.equals(method) &&
+				((mRequestParams != null && !mRequestParams.isEmpty()) ||
+				(sJsonParams != null && ! sJsonParams.isEmpty())));
 	}
 
 
@@ -143,10 +176,15 @@ public class RestService {
 		StringBuilder builder = new StringBuilder();
 
 		try {
-			int j = 0;
-			for(Map.Entry<String, String> entry : mRequestParams.entrySet()) {
-				builder.append(URLEncoder.encode(entry.getKey(), "UTF-8") + "=");
-				builder.append(URLEncoder.encode(entry.getValue(), "UTF-8") + (j++ < (mRequestParams.size() - 1) ? "&" : ""));
+			if(mRequestParams != null) {
+				int j = 0;
+				for(Map.Entry<String, String> entry : mRequestParams.entrySet()) {
+					builder.append(URLEncoder.encode(entry.getKey(), "UTF-8") + "=");
+					builder.append(URLEncoder.encode(entry.getValue(), "UTF-8") + (j++ < (mRequestParams.size() - 1) ? "&" : ""));
+				}
+			}
+			else{
+				builder.append(URLEncoder.encode(sJsonParams, "UTF-8"));
 			}
 		}
 		catch(UnsupportedEncodingException e){

@@ -15,10 +15,11 @@ public class AppSettings {
 
 	private static final String SETTINGS_FILE_NAME = "settings";
 
-	private static AppSettings instance = null;
-
-	private final String KEY_SYNC = "is_auto_sync";
+	private final String KEY_IS_AUTO_SYNC = "is_auto_sync";
+	private final String KEY_IS_SCHEMA_CREATED = "is_synced";
 	private final String KEY_LAST_SYNC = "last_sync";
+
+	private static AppSettings instance = null;
 
 	private SharedPreferences preferences;
 
@@ -26,7 +27,7 @@ public class AppSettings {
 
 	private AppSettings(Context context){
 		preferences = context.getApplicationContext().getSharedPreferences(SETTINGS_FILE_NAME, Context.MODE_PRIVATE);
-		if(!preferences.contains(KEY_SYNC)) {
+		if(!preferences.contains(KEY_IS_AUTO_SYNC)) {
 			populateValues();
 		}
 	}
@@ -53,20 +54,32 @@ public class AppSettings {
 	 */
 	private void populateValues(){
 		Editor editor = preferences.edit();
-		editor.putBoolean(KEY_SYNC, true);
-		editor.putString(KEY_LAST_SYNC, DateTimeUtils.getCurrentTimeStampString());
+
+		editor.putBoolean(KEY_IS_AUTO_SYNC, true);
+		editor.putBoolean(KEY_IS_SCHEMA_CREATED, false);
+		editor.putString(KEY_LAST_SYNC, "");
+
 		editor.commit();
 	}
 
 
-	public boolean isAutoSync(){ return preferences.getBoolean(KEY_SYNC, false); }
+	public boolean isAutoSync(){ return preferences.getBoolean(KEY_IS_AUTO_SYNC, false); }
+
+	public boolean isSchemaCreated(){ return preferences.getBoolean(KEY_IS_SCHEMA_CREATED, false); }
 
 	public String getLastSyncTime(){ return preferences.getString(KEY_LAST_SYNC, "none"); }
 
 
 	public void setAutoSync(boolean isAutoSync){
 		Editor editor = preferences.edit();
-		editor.putBoolean(KEY_SYNC, isAutoSync);
+		editor.putBoolean(KEY_IS_AUTO_SYNC, isAutoSync);
+		editor.commit();
+	}
+
+
+	public void setIsSchemaCreated(boolean isSchemaCreated){
+		Editor editor = preferences.edit();
+		editor.putBoolean(KEY_IS_SCHEMA_CREATED, isSchemaCreated);
 		editor.commit();
 	}
 

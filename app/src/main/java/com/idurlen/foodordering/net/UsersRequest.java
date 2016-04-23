@@ -7,6 +7,7 @@ import com.idurlen.foodordering.database.model.User;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -15,59 +16,23 @@ import java.util.Map;
 /**
  * @author Ivan Durlen
  */
-public class UsersRequest {
+public class UsersRequest extends RestClient{
 
 
-	/**
-	 * Performs Web-service call to check User credentials.
-	 * @param email
-	 * @param password
-	 * @return
-	 * @throws IOException
-	 */
-	public static User getUser(String email, String password) throws Exception {
-		final String SERVICE_URL = "users.php";
-		final String ELEMENT_USER = "user";
-
-		Map<String, String> mRequestParams = new HashMap<>();
-		mRequestParams.put(Users.COL_EMAIL, email);
-		mRequestParams.put(Users.COL_PASSWORD, password);
-
-		User user = null;
-		RestService service = new RestService(RestService.HttpMethod.GET, SERVICE_URL, mRequestParams);
-
-		try {
-			service.call();
-			JSONResponse jsonResponse = service.getJSONResponse();
-			if(jsonResponse.isError()) {
-				Log.e("REST", jsonResponse.getErrorMessage());
-			}
-			else{
-				user = (User) jsonResponse.getDataObject(ELEMENT_USER, User.class);
-			}
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			throw new Exception("Network error");
-		}
-		finally{
-			service.close();
-		}
-
-		return user;
+	public UsersRequest() {
+		super("users.php");
 	}
 
 
+	@Override
+	public List<Object> getAll() throws Exception {
+		return null;
+	}
 
 
-	/**
-	 * Performs Web-service call to insert a User.
-	 * @param user
-	 * @return
-	 * @throws Exception
-	 */
-	public static int insertUser(User user) throws Exception{
-		final String SERVICE_URL = "users.php";
+	@Override
+	public int insert(Object theObject) throws Exception {
+		User user = (User) theObject;
 
 		Map<String, String> mRequestParams = new HashMap<>();
 		mRequestParams.put(Users.COL_FIRST_NAME, user.getFirstName());
@@ -79,7 +44,7 @@ public class UsersRequest {
 		//TODO: mRequestParams.put(Users.COL_BIRTH_DATE, user.getBirthDate());
 
 		int iResult = RestService.REST_NO_INSERT;
-		RestService service = new RestService(RestService.HttpMethod.POST, SERVICE_URL, mRequestParams);
+		RestService service = new RestService(RestService.HttpMethod.POST, ENDPOINT_ADDRESS, mRequestParams);
 
 		try {
 			service.call();
@@ -100,6 +65,63 @@ public class UsersRequest {
 		}
 
 		return iResult;
+	}
+
+
+
+
+	@Override
+	public List<Integer> insertAll(List<Object> lObjects) throws Exception {
+		return null;
+	}
+
+
+
+
+	@Override
+	public int update(Object theObject) throws Exception {
+		return 0;
+	}
+
+
+
+
+	/**
+	 * Performs Web-service call to check User credentials.
+	 * @param email
+	 * @param password
+	 * @return
+	 * @throws IOException
+	 */
+	public User getUser(String email, String password) throws Exception {
+		final String ELEMENT_USER = "user";
+
+		Map<String, String> mRequestParams = new HashMap<>();
+		mRequestParams.put(Users.COL_EMAIL, email);
+		mRequestParams.put(Users.COL_PASSWORD, password);
+
+		User user = null;
+		RestService service = new RestService(RestService.HttpMethod.GET, ENDPOINT_ADDRESS, mRequestParams);
+
+		try {
+			service.call();
+			JSONResponse jsonResponse = service.getJSONResponse();
+			if(jsonResponse.isError()) {
+				Log.e("REST", jsonResponse.getErrorMessage());
+			}
+			else{
+				user = (User) jsonResponse.getDataObject(ELEMENT_USER, User.class);
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			throw new Exception("Network error");
+		}
+		finally{
+			service.close();
+		}
+
+		return user;
 	}
 
 

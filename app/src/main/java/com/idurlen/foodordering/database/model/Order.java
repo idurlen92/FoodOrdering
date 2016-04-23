@@ -12,61 +12,58 @@ public class Order {
 	private int restaurantId;
 
 	private String orderTime;
-	private String orderCity;
+	private String deliveryTime;
 	private String orderAddress;
+	private String orderCity;
 
+
+	public Order(){/* Required default constructor */ }
+
+
+
+	public Order(int userId, int restaurantId, String orderCity, String orderAddress, String orderTime, String deliveryTime){
+		this.userId = userId;
+		this.restaurantId = restaurantId;
+		this.orderTime = orderTime;
+		this.deliveryTime = deliveryTime;
+		this.orderAddress = orderAddress;
+		this.orderCity = orderCity;
+	}
 
 
 	public boolean isCanceled() { return isCanceled; }
 
-	public int getId() {
-		return id;
-	}
+	public int getId() { return id; }
 
-	public int getUserId() {
-		return userId;
-	}
+	public int getUserId() { return userId; }
 
-	public int getRestaurantId() {
-		return restaurantId;
-	}
+	public int getRestaurantId() { return restaurantId; }
 
-	public String getOrderTime() {
-		return orderTime;
-	}
+	public String getOrderTime() { return orderTime; }
+
+	public String getDeliveryTime() { return deliveryTime; }
+
+	public String getOrderAddress() { return orderAddress; }
 
 	public String getOrderCity() { return orderCity; }
-
-	public String getOrderAddress() {
-		return orderAddress;
-	}
 
 
 
 	public void setIsCanceled(boolean isCanceled) { this.isCanceled = isCanceled; }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+	public void setId(int id) { this.id = id; }
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+	public void setUserId(int userId) { this.userId = userId; }
 
-	public void setRestaurantId(int restaurantId) {
-		this.restaurantId = restaurantId;
-	}
+	public void setRestaurantId(int restaurantId) { this.restaurantId = restaurantId; }
 
-	public void setOrderTime(String orderTime) {
-		this.orderTime = orderTime;
-	}
+	public void setOrderTime(String orderTime) { this.orderTime = orderTime; }
+
+	public void setDeliveryTime(String deliveryTime) { this.deliveryTime = deliveryTime; }
+
+	public void setOrderAddress(String orderAddress) { this.orderAddress = orderAddress; }
 
 	public void setOrderCity(String orderCity) { this.orderCity = orderCity; }
-
-	public void setOrderAddress(String orderAddress) {
-		this.orderAddress = orderAddress;
-	}
-
 
 
 }
