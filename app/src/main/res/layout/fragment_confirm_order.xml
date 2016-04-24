@@ -32,22 +32,27 @@
                 android:layout_toRightOf="@id/tvOrderDateTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/layoutOrderDeliveryTime"
+            <TextView
+                android:id="@+id/tvDeliveryTimeTitle"
                 android:layout_below="@id/tvOrderDateTitle"
-                android:layout_width="match_parent"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp">
-                <EditText
-                    android:id="@+id/etOrderDeliveryTime"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/title_order_time"
-                    android:textSize="13dp"/>
-            </android.support.design.widget.TextInputLayout>
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                android:text="@string/title_order_time"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+            <Spinner
+                android:id="@+id/spDeliveryTIme"
+                android:layout_below="@id/tvDeliveryTimeTitle"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+           <!-- -->
             <TextView
                 android:id="@+id/tvOrderAddressTitle"
-                android:layout_below="@id/layoutOrderDeliveryTime"
+                android:layout_below="@id/spDeliveryTIme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"

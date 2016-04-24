@@ -59,7 +59,9 @@ public class RestaurantController implements Controller{
 
 	@Override
 	public void activate() {
+		Log.d("RestaurantController", "ACTIVATED");
 		activity.getSupportActionBar().setTitle(restaurant.getName());
+		fragment.getBOrder().setEnabled(false);
 		db = DatabaseManager.getInstance(fragment.getActivity()).getReadableDatabase();
 
 		BackgroundTask task = new BackgroundTask(fragment.getProgressBar(), fragment.getLayoutContainer(), new BackgroundOperation() {

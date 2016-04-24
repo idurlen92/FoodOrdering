@@ -96,7 +96,6 @@ public class LoginController implements Controller{
 		layoutPassword.setError(sPassword.isEmpty() ? MSG_EMPTY : null);
 
 		if(!sUsername.isEmpty() && !sPassword.isEmpty()){
-			//if
 			loginTask = new BackgroundTask(activity, "Prijava", new BackgroundOperation() {
 				@Override
 				public Object execInBackground() {
@@ -123,6 +122,8 @@ public class LoginController implements Controller{
 					}
 					else {
 						sessionManager.createSession(user);
+						Log.d("User ADDRESS:", user.getAddress());
+						Log.d("Session ADDRESS:", sessionManager.getAddress());
 						redirectToMain();
 					}
 				}

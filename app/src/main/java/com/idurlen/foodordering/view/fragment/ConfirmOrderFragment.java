@@ -26,13 +26,13 @@ public class ConfirmOrderFragment extends Fragment {
 	private Button bConfirmOrder;
 
 	private EditText etOrderAltAddress;
-	private EditText etDeliveryTime;
 	private LinearLayout layoutOrderItems;
+	private Spinner spDeliveryTime;
 	private Spinner spOrderAddress;
 	private TextView tvOrderDate;
 	private TextView tvOrderTotal;
 
-	TextInputLayout layoutOrderAltAddress;
+	private TextInputLayout layoutOrderAltAddress;
 
 	private ProgressBar progressBar;
 	private ScrollView layoutContainer;
@@ -62,12 +62,13 @@ public class ConfirmOrderFragment extends Fragment {
 	private void findViews(){
 		layoutContainer = (ScrollView) getView().findViewById(R.id.layoutConfirmOrder);
 		progressBar = (ProgressBar) getView().findViewById(R.id.pbConfirmOrder);
+
 		layoutOrderItems = (LinearLayout) getView().findViewById(R.id.layoutOrderItems);
 		layoutOrderAltAddress = (TextInputLayout) getView().findViewById(R.id.layoutOrderAltAddress);
 
 		bConfirmOrder = (Button) getView().findViewById(R.id.bConfirmOrder);
 		etOrderAltAddress = (EditText) getView().findViewById(R.id.etOrderAltAddress);
-		etDeliveryTime = (EditText) getView().findViewById(R.id.etOrderDeliveryTime);
+		spDeliveryTime = (Spinner) getView().findViewById(R.id.spDeliveryTIme);
 		spOrderAddress = (Spinner) getView().findViewById(R.id.spOrderAddress);
 		tvOrderDate = (TextView) getView().findViewById(R.id.tvOrderDate);
 		tvOrderTotal = (TextView) getView().findViewById(R.id.tvOrderTotal);
@@ -86,7 +87,7 @@ public class ConfirmOrderFragment extends Fragment {
 
 	public EditText getEtOrderAltAddress() { return etOrderAltAddress; }
 
-	public EditText getEtDeliveryTime() { return etDeliveryTime; }
+	public Spinner getSpDeliveryTime() { return spDeliveryTime; }
 
 	public Spinner getSpOrderAddress() { return spOrderAddress; }
 

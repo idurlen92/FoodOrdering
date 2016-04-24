@@ -33,9 +33,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		db.execSQL(Dishes.getCreateTableStatement());
 		db.execSQL(Orders.getCreateTableStatement());
 		db.execSQL(OrderItems.getCreateTableStatement());
-		Restaurants.prepareTestData(db);
-		DishTypes.prepareTestData(db);
-		Dishes.prepareTestData(db);
 	}
 
 
@@ -64,6 +61,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 
+
+
+
+	/**
+	 * Used only for local testing.
+	 */
+	private void prepareTestData(SQLiteDatabase db){
+		Restaurants.prepareTestData(db);
+		DishTypes.prepareTestData(db);
+		Dishes.prepareTestData(db);
+	}
 
 
 

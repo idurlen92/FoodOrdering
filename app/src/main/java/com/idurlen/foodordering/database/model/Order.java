@@ -24,10 +24,10 @@ public class Order {
 	public Order(int userId, int restaurantId, String orderCity, String orderAddress, String orderTime, String deliveryTime){
 		this.userId = userId;
 		this.restaurantId = restaurantId;
+		this.orderCity = orderCity;
+		this.orderAddress = orderAddress;
 		this.orderTime = orderTime;
 		this.deliveryTime = deliveryTime;
-		this.orderAddress = orderAddress;
-		this.orderCity = orderCity;
 	}
 
 

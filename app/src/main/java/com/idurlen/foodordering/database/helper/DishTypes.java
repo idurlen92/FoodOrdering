@@ -51,7 +51,7 @@ public class DishTypes extends HelperMethods{
 	public static List<DishType> getDishTypesOfRestaurant(SQLiteDatabase db, int restaurantId){
 		final String strStatement = "SELECT * FROM " + TABLE_NAME +
 				" WHERE " + COL_ID + " IN " +
-					"(SELECT DISTINCT " + Dishes.COL_DISH_TYPE + " FROM " + Dishes.TABLE_NAME +
+					"(SELECT DISTINCT " + Dishes.COL_DISH_TYPE_ID + " FROM " + Dishes.TABLE_NAME +
 					" WHERE " + Dishes.COL_RESTAURANT_ID + " = ?)" +
 				" ORDER BY " + COL_TYPE_NAME;
 
@@ -65,6 +65,21 @@ public class DishTypes extends HelperMethods{
 
 		cursor.close();
 		return lDishTypes;
+	}
+
+
+	public static void insertDishTypes(SQLiteDatabase db, List<Object> lDishTypes){
+		ContentValues values = new ContentValues();
+
+		for(Object obj : lDishTypes){
+			DishType dishType = (DishType) obj;
+
+			values.put(COL_ID, dishType.getId());
+			values.put(COL_TYPE_NAME, dishType.getTypeName());
+
+			db.insert(TABLE_NAME, null, values);
+			values.clear();
+		}
 	}
 
 

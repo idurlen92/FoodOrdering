@@ -39,10 +39,12 @@ public class OrdersRequest extends RestClient{
 		Map<String, String> mRequestParams = new HashMap<>();
 		mRequestParams.put(Orders.COL_USER_ID, Integer.toString(order.getUserId()));
 		mRequestParams.put(Orders.COL_RESTAURANT_ID, Integer.toString(order.getRestaurantId()));
-		mRequestParams.put(Orders.COL_ORDER_TIME, order.getOrderTime());
-		mRequestParams.put(Orders.COL_DELIVERY_TIME, order.getDeliveryTime());
 		mRequestParams.put(Orders.COL_ORDER_CITY, order.getOrderCity());
 		mRequestParams.put(Orders.COL_ORDER_ADDRESS, order.getOrderAddress());
+		mRequestParams.put(Orders.COL_ORDER_TIME, order.getOrderTime());
+		mRequestParams.put(Orders.COL_DELIVERY_TIME, order.getDeliveryTime());
+
+		//Log.d("TIMESTAMP", order.getOrderTime());
 
 		int iResult = REST_NO_INSERT;
 		RestService service = new RestService(RestService.HttpMethod.POST, ENDPOINT_ADDRESS, mRequestParams);

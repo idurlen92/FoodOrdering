@@ -184,7 +184,7 @@ public class RestService {
 				}
 			}
 			else{
-				builder.append(URLEncoder.encode(sJsonParams, "UTF-8"));
+				builder.append(sJsonParams);
 			}
 		}
 		catch(UnsupportedEncodingException e){

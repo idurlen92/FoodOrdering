@@ -41,7 +41,7 @@ public class UsersRequest extends RestClient{
 		mRequestParams.put(Users.COL_PASSWORD, user.getPassword());
 		mRequestParams.put(Users.COL_CITY, user.getCity());
 		mRequestParams.put(Users.COL_ADDRESS, user.getAddress());
-		//TODO: mRequestParams.put(Users.COL_BIRTH_DATE, user.getBirthDate());
+		mRequestParams.put(Users.COL_BIRTH_DATE, user.getBirthDate());
 
 		int iResult = RestService.REST_NO_INSERT;
 		RestService service = new RestService(RestService.HttpMethod.POST, ENDPOINT_ADDRESS, mRequestParams);

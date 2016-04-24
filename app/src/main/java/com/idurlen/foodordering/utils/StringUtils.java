@@ -62,8 +62,8 @@ public class StringUtils{
 	 */
 	public static String getTimeString(int hour, int minute, int second){
 		StringBuilder builder = new StringBuilder();
-		builder.append((hour < 9 ? "0" : "") + hour);
-		builder.append((minute < 9 ? "0" : "") + minute);
+		builder.append((hour < 9 ? "0" : "") + hour + ":");
+		builder.append((minute < 9 ? "0" : "") + minute + ":");
 		builder.append((second < 9 ? "0" : "") + second);
 		return builder.toString();
 	}

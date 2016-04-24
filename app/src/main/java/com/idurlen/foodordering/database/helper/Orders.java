@@ -1,5 +1,8 @@
 package com.idurlen.foodordering.database.helper;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+
 import com.idurlen.foodordering.database.model.Order;
 
 
@@ -38,9 +41,18 @@ public class Orders {
 
 
 
-	public static boolean insertOrder(Order order){
-		//TODO:
-		return false;
+	public static void insertOrder(SQLiteDatabase db, Order order){
+		ContentValues values = new ContentValues();
+
+		values.put(COL_ID, order.getId());
+		values.put(COL_USER_ID, order.getUserId());
+		values.put(COL_RESTAURANT_ID, order.getRestaurantId());
+		values.put(COL_ORDER_CITY, order.getOrderCity());
+		values.put(COL_ORDER_ADDRESS, order.getOrderAddress());
+		values.put(COL_ORDER_TIME, order.getOrderTime());
+		values.put(COL_DELIVERY_TIME, order.getDeliveryTime());
+
+		db.insert(TABLE_NAME, null, values);
 	}
 
 

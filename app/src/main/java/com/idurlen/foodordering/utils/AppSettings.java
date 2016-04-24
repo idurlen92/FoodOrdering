@@ -84,4 +84,11 @@ public class AppSettings {
 	}
 
 
+	public void setLastSyncTime(String syncTime){
+		Editor editor = preferences.edit();
+		editor.putString(KEY_LAST_SYNC, syncTime);
+		editor.commit();
+	}
+
+
 }

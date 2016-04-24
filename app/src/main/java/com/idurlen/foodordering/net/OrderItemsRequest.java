@@ -2,10 +2,10 @@ package com.idurlen.foodordering.net;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.idurlen.foodordering.database.helper.OrderItems;
 import com.idurlen.foodordering.database.model.OrderItem;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,11 +44,28 @@ public class OrderItemsRequest extends RestClient{
 			lOrderItems.add((OrderItem) item);
 		}
 
-		Gson gson = new Gson();
-		String sJsonParam = gson.toJson(lOrderItems);
-		Log.d("Order items", sJsonParam);
 
-		RestService service = new RestService(RestService.HttpMethod.POST, ENDPOINT_ADDRESS, sJsonParam);
+
+		StringBuilder builder = new StringBuilder("[");
+		int k = 0;
+		for(Object item : lObjects){
+			OrderItem orderItem = (OrderItem) item;
+			builder.append("{\"" + OrderItems.COL_ORDER_ID + "\":" + orderItem.getOrderId() + ",");
+			builder.append("\"" + OrderItems.COL_DISH_ID + "\":" + orderItem.getDishId()+ ",");
+			builder.append("\"" + OrderItems.COL_QUANTITY + "\":" + orderItem.getQuantity() + (k++ < (lObjects.size() - 1) ? "}," : "}]"));
+		}
+
+		Log.d("JSON OrdItm:", builder.toString());
+
+		String sJsonArray = "orderItems=";
+		try{
+			sJsonArray += URLEncoder.encode(builder.toString(), "UTF-8");
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		RestService service = new RestService(RestService.HttpMethod.POST, ENDPOINT_ADDRESS, sJsonArray);
 		List<Integer> lInsertIds = new ArrayList<>();
 
 		try {
@@ -57,14 +74,9 @@ public class OrderItemsRequest extends RestClient{
 			if(jsonResponse.isError()) {
 				Log.e("REST", jsonResponse.getErrorMessage());
 			}
-			else{
-				TypeToken typeToken = new TypeToken<ArrayList<Integer>>(){};
-				lInsertIds.addAll((ArrayList<Integer>) jsonResponse.getDataList(JSONResponse.KEY_INSERT_ID, typeToken.getType()));
-			}
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			throw new Exception("Network error");
 		}
 		finally{
 			service.close();

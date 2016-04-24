@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.idurlen.foodordering.net.RestClient;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -50,12 +49,7 @@ public class DownloadThread extends Thread{
 						list.add(obj);
 					}
 				}
-				catch(IOException e){
-					isErrorOccurred = true;
-					errorMessage = "Mrežna greška";
-				}
 				catch(Exception e){
-					isErrorOccurred = true;
 					e.printStackTrace();
 				}
 			}

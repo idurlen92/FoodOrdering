@@ -16,7 +16,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.idurlen.foodordering.R;
+import com.idurlen.foodordering.controller.Controller;
 import com.idurlen.foodordering.controller.MenuController;
+import com.idurlen.foodordering.factory.ControllerFactory;
 import com.idurlen.foodordering.factory.FragmentFactory;
 import com.idurlen.foodordering.utils.SessionManager;
 
@@ -28,12 +30,15 @@ public class MainActivity extends AppCompatActivity {
 	final String BACK_STACK_NAME = "food_ordering_back_stack_1992";
 	final String OPTION_HOME = "homeOption";
 
-	SessionManager sessionManager;
-
 	ActionBarDrawerToggle toggle;
 	DrawerLayout drawer;
 	NavigationView navigationView;
 	Toolbar toolbar;
+
+	SessionManager sessionManager;
+
+	Controller controller;
+	MenuController menuController;
 
 
 	@Override
@@ -48,16 +53,11 @@ public class MainActivity extends AppCompatActivity {
 		else{
 			Log.d("USER", "Logged in");
 			setContentView(R.layout.activity_main);
-
 			findWidgets();
-			setSupportActionBar(toolbar);
 
-			toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-			drawer.setDrawerListener(toggle);
-			toggle.syncState();
-
-			MenuController menuController = new MenuController(this);
-			pushFragment(MenuController.OPTION_HOME);
+			controller = ControllerFactory.newInstance(this);
+			controller.activate();
+			menuController = new MenuController(this);
 		}
 	}
 
@@ -93,6 +93,12 @@ public class MainActivity extends AppCompatActivity {
 
 		View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
 		((TextView) headerView.findViewById(R.id.tvMenuUsername)).setText(sessionManager.getName());
+
+		setSupportActionBar(toolbar);
+
+		toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		drawer.setDrawerListener(toggle);
+		toggle.syncState();
 	}
 
 

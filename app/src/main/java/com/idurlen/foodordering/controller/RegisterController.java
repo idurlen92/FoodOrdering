@@ -216,7 +216,7 @@ public class RegisterController implements Controller, View.OnTouchListener{
 			user.setPassword(etPassword.getText().toString());
 			user.setCity(sCity.getSelectedItem().toString());
 			user.setAddress(etAddress.getText().toString());
-			//TODO user.setBirthDate(etBirthDate.getText().toString());
+			//TODO: user.setBirthDate(etBirthDate.getText().toString());
 			registerUser(user);
 		}
 		else {

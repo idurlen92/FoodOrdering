@@ -75,6 +75,7 @@ public class HelperMethods {
 	}
 
 
+
 	/**
 	 * Returns "?"s as param for IN operator in query.
 	 * @param sParams
@@ -87,7 +88,6 @@ public class HelperMethods {
 		}
 		return queryBuilder.toString();
 	}
-
 
 
 

@@ -3,7 +3,6 @@ package com.idurlen.foodordering.database.helper;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 
 import com.idurlen.foodordering.database.model.Restaurant;
 
@@ -27,10 +26,10 @@ public class Restaurants extends HelperMethods{
 	public static final String COL_DESCRIPTION = "description";
 	public static final String COL_EMAIL = "email";
 	public static final String COL_PHONE = "phone";
-	public static final String COL_WORKS_FROM = "working_from";
-	public static final String COL_WORKS_TO = "working_until";
-	public static final String COL_ORDERS_FROM = "ordering_from";
-	public static final String COL_ORDERS_TO = "ordering_until";
+	public static final String COL_WORKING_FROM = "working_from";
+	public static final String COL_WORKING_UNTIL = "working_until";
+	public static final String COL_DELIVERING_FROM = "delivering_from";
+	public static final String COL_DELIVERING_UNTIL = "delivering_until";
 
 
 	public static String getCreateTableStatement(){
@@ -42,10 +41,10 @@ public class Restaurants extends HelperMethods{
 				COL_DESCRIPTION + " TEXT, " +
 				COL_EMAIL + " VARCHAR(45), " +
 				COL_PHONE + " VARCHAR(15), " +
-				COL_WORKS_FROM + " VARCHAR(5), " +
-				COL_WORKS_TO + " VARCHAR(5), " +
-				COL_ORDERS_FROM + " VARCHAR(5), " +
-				COL_ORDERS_TO + " VARCHAR(5) )";
+				COL_WORKING_FROM + " VARCHAR(5), " +
+				COL_WORKING_UNTIL + " VARCHAR(5), " +
+				COL_DELIVERING_FROM + " VARCHAR(5), " +
+				COL_DELIVERING_UNTIL + " VARCHAR(5) )";
 	}
 
 
@@ -67,10 +66,10 @@ public class Restaurants extends HelperMethods{
 			values.put(COL_ADDRESS, "Adresa " + (34 + i) + " " + astrCities[i % 4] );
 			values.put(COL_EMAIL, "restoran" + i + "@example.com");
 			values.put(COL_DESCRIPTION, "Restoran " + i + " radi vrhunska jela od domaćih sastojaka.");
-			values.put(COL_ORDERS_FROM, astrWorksOrdersFrom[i % 3]);
-			values.put(COL_WORKS_FROM, astrWorksOrdersFrom[i % 3]);
-			values.put(COL_WORKS_TO, astrWorksTo[i % 5]);
-			values.put(COL_ORDERS_TO, astrOrdersTo[i % 5]);
+			values.put(COL_WORKING_FROM, astrWorksOrdersFrom[i % 3]);
+			values.put(COL_WORKING_UNTIL, astrWorksTo[i % 5]);
+			values.put(COL_DELIVERING_FROM, astrWorksOrdersFrom[i % 3]);
+			values.put(COL_DELIVERING_UNTIL, astrOrdersTo[i % 5]);
 			values.put(COL_PHONE, "+3851 2345 678");
 
 			db.insert(TABLE_NAME, null, values);
@@ -115,30 +114,26 @@ public class Restaurants extends HelperMethods{
 
 
 	public static void insertRestaurants(SQLiteDatabase db, List<Object> lRestaurants){
-		/*
-		public static final String COL_ID = "id";
-	public static final String COL_NAME = "name";
-	public static final String COL_CITY = "city";
-	public static final String COL_ADDRESS = "address";
-	public static final String COL_DESCRIPTION = "description";
-	public static final String COL_EMAIL = "email";
-	public static final String COL_PHONE = "phone";
-	public static final String COL_WORKS_FROM = "working_from";
-	public static final String COL_WORKS_TO = "working_until";
-	public static final String COL_ORDERS_FROM = "ordering_from";
-	public static final String COL_ORDERS_TO = "ordering_until";
-		 */
-		String sInsertStatement = "INSERT INTO " + TABLE_NAME + "(" +
-				COL_ID + "," + COL_NAME + "," + COL_CITY + "," +
-				COL_ADDRESS + "," + COL_DESCRIPTION + "," + COL_EMAIL + "," +
-				COL_PHONE + "," + COL_WORKS_FROM + "," + COL_WORKS_TO + "," +
-				COL_ORDERS_FROM + "," + COL_ORDERS_TO +
-				" VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		ContentValues values = new ContentValues();
 
-		SQLiteStatement statement = db.compileStatement(sInsertStatement);
-		//for(Object obj : lRestaurants){
+		for(Object obj : lRestaurants){
+			Restaurant restaurant = (Restaurant) obj;
 
-		//}
+			values.put(COL_ID, restaurant.getId());
+			values.put(COL_NAME, restaurant.getName());
+			values.put(COL_CITY, restaurant.getCity());
+			values.put(COL_ADDRESS, restaurant.getAddress());
+			values.put(COL_EMAIL, restaurant.getEmail());
+			values.put(COL_DESCRIPTION, restaurant.getDescription());
+			values.put(COL_WORKING_FROM, restaurant.getWorkingFrom());
+			values.put(COL_WORKING_UNTIL, restaurant.getWorkingUntil());
+			values.put(COL_DELIVERING_FROM, restaurant.getDeliveringFrom());
+			values.put(COL_DELIVERING_UNTIL, restaurant.getDeliveringUntil());
+			values.put(COL_PHONE, restaurant.getPhone());
+
+			db.insert(TABLE_NAME, null, values);
+			values.clear();
+		}
 	}
 
 }
