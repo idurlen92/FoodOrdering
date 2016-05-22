@@ -56,7 +56,7 @@ public class HomeController implements Controller, AdapterView.OnItemClickListen
 		loadRestaurantsTask = new BackgroundTask(fragment.getProgressBar(), fragment.getLayoutContainer(), new BackgroundOperation() {
 			@Override
 			public Object execInBackground() {
-				return Restaurants.getRetaurantsByCity(db, session.getCity());
+				return Restaurants.getRestaurantsByCity(db, session.getCity());
 			}
 
 			@Override

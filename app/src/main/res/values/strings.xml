@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">Food Ordering</string>
+    <string name="google_api_key">AIzaSyBUWFfFpeMNmLOcDMgg8DwXLPVBhT6Avg0</string>
 
     <!-- ######### Login ######### -->
     <string name="title_activity_login">Prijava</string>
@@ -21,6 +22,12 @@
 
     <!-- ########## Fragment Restaurant ########## -->
     <string name="action_order">Naruči</string>
+
+    <!-- ########## Fragment Orders ########## -->
+    <string name="title_orders_restaurant_name">Restoran</string>
+    <string name="title_orders_time">Vrijeme narudžbe</string>
+    <string name="title_orders_total">Ukupna cijena</string>
+    <string name="action_cancel_order">Otkaži narudžbu</string>
 
     <!-- ########## Fragment ConfirmOrder ########## -->
     <string name="title_order_date">Datum narudžbe:</string>

@@ -1,11 +1,14 @@
 package com.idurlen.foodordering.database.helper;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.idurlen.foodordering.database.model.OrderItem;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 
@@ -29,6 +32,23 @@ public class OrderItems extends HelperMethods{
 				COL_DISH_ID + " INTEGER REFERENCES " + Dishes.TABLE_NAME +
 					"(" + Dishes.COL_ID + ") ON DELETE CASCADE ON UPDATE CASCADE, " +
 				COL_QUANTITY + " INTEGER DEFAULT 1)";
+	}
+
+
+	public static List<OrderItem> getOrderItemsOfUser(SQLiteDatabase db, Set<Integer> sOrderIds){
+		final String sQuery = "SELECT * FROM " + TABLE_NAME +
+								" WHERE " + COL_ORDER_ID + " IN(" +  getInStatementQueryParams(sOrderIds) + ")" +
+								" ORDER BY " + COL_ORDER_ID;
+
+		ArrayList<OrderItem> lOrderItems = new ArrayList<>();
+
+		Cursor cursor = db.rawQuery(sQuery, getSetAsStringArray(sOrderIds));
+		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+			lOrderItems.add((OrderItem) extractFields(cursor, new OrderItem()));
+		}
+		cursor.close();
+
+		return lOrderItems;
 	}
 
 

@@ -1,10 +1,12 @@
 package com.idurlen.foodordering.database.helper;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.idurlen.foodordering.database.model.Order;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,7 +15,7 @@ import java.util.List;
 /**
  * @author Ivan Durlen
  */
-public class Orders {
+public class Orders extends HelperMethods{
 
 	public static final String TABLE_NAME = "orders";
 
@@ -43,6 +45,25 @@ public class Orders {
 
 
 
+	public static List<Order> getOrdersOfUser(SQLiteDatabase db, int userId){
+		final String sQuery = "SELECT * FROM " + TABLE_NAME +
+								" WHERE " + COL_USER_ID + " = ? " +
+								"ORDER BY " + COL_ORDER_TIME + " DESC";
+
+		ArrayList<Order> lOrders = new ArrayList<>();
+
+		Cursor cursor = db.rawQuery(sQuery,  new String[]{ Integer.toString(userId) });
+		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+			Order order = new Order();
+			lOrders.add((Order) extractFields(cursor, order));
+		}
+		cursor.close();
+
+		return lOrders;
+	}
+
+
+
 	public static void insertOrder(SQLiteDatabase db, Order order){
 		ContentValues values = new ContentValues();
 
@@ -67,7 +88,7 @@ public class Orders {
 			values.put(COL_ID, order.getId());
 			values.put(COL_USER_ID, order.getUserId());
 			values.put(COL_RESTAURANT_ID, order.getRestaurantId());
-			values.put(COL_IS_CANCELED, order.isCanceled());
+			values.put(COL_IS_CANCELED, order.getIsCanceled());
 			values.put(COL_ORDER_CITY, order.getOrderCity());
 			values.put(COL_ORDER_ADDRESS, order.getOrderAddress());
 			values.put(COL_ORDER_TIME, order.getOrderTime());

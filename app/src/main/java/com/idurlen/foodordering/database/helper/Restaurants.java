@@ -7,7 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import com.idurlen.foodordering.database.model.Restaurant;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 
@@ -80,7 +83,7 @@ public class Restaurants extends HelperMethods{
 
 
 
-	public static List<Restaurant> getRetaurantsByCity(SQLiteDatabase db, String city){
+	public static List<Restaurant> getRestaurantsByCity(SQLiteDatabase db, String city){
 		final String sQuery = "SELECT * FROM " + TABLE_NAME +
 				" WHERE " + COL_CITY + " LIKE ? " +
 				" ORDER BY " + COL_NAME;
@@ -97,6 +100,23 @@ public class Restaurants extends HelperMethods{
 		return lRestaurants;
 	}
 
+
+	public static Map<Integer, Restaurant> getRestaurantsMapByIds(SQLiteDatabase db, Set<Integer> sRestaurantIds){
+		final String sQuery = "SELECT * FROM " + TABLE_NAME +
+								" WHERE " + COL_ID + " IN(" +  getInStatementQueryParams(sRestaurantIds) + ")" +
+								" ORDER BY " + COL_ID;
+
+		Map<Integer, Restaurant> mRestaurants = new LinkedHashMap<>();
+
+		Cursor cursor = db.rawQuery(sQuery, getSetAsStringArray(sRestaurantIds));
+		for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+			Restaurant restaurant = ((Restaurant) extractFields(cursor, new Restaurant()));
+			mRestaurants.put(restaurant.getId(), restaurant);
+		}
+		cursor.close();
+
+		return mRestaurants;
+	}
 
 
 	public static Restaurant getRestaurantById(SQLiteDatabase db, int id){

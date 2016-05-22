@@ -181,6 +181,7 @@ public class MainController  implements Controller{
 			settings.setIsMainDataSynced(true);
 		}
 		if(settings.isUserChanged()){
+			Orders.deleteOrders(db);
 			Orders.insertOrders(db, lOrders);
 			OrderItems.insertOrderItems(db, lOrderItems);
 

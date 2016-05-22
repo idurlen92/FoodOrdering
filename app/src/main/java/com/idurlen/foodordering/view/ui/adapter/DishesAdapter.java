@@ -95,10 +95,10 @@ public class DishesAdapter extends BaseAdapter{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if(getItemViewType(position) == TYPE_GROUP_TITLE){
 			if(convertView == null) {
-				convertView = inflater.inflate(R.layout.list_dish_group, null);
+				convertView = inflater.inflate(R.layout.list_group_item, null);
 			}
 			DishType dishType = mPosToDishType.get(position);
-			((TextView) convertView.findViewById(R.id.tvDishListDishType)).setText(dishType.getTypeName());
+			((TextView) convertView.findViewById(R.id.tvGroupTItle)).setText(dishType.getTypeName());
 		}
 		else{
 			if(convertView == null) {
