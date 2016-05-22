@@ -40,7 +40,7 @@ public class SessionManager {
 	 * @param context
 	 * @return
 	 */
-	public static SessionManager getInstance(Context context){
+	public static synchronized SessionManager getInstance(Context context){
 		if(instance == null) {
 			instance = new SessionManager(context);
 		}

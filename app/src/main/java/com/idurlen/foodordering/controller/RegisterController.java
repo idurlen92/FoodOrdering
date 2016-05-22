@@ -49,6 +49,8 @@ public class RegisterController implements Controller, View.OnTouchListener{
 
 	int insertStatus = RestService.REST_NO_INSERT;
 
+	String sBirthDate = "";
+
 	DatePicker datePicker;
 
 	Button bRegister;
@@ -61,7 +63,7 @@ public class RegisterController implements Controller, View.OnTouchListener{
 	EditText etAddress;
 	EditText etBirthDate;
 
-	Spinner sCity;
+	Spinner spCity;
 
 	BackgroundTask registerTask;
 	UsersRequest request;
@@ -85,6 +87,14 @@ public class RegisterController implements Controller, View.OnTouchListener{
 		datePicker = new DatePicker(activity, new DatePickerDialog.OnDateSetListener() {
 			@Override
 			public void onDateSet(android.widget.DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+				StringBuilder builder = new StringBuilder();
+				builder.append(year + "-");
+				builder.append(( (monthOfYear + 1) < 10 ? "0" : "") + (monthOfYear + 1) + "-");
+				builder.append((dayOfMonth < 10 ? "0" : "") + dayOfMonth);
+				sBirthDate = builder.toString();
+
+				Log.d("Birthdate", sBirthDate);
+
 				etBirthDate.setText(StringUtils.getDateString(year, monthOfYear, dayOfMonth, true, false));
 			}
 		});
@@ -100,7 +110,7 @@ public class RegisterController implements Controller, View.OnTouchListener{
 		etPasswordRepeat = activity.getEtPasswordRepeat();
 		etAddress = activity.getEtAddress();
 		etBirthDate = activity.getEtBirthDate();
-		sCity = activity.getSCity();
+		spCity = activity.getSCity();
 	}
 
 
@@ -214,9 +224,9 @@ public class RegisterController implements Controller, View.OnTouchListener{
 			user.setLastName(etLastName.getText().toString());
 			user.setEmail(etEmail.getText().toString());
 			user.setPassword(etPassword.getText().toString());
-			user.setCity(sCity.getSelectedItem().toString());
+			user.setCity(spCity.getSelectedItem().toString());
 			user.setAddress(etAddress.getText().toString());
-			//TODO: user.setBirthDate(etBirthDate.getText().toString());
+			user.setBirthDate(sBirthDate);
 			registerUser(user);
 		}
 		else {

@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.idurlen.foodordering.database.model.OrderItem;
 
+import java.util.List;
+
 
 
 
@@ -37,4 +39,21 @@ public class OrderItems extends HelperMethods{
 		values.put(COL_QUANTITY, orderItem.getQuantity());
 		db.insert(TABLE_NAME, null, values);
 	}
+
+
+	public static void insertOrderItems(SQLiteDatabase db, List<Object> lOrderITems){
+		ContentValues values = new ContentValues();
+
+		for(Object obj : lOrderITems){
+			OrderItem orderItem = (OrderItem) obj;
+
+			values.put(COL_ORDER_ID, orderItem.getOrderId());
+			values.put(COL_DISH_ID, orderItem.getDishId());
+			values.put(COL_QUANTITY, orderItem.getQuantity());
+
+			db.insert(TABLE_NAME, null, values);
+			values.clear();
+		}
+	}
+
 }

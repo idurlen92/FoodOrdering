@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.idurlen.foodordering.database.model.Order;
 
+import java.util.List;
+
 
 
 
@@ -22,7 +24,7 @@ public class Orders {
 	public static final String COL_DELIVERY_TIME = "delivery_time";
 	public static final String COL_ORDER_CITY = "order_city";
 	public static final String COL_ORDER_ADDRESS = "order_address";
-	public static final String COL_CANCELED = "is_canceled";
+	public static final String COL_IS_CANCELED = "is_canceled";
 
 
 	public static String getCreateTableStatement(){
@@ -35,7 +37,7 @@ public class Orders {
 				COL_DELIVERY_TIME + " VARCHAR(5) NOT NULL, " +
 				COL_ORDER_CITY + " VARCHAR(45), " +
 				COL_ORDER_ADDRESS + " VARCHAR(45), " +
-				COL_CANCELED + " INTEGER DEFAULT 0, " +
+				COL_IS_CANCELED + " INTEGER DEFAULT 0, " +
 				"UNIQUE(" + COL_USER_ID + "," + COL_RESTAURANT_ID + "," + COL_ORDER_TIME + "))";
 	}
 
@@ -53,6 +55,32 @@ public class Orders {
 		values.put(COL_DELIVERY_TIME, order.getDeliveryTime());
 
 		db.insert(TABLE_NAME, null, values);
+	}
+
+
+	public static void insertOrders(SQLiteDatabase db, List<Object> lOrders){
+		ContentValues values = new ContentValues();
+
+		for(Object obj : lOrders){
+			Order order = (Order) obj;
+
+			values.put(COL_ID, order.getId());
+			values.put(COL_USER_ID, order.getUserId());
+			values.put(COL_RESTAURANT_ID, order.getRestaurantId());
+			values.put(COL_IS_CANCELED, order.isCanceled());
+			values.put(COL_ORDER_CITY, order.getOrderCity());
+			values.put(COL_ORDER_ADDRESS, order.getOrderAddress());
+			values.put(COL_ORDER_TIME, order.getOrderTime());
+			values.put(COL_DELIVERY_TIME, order.getDeliveryTime());
+
+			db.insert(TABLE_NAME, null, values);
+			values.clear();
+		}
+	}
+
+
+	public static void deleteOrders(SQLiteDatabase db){
+		db.delete(TABLE_NAME, "", new String[]{});
 	}
 
 

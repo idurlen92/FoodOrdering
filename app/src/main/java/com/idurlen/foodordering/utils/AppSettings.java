@@ -16,8 +16,11 @@ public class AppSettings {
 	private static final String SETTINGS_FILE_NAME = "settings";
 
 	private final String KEY_IS_AUTO_SYNC = "is_auto_sync";
-	private final String KEY_IS_SCHEMA_CREATED = "is_synced";
-	private final String KEY_LAST_SYNC = "last_sync";
+	private final String KEY_IS_MAIN_DATA_SYNCED = "is_main_data_synced";
+	private final String KEY_IS_USER_CHANGED = "is_user_changed";
+	private final String KEY_LAST_SYNC_TIME = "last_sync_time";
+	private final String KEY_LAST_USER_ID = "last_user_id";
+
 
 	private static AppSettings instance = null;
 
@@ -27,7 +30,7 @@ public class AppSettings {
 
 	private AppSettings(Context context){
 		preferences = context.getApplicationContext().getSharedPreferences(SETTINGS_FILE_NAME, Context.MODE_PRIVATE);
-		if(!preferences.contains(KEY_IS_AUTO_SYNC)) {
+		if(preferences.getAll().isEmpty()) {
 			populateValues();
 		}
 	}
@@ -38,7 +41,7 @@ public class AppSettings {
 	 * @param context
 	 * @return
 	 */
-	public static AppSettings getInstance(Context context){
+	public static synchronized AppSettings getInstance(Context context){
 		if(instance == null) {
 			instance = new AppSettings(context);
 		}
@@ -56,18 +59,29 @@ public class AppSettings {
 		Editor editor = preferences.edit();
 
 		editor.putBoolean(KEY_IS_AUTO_SYNC, true);
-		editor.putBoolean(KEY_IS_SCHEMA_CREATED, false);
-		editor.putString(KEY_LAST_SYNC, "");
+		editor.putBoolean(KEY_IS_MAIN_DATA_SYNCED, false);
+		editor.putBoolean(KEY_IS_USER_CHANGED, true);
+		editor.putString(KEY_LAST_SYNC_TIME, "");
+		editor.putInt(KEY_LAST_USER_ID, -1);
 
 		editor.commit();
 	}
 
 
+
 	public boolean isAutoSync(){ return preferences.getBoolean(KEY_IS_AUTO_SYNC, false); }
 
-	public boolean isSchemaCreated(){ return preferences.getBoolean(KEY_IS_SCHEMA_CREATED, false); }
+	public boolean isMainDataSynced(){ return preferences.getBoolean(KEY_IS_MAIN_DATA_SYNCED, false); }
 
-	public String getLastSyncTime(){ return preferences.getString(KEY_LAST_SYNC, "none"); }
+	public boolean isUserChanged(){ return preferences.getBoolean(KEY_IS_USER_CHANGED, true); }
+
+	public String getLastSyncTime(){ return preferences.getString(KEY_LAST_SYNC_TIME, ""); }
+
+	public int getLastUserId(){ return preferences.getInt(KEY_LAST_USER_ID, - 1); }
+
+
+	public boolean isSyncRequired(){ return !isMainDataSynced() || isUserChanged(); }
+
 
 
 	public void setAutoSync(boolean isAutoSync){
@@ -77,17 +91,34 @@ public class AppSettings {
 	}
 
 
-	public void setIsSchemaCreated(boolean isSchemaCreated){
+	public void setIsMainDataSynced(boolean isMainDataSynced){
 		Editor editor = preferences.edit();
-		editor.putBoolean(KEY_IS_SCHEMA_CREATED, isSchemaCreated);
+		editor.putBoolean(KEY_IS_MAIN_DATA_SYNCED, isMainDataSynced);
+		editor.commit();
+	}
+
+
+	public void setIsUserChanged(boolean isUserChanged){
+		Editor editor = preferences.edit();
+		editor.putBoolean(KEY_IS_USER_CHANGED, isUserChanged);
 		editor.commit();
 	}
 
 
 	public void setLastSyncTime(String syncTime){
 		Editor editor = preferences.edit();
-		editor.putString(KEY_LAST_SYNC, syncTime);
+		editor.putString(KEY_LAST_SYNC_TIME, syncTime);
 		editor.commit();
+	}
+
+	public void setLastUserId(int lastUserId){
+		if(lastUserId != getLastUserId()){
+			setIsUserChanged(true);
+		}
+		Editor editor = preferences.edit();
+		editor.putInt(KEY_LAST_USER_ID, lastUserId);
+		editor.commit();
+
 	}
 
 

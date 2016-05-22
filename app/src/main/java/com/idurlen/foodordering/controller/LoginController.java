@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.idurlen.foodordering.database.model.User;
 import com.idurlen.foodordering.net.UsersRequest;
+import com.idurlen.foodordering.utils.AppSettings;
 import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.utils.async.BackgroundOperation;
 import com.idurlen.foodordering.utils.async.BackgroundTask;
@@ -37,8 +38,10 @@ public class LoginController implements Controller{
 	private TextInputLayout layoutPassword;
 
 	private BackgroundTask loginTask;
+	private AppSettings settings;
 	private SessionManager sessionManager;
-	UsersRequest request;
+
+	private UsersRequest request;
 
 	private User user = null;
 
@@ -48,6 +51,7 @@ public class LoginController implements Controller{
 
 	public LoginController(AppCompatActivity activity){
 		this.activity = (LoginActivity) activity;
+		settings = AppSettings.getInstance(activity);
 		sessionManager = SessionManager.getInstance(activity);
 		request = new UsersRequest();
 	}
@@ -88,7 +92,6 @@ public class LoginController implements Controller{
 
 
 	private void handleLogin(){
-		//TODO: errors!!!
 		final String sUsername = etUsername.getText().toString();
 		final String sPassword = etPassword.getText().toString();
 
@@ -122,6 +125,7 @@ public class LoginController implements Controller{
 					}
 					else {
 						sessionManager.createSession(user);
+						settings.setLastUserId(user.getId());
 						Log.d("User ADDRESS:", user.getAddress());
 						Log.d("Session ADDRESS:", sessionManager.getAddress());
 						redirectToMain();
@@ -135,10 +139,10 @@ public class LoginController implements Controller{
 
 
 	private void redirectToMain(){
+		Class c = this.getClass();
 		Intent intent = new Intent(activity, MainActivity.class);
 		activity.startActivity(intent);
 		activity.finish();
 	}
-
 
 }

@@ -55,11 +55,23 @@ public class MainActivity extends AppCompatActivity {
 			setContentView(R.layout.activity_main);
 			findWidgets();
 
-			controller = ControllerFactory.newInstance(this);
-			controller.activate();
+			if(controller == null) {
+				controller = ControllerFactory.newInstance(this);
+			}
 			menuController = new MenuController(this);
 		}
 	}
+
+
+
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		controller.activate();
+	}
+
+
 
 
 	@Override

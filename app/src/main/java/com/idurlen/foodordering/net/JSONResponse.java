@@ -86,7 +86,14 @@ public class JSONResponse {
 	 */
 	public Object getDataObject(String elementName, Class objClass){
 		Gson gson = new Gson();
-		return gson.fromJson(jsonObject.get(elementName), objClass);
+		if(jsonObject.has(elementName)){
+			JsonElement element = jsonObject.get(elementName);
+			if(element.isJsonNull() || (element.isJsonArray() && element.getAsJsonArray().size() == 0)){
+				return null;
+			}
+			return gson.fromJson(jsonObject.get(elementName), objClass);
+		}
+		return null;
 	}
 
 

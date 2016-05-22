@@ -2,12 +2,17 @@ package com.idurlen.foodordering.net;
 
 import android.util.Log;
 
+import com.google.gson.reflect.TypeToken;
 import com.idurlen.foodordering.database.helper.OrderItems;
+import com.idurlen.foodordering.database.helper.Orders;
 import com.idurlen.foodordering.database.model.OrderItem;
+import com.idurlen.foodordering.utils.SessionManager;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -25,7 +30,35 @@ public class OrderItemsRequest extends RestClient{
 
 	@Override
 	public List<Object> getAll() throws Exception {
-		return null;
+		SessionManager session = SessionManager.getInstance(null);
+
+		List<Object> lOrderItems = new ArrayList<>();
+		Map<String, String> mRequestParams = new HashMap<>();
+		mRequestParams.put(Orders.COL_USER_ID, Integer.toString(session.getUserId()));
+
+		RestService service = new RestService(RestService.HttpMethod.GET, ENDPOINT_ADDRESS, mRequestParams);
+
+		try {
+			service.call();
+			JSONResponse jsonResponse = service.getJSONResponse();
+			if(jsonResponse.isError()) {
+				Log.e("REST", jsonResponse.getErrorMessage());
+			}
+			else{
+				final String ELEMENT_RESTAURANTS = "orderItems";
+				TypeToken typeToken = new TypeToken<ArrayList<OrderItem>>(){};
+				lOrderItems.addAll((ArrayList<OrderItem>) jsonResponse.getDataList(ELEMENT_RESTAURANTS, typeToken.getType()));
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			throw new Exception("Network error");
+		}
+		finally{
+			service.close();
+		}
+
+		return lOrderItems;
 	}
 
 
