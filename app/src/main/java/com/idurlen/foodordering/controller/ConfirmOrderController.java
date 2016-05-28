@@ -172,9 +172,10 @@ public class ConfirmOrderController implements Controller{
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				String clickedItem = (String) parent.getItemAtPosition(position);
-				if(! OPTION_NOT_SELECTED.equals(clickedItem) && lAddressChoices.contains(OPTION_NOT_SELECTED)) {
+				if(! OPTION_NOT_SELECTED.equals(clickedItem) && lDeliveryTimeChoices.contains(OPTION_NOT_SELECTED)) {
 					lDeliveryTimeChoices.remove(0);
 					((ArrayAdapter<String>) fragment.getSpDeliveryTime().getAdapter()).notifyDataSetChanged();
+					fragment.getSpDeliveryTime().setSelection(position - 1);
 				}
 			}
 

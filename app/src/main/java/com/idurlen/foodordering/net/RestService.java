@@ -95,6 +95,7 @@ public class RestService {
 	public void call() throws Exception{
 		URL url = url = new URL(hasGETParams() ? (sServiceUrl + '?' + createQueryString()) : sServiceUrl);
 		connection = (HttpURLConnection) url.openConnection();
+		connection.setConnectTimeout(5000);
 		connection.setRequestMethod(method.toString());
 		if(hasParams()) {
 			connection.setDoOutput(true);

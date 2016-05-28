@@ -11,7 +11,7 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/item_orders"/>
         <item
-            android:id="@+id/mapOption"
+            android:id="@+id/showMapOption"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/item_map"/>
     </group>

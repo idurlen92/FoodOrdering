@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 public class BackgroundTask extends AsyncTask{
 
 	private boolean isShowProgressDialog = false;
-	private boolean isShowSpinner = true;
+	private boolean isShowSpinner = false;
 
 	private ProgressDialog progressDialog;
 	private ProgressBar progressBar;
@@ -25,6 +25,12 @@ public class BackgroundTask extends AsyncTask{
 
 	private BackgroundOperation operation;
 	private Context context;
+
+
+
+	public BackgroundTask(BackgroundOperation operation){
+		this.operation = operation;
+	}
 
 
 	public BackgroundTask(ProgressBar progressBar, View mainView, BackgroundOperation operation){
