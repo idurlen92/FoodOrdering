@@ -90,4 +90,14 @@ public class BackgroundTask extends AsyncTask{
 		operation.execAfter(o);
 	}
 
+
+
+
+	@Override
+	protected void onCancelled() {
+		super.onCancelled();
+		if(isShowProgressDialog){
+			progressDialog.dismiss();
+		}
+	}
 }

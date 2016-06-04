@@ -1,8 +1,8 @@
-package com.idurlen.foodordering.controller;
+package com.idurlen.foodordering.presenter;
 import android.app.Fragment;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,7 +11,6 @@ import com.idurlen.foodordering.database.DatabaseManager;
 import com.idurlen.foodordering.database.helper.Orders;
 import com.idurlen.foodordering.database.helper.Restaurants;
 import com.idurlen.foodordering.database.model.Order;
-import com.idurlen.foodordering.database.model.OrderItem;
 import com.idurlen.foodordering.database.model.Restaurant;
 import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.utils.async.BackgroundOperation;
@@ -30,51 +29,55 @@ import java.util.TreeSet;
 /**
  * Created by Duky on 22.5.2016..
  */
-public class OrdersController implements Controller, AdapterView.OnItemLongClickListener{
+public class OrdersPresenter extends Presenter implements AdapterView.OnItemLongClickListener{
+
+	private static final String TITLE = "Izvršene narudžbe";
 
 	List<Order> lOrders;
-	List<OrderItem> lOrderItems;
 
 	Map<Integer, Restaurant> mRestaurants;
 
 	DatabaseManager databaseManager;
 	SessionManager session;
 
-	BackgroundTask ordersTask;
-	OrdersAdapter adapter;
 
-	OrdersFragment fragment;
-
-
-	public OrdersController(Fragment fragment){
-		this.fragment = (OrdersFragment) fragment;
-
-		databaseManager = DatabaseManager.getInstance(fragment.getActivity());
-		session = SessionManager.getInstance(fragment.getActivity());
+	public OrdersPresenter(Fragment fragment){
+		super(fragment, TITLE);
 	}
 
 
 	@Override
-	public void activate() {
-		((AppCompatActivity) fragment.getActivity()).getSupportActionBar().setTitle("Izvršene narudžbe");
+	public void onCreate(Bundle savedInstanceState) { }
+
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		databaseManager = DatabaseManager.getInstance(getApplicationContext());
+		session = SessionManager.getInstance(getApplicationContext());
 		getUserOrders();
-		setListeners();
 	}
 
 
+	@Override
+	public void onPause() { }
 
 
 	@Override
+	public void onStop() {
+		databaseManager = null;
+		session = null;
+		if(lOrders != null) {
+			lOrders.clear();
+		}
+		if(mRestaurants != null) {
+			mRestaurants.clear();
+		}
+	}
+
+
 	public void setListeners() {
-		fragment.getLvUserOrders().setOnItemLongClickListener(OrdersController.this);
+		((OrdersFragment) getFragment()).getLvUserOrders().setOnItemLongClickListener(OrdersPresenter.this);
 	}
-
-
-	@Override
-	public void onClick(View v) {
-	}
-
-
 
 
 	@Override
@@ -84,18 +87,15 @@ public class OrdersController implements Controller, AdapterView.OnItemLongClick
 	}
 
 
-
-
 	private void getUserOrders(){
-		ordersTask = new BackgroundTask(fragment.getPbUserOrders(), fragment.getLvUserOrders(), new BackgroundOperation() {
+		OrdersFragment fragment = (OrdersFragment) getFragment();
+
+		BackgroundTask task = new BackgroundTask(fragment.getPbUserOrders(), fragment.getLvUserOrders(), new BackgroundOperation() {
 			@Override
 			public Object execInBackground() {
 				SQLiteDatabase db = databaseManager.getReadableDatabase();
-
 				lOrders = Orders.getOrdersOfUser(db, session.getUserId());
-				//lOrderItems = OrderItems.getOrderItemsOfUser(db, getOrderIds());
 				mRestaurants = Restaurants.getRestaurantsMapByIds(db, getRestaurantIdsFromOrders());
-
 				db.close();
 
 				return null;
@@ -104,14 +104,13 @@ public class OrdersController implements Controller, AdapterView.OnItemLongClick
 			@Override
 			public void execAfter(Object object) {
 				super.execAfter(object);
-				adapter = new OrdersAdapter(OrdersController.this,
-						(LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE),
-						lOrders, mRestaurants);
-				fragment.getLvUserOrders().setAdapter(adapter);
+				setListAdapter();
+				setListeners();
+				setIsActivated(true);
 			}
 		});
 
-		ordersTask.execute();
+		task.execute();
 	}
 
 
@@ -130,6 +129,14 @@ public class OrdersController implements Controller, AdapterView.OnItemLongClick
 			sRestaurantIds.add(ord.getRestaurantId());
 		}
 		return sRestaurantIds;
+	}
+
+
+	private void setListAdapter(){
+		OrdersAdapter adapter = new OrdersAdapter(OrdersPresenter.this,
+				(LayoutInflater) getFragment().getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE),
+				lOrders, mRestaurants);
+		((OrdersFragment) getFragment()).getLvUserOrders().setAdapter(adapter);
 	}
 
 

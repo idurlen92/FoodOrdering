@@ -3,6 +3,7 @@ package com.idurlen.foodordering.view.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.controller.Controller;
-import com.idurlen.foodordering.factory.ControllerFactory;
+import com.idurlen.foodordering.factory.PresenterFactory;
+import com.idurlen.foodordering.presenter.Presenter;
 
 
 
@@ -31,53 +32,64 @@ public class RestaurantFragment extends Fragment {
 	ProgressBar progressBar;
 	ListView listView;
 
-	Controller controller;
+	Presenter presenter;
 
 
 	public RestaurantFragment() {
-		// Required empty public constructor
+		if(this.presenter == null) {
+			this.presenter = PresenterFactory.newInstance(this);
+		}
 	}
-
-
 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		controller = ControllerFactory.newInstance(this);
+		Log.e("RESTAURANT", "onCreate");
+		presenter.onCreate(savedInstanceState);
 	}
-
-
 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
+		Log.e("RESTAURANT", "onCreateView");
 		return inflater.inflate(R.layout.fragment_restaurant, container, false);
 	}
-
-
 
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if(savedInstanceState == null || !savedInstanceState.containsKey(KEY_RESTORED_STATE)){
-			findViews();
-			controller.activate();
-		}
+		Log.e("RESTAURANT", "onActivityCreated");
+		findViews();
+		presenter.onActivityCreated(savedInstanceState);
 	}
-
-
 
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putBoolean(KEY_RESTORED_STATE, true);
+	public void onResume() {
+		super.onResume();
+		Log.e("RESTAURANT", "onResume");
+		presenter.onResume();
 	}
 
 
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.e("RESTAURANT", "onStop");
+		presenter.onStop();
+	}
+
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.e("RESTAURANT", "onDestroy");
+		presenter.onDestroy();
+		presenter = null;
+	}
 
 
 	private void findViews(){
@@ -86,6 +98,7 @@ public class RestaurantFragment extends Fragment {
 		layoutContainer = (LinearLayout) getView().findViewById(R.id.layoutRestaurant);
 		progressBar = (ProgressBar) getView().findViewById(R.id.pbRestaurant);
 	}
+
 
 	public Button getBOrder(){ return bOrder; }
 

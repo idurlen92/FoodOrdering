@@ -3,7 +3,7 @@ package com.idurlen.foodordering.utils.async;
 import android.content.Context;
 import android.util.Log;
 
-import com.idurlen.foodordering.controller.MainController;
+import com.idurlen.foodordering.presenter.MainPresenter;
 import com.idurlen.foodordering.net.RestClient;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class DownloadThread extends Thread{
 	Runnable runnable;
 
 	Context context;
-	MainController controller;
+	MainPresenter controller;
 
 
 	/**
@@ -31,7 +31,7 @@ public class DownloadThread extends Thread{
 	 * @param client
 	 * @param list
 	 */
-	public DownloadThread(Context context, MainController controller, RestClient client, List<Object> list){
+	public DownloadThread(Context context, MainPresenter controller, RestClient client, List<Object> list){
 		this.context = context;
 		this.controller = controller;
 		this.client = client;

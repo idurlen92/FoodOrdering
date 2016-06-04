@@ -8,7 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.controller.RestaurantController;
+import com.idurlen.foodordering.presenter.RestaurantPresenter;
 import com.idurlen.foodordering.database.model.Dish;
 import com.idurlen.foodordering.database.model.DishType;
 
@@ -32,14 +32,14 @@ public class DishesAdapter extends BaseAdapter{
 
 	private Map<Integer, DishType> mPosToDishType;
 	private Map<Integer, Dish> mPosToDish;
-	/** Reference to the map from the Controller */
+	/** Reference to the map from the Presenter */
 	private Map<Integer, Integer> mDishQuantities;
 
-	RestaurantController controller;
+	RestaurantPresenter controller;
 	LayoutInflater inflater;
 
 
-	public DishesAdapter(RestaurantController controller,  LayoutInflater inflater, Map<DishType, List<Dish>> mDishesByType, Map<Integer, Integer> mDishQuantities){
+	public DishesAdapter(RestaurantPresenter controller, LayoutInflater inflater, Map<DishType, List<Dish>> mDishesByType, Map<Integer, Integer> mDishQuantities){
 		this.controller = controller;
 		this.mDishQuantities = mDishQuantities;
 		this.inflater = inflater;

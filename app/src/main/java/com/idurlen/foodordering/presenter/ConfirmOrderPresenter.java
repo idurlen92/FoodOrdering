@@ -1,10 +1,10 @@
-package com.idurlen.foodordering.controller;
+package com.idurlen.foodordering.presenter;
 
 import android.app.Fragment;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,6 +29,7 @@ import com.idurlen.foodordering.database.model.Restaurant;
 import com.idurlen.foodordering.net.OrderItemsRequest;
 import com.idurlen.foodordering.net.OrdersRequest;
 import com.idurlen.foodordering.utils.DateTimeUtils;
+import com.idurlen.foodordering.utils.MenuController;
 import com.idurlen.foodordering.utils.Messenger;
 import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.utils.async.BackgroundOperation;
@@ -49,12 +50,13 @@ import java.util.Map;
  *
  * @author Ivan Durlen
  */
-public class ConfirmOrderController implements Controller{
+public class ConfirmOrderPresenter extends Presenter implements View.OnClickListener{
 
-	final String TITLE_ACTIONBAR = "Potvrda narudžbe";
-	final String OPTION_NOT_SELECTED = "Nije odabrano";
-	final String OPTION_ALT_ADDRESS = "Druga adresa";
-	final String OPTION_DEFAULT_ADDRESS = "Postojeća adresa";
+	private static final String TITLE = "Potvrda narudžbe";
+
+	private static final String OPTION_NOT_SELECTED = "Nije odabrano";
+	private static final String OPTION_ALT_ADDRESS = "Druga adresa";
+	private static final String OPTION_DEFAULT_ADDRESS = "Postojeća adresa";
 
 	boolean isTimeValid = false;
 	boolean isAddressValid = false;
@@ -77,72 +79,138 @@ public class ConfirmOrderController implements Controller{
 	OrdersRequest ordersRequest;
 	OrderItemsRequest orderItemsRequest;
 
-	BackgroundTask task;
-	BackgroundTask insertTask;
 	SessionManager session;
+	DatabaseManager databaseManager;
 
-	ConfirmOrderFragment fragment;
 
-
-	public ConfirmOrderController(Fragment fragment){
-		this.fragment = (ConfirmOrderFragment) fragment;
-
-		lSelectedDishes = new ArrayList<>();
-		lAddressChoices = new ArrayList<>(Arrays.asList(new String[]{OPTION_NOT_SELECTED, OPTION_DEFAULT_ADDRESS, OPTION_ALT_ADDRESS}));
-		lDeliveryTimeChoices = new ArrayList<>(Arrays.asList(new String[]{OPTION_NOT_SELECTED}));
-
-		ordersRequest = new OrdersRequest();
-		orderItemsRequest = new OrderItemsRequest();
-
-		session = SessionManager.getInstance(fragment.getActivity());
-		sOrderAddress = session.getAddress();
-
-		Log.d("ADDRESS", session.getAddress());
-
-		selectedRestaurant = (Restaurant) Messenger.getObject(Messenger.KEY_RESTAURANT_OBJECT);
-		mDishIdQuantities = new HashMap<>((HashMap<Integer, Integer>) Messenger.getObject(Messenger.KEY_SELECTED_DISHES_MAP));
-		Messenger.clearAll();
+	public ConfirmOrderPresenter(Fragment fragment){
+		super(fragment, TITLE);
 	}
 
 
 	@Override
-	public void activate() {
-		((AppCompatActivity) fragment.getActivity()).getSupportActionBar().setTitle(TITLE_ACTIONBAR);
+	public void onCreate(Bundle savedInstanceState) { }
 
-		task = new BackgroundTask(fragment.getProgressBar(), fragment.getLayoutContainer(),
-				new BackgroundOperation() {
-					@Override
-					public Object execInBackground() {
-						SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity()).getReadableDatabase();
 
-						lSelectedDishes.addAll(Dishes.getDishesById(db, mDishIdQuantities.keySet()));
-						for(Dish dish : lSelectedDishes){
-							fragment.getLayoutOrderItems().addView(createItemLayout(dish, mDishIdQuantities.get(dish.getId())));
-							dOrderTotal += (dish.getPrice() * mDishIdQuantities.get(dish.getId()));
-							Log.d("DISH", dish.getTitle() + ": " + mDishIdQuantities.get(dish.getId()));
-						}
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		lAddressChoices = new ArrayList<>(Arrays.asList(new String[]{OPTION_NOT_SELECTED, OPTION_DEFAULT_ADDRESS, OPTION_ALT_ADDRESS}));
+		lDeliveryTimeChoices = new ArrayList<>(Arrays.asList(new String[]{OPTION_NOT_SELECTED}));
 
-						db.close();
-						return null;
+		selectedRestaurant = (Restaurant) Messenger.getObject(Messenger.KEY_RESTAURANT_OBJECT);
+		mDishIdQuantities = new HashMap<>((HashMap<Integer, Integer>) Messenger.getObject(Messenger.KEY_SELECTED_DISHES_MAP));
+		Messenger.clearAll();
+
+		session = SessionManager.getInstance(getApplicationContext());
+		databaseManager = DatabaseManager.getInstance(getApplicationContext());
+
+		ordersRequest = new OrdersRequest();
+		orderItemsRequest = new OrderItemsRequest();
+		sOrderAddress = session.getAddress();
+
+		getDishes();
+	}
+
+
+	@Override
+	public void onPause() { }
+
+
+	@Override
+	public void onStop(){
+		order = null;
+		selectedRestaurant = null;
+		ordersRequest = null;
+		orderItemsRequest = null;
+		session = null;
+		databaseManager = null;
+
+		mDishIdQuantities.clear();
+		lSelectedDishes.clear();
+		lDeliveryTimeChoices.clear();
+		lAddressChoices.clear();
+		if(lOrderItems != null) {
+			lOrderItems.clear();
+		}
+	}
+
+
+	@Override
+	public void onClick(View v) {
+		if(isInputValid() && (order == null || lOrderItems == null)) {
+			insertOrder();
+		}
+		else{
+			Snackbar.make( ((ConfirmOrderFragment) getFragment()).getBConfirmOrder(), "Unesite sve podatke...", Snackbar.LENGTH_SHORT).show();
+		}
+	}
+
+
+	public void getDishes() {
+		final ConfirmOrderFragment fragment = (ConfirmOrderFragment) getFragment();
+
+		BackgroundTask task = new BackgroundTask(fragment.getProgressBar(), fragment.getLayoutContainer(),
+			new BackgroundOperation() {
+				@Override
+				public Object execInBackground() {
+					SQLiteDatabase db = databaseManager.getReadableDatabase();
+
+					lSelectedDishes = Dishes.getDishesById(db, mDishIdQuantities.keySet());
+					for(Dish dish : lSelectedDishes){
+						fragment.getLayoutOrderItems().addView(createItemLayout(dish, mDishIdQuantities.get(dish.getId())));
+						dOrderTotal += (dish.getPrice() * mDishIdQuantities.get(dish.getId()));
+						Log.d("DISH", dish.getTitle() + ": " + mDishIdQuantities.get(dish.getId()));
 					}
 
-					@Override
-					public void execAfter(Object object) {
-						setData();
-						setListeners();
-					}
-				});
+					db.close();
+					return null;
+				}
+
+				@Override
+				public void execAfter(Object object) {
+					setData();
+					setListeners();
+					setIsActivated(true);
+				}
+		});
+
 		task.execute();
 	}
 
 
 
-	@Override
 	public void setListeners() {
+		final ConfirmOrderFragment fragment = (ConfirmOrderFragment) getFragment();
+
 		fragment.getBConfirmOrder().setOnClickListener(this);
 
 		fragment.getSpOrderAddress().setAdapter(new ArrayAdapter<String>(fragment.getActivity(),
 				R.layout.support_simple_spinner_dropdown_item, lAddressChoices));
+		setSpOrderAddressListener(fragment);
+
+		fragment.getSpDeliveryTime().setAdapter(new ArrayAdapter<String>(fragment.getActivity(),
+				R.layout.support_simple_spinner_dropdown_item, lDeliveryTimeChoices));
+		setSpDeliveryTimeListener(fragment);
+
+		fragment.getEtOrderAltAddress().addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				sOrderAddress = s.toString();
+			}
+		});
+	}
+
+
+
+	private void setSpOrderAddressListener(final ConfirmOrderFragment fragment){
 		fragment.getSpOrderAddress().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -165,9 +233,11 @@ public class ConfirmOrderController implements Controller{
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) { /* --- Do nothing --- */ }
 		});
+	}
 
-		fragment.getSpDeliveryTime().setAdapter(new ArrayAdapter<String>(fragment.getActivity(),
-				R.layout.support_simple_spinner_dropdown_item, lDeliveryTimeChoices));
+
+
+	private void setSpDeliveryTimeListener(final ConfirmOrderFragment fragment){
 		fragment.getSpDeliveryTime().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -182,38 +252,12 @@ public class ConfirmOrderController implements Controller{
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) { /* --- Do nothing --- */ }
 		});
-
-		fragment.getEtOrderAltAddress().addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				sOrderAddress = s.toString();
-			}
-		});
 	}
-
-
-
-	@Override
-	public void onClick(View v) {
-		if(isInputValid() && (order == null || lOrderItems == null)) {
-			insertOrder();
-		}
-		else{
-			Snackbar.make(fragment.getBConfirmOrder(), "Unesite sve podatke...", Snackbar.LENGTH_SHORT).show();
-		}
-	}
-
 
 
 	private LinearLayout createItemLayout(Dish dish, int quantity){
+		ConfirmOrderFragment fragment = (ConfirmOrderFragment) getFragment();
+
 		LinearLayout layoutItem = new LinearLayout(fragment.getActivity());
 		layoutItem.setOrientation(LinearLayout.HORIZONTAL);
 		layoutItem.setVisibility(View.VISIBLE);
@@ -250,6 +294,8 @@ public class ConfirmOrderController implements Controller{
 
 
 	private void setData(){
+		ConfirmOrderFragment fragment = (ConfirmOrderFragment) getFragment();
+
 		fragment.getTvOrderDate().setText(DateTimeUtils.getCurrentDateString());
 		fragment.getTvOrderTotal().setText(String.format("%.2f KN", dOrderTotal));
 
@@ -267,6 +313,8 @@ public class ConfirmOrderController implements Controller{
 
 
 	private boolean isInputValid(){
+		ConfirmOrderFragment fragment = (ConfirmOrderFragment) getFragment();
+
 		isAddressValid = (fragment.getSpOrderAddress().getCount() == 2 && fragment.getSpOrderAddress().getSelectedItemPosition() == 0) ||
 				(fragment.getSpOrderAddress().getCount() == 2 && !fragment.getEtOrderAltAddress().getText().toString().isEmpty());
 		isTimeValid = (! OPTION_NOT_SELECTED.equals((String) fragment.getSpDeliveryTime().getSelectedItem()));
@@ -276,7 +324,9 @@ public class ConfirmOrderController implements Controller{
 
 
 	private void insertOrder(){
-		insertTask = new BackgroundTask(fragment.getActivity(), "Unos podataka", new BackgroundOperation() {
+		final ConfirmOrderFragment fragment = (ConfirmOrderFragment) getFragment();
+
+		BackgroundTask task = new BackgroundTask(fragment.getActivity(), "Unos podataka", new BackgroundOperation() {
 			@Override
 			public Object execInBackground() {
 				SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity()).getWritableDatabase();
@@ -338,11 +388,10 @@ public class ConfirmOrderController implements Controller{
 					toast.setGravity(Gravity.TOP, 0, 0);
 					toast.show();
 				}
-				insertTask = null;
 			}
 		});
 
-		insertTask.execute();
+		task.execute();
 	}
 
 

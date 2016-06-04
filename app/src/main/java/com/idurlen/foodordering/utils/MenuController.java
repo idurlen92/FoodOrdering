@@ -1,4 +1,4 @@
-package com.idurlen.foodordering.controller;
+package com.idurlen.foodordering.utils;
 
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.view.LoginActivity;
 import com.idurlen.foodordering.view.MainActivity;
 import com.idurlen.foodordering.view.SettingsActivity;

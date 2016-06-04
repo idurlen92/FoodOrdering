@@ -16,10 +16,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.controller.Controller;
-import com.idurlen.foodordering.controller.MenuController;
-import com.idurlen.foodordering.factory.ControllerFactory;
 import com.idurlen.foodordering.factory.FragmentFactory;
+import com.idurlen.foodordering.factory.PresenterFactory;
+import com.idurlen.foodordering.presenter.Presenter;
+import com.idurlen.foodordering.utils.MenuController;
 import com.idurlen.foodordering.utils.SessionManager;
 
 
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
 	SessionManager sessionManager;
 
-	Controller controller;
+	Presenter presenter;
 	MenuController menuController;
 
 
@@ -45,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		presenter = PresenterFactory.newInstance(this);
 		sessionManager = SessionManager.getInstance(this);
+
 		if(!sessionManager.isLoggedIn()){
 			Log.d("USER", "Not logged in - redirecting to Login");
 			redirectToLogin();//TODO: onRestart(), onStart()?
@@ -53,25 +55,38 @@ public class MainActivity extends AppCompatActivity {
 		else{
 			Log.d("USER", "Logged in");
 			setContentView(R.layout.activity_main);
+
 			findWidgets();
 
-			if(controller == null) {
-				controller = ControllerFactory.newInstance(this);
-			}
 			menuController = new MenuController(this);
+			presenter.onCreate(savedInstanceState);
 		}
 	}
-
-
 
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		controller.activate();
+		presenter.onStart();
 	}
 
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.onStop();
+	}
+
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		presenter.onDestroy();
+
+		presenter = null;
+		sessionManager = null;
+		menuController = null;
+	}
 
 
 	@Override
@@ -97,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
 	public Toolbar getToolbar(){ return toolbar; }
 
 
-
 	private void findWidgets(){
 		drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -114,13 +128,11 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 
-
 	private void redirectToLogin(){
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
 		finish();
 	}
-
 
 
 	/**

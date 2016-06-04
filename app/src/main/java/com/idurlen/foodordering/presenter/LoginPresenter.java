@@ -1,6 +1,7 @@
-package com.idurlen.foodordering.controller;
+package com.idurlen.foodordering.presenter;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -23,9 +24,9 @@ import com.idurlen.foodordering.view.RegisterActivity;
 
 
 /**
- * MVC Controller component for LoginActivity.
+ * MVC Presenter component for LoginActivity.
  */
-public class LoginController implements Controller{
+public class LoginPresenter extends Presenter implements View.OnClickListener{
 
 	private final String MSG_EMPTY = "Unesite vrijednost";
 	private final String MSG_NOT_FOUND = "Krivo kor. ime ili lozinka";
@@ -37,7 +38,6 @@ public class LoginController implements Controller{
 	private TextInputLayout layoutUsername;
 	private TextInputLayout layoutPassword;
 
-	private BackgroundTask loginTask;
 	private AppSettings settings;
 	private SessionManager sessionManager;
 
@@ -45,33 +45,59 @@ public class LoginController implements Controller{
 
 	private User user = null;
 
-	private LoginActivity activity;
 
 
+	public LoginPresenter(AppCompatActivity activity){
+		super(activity);
+	}
 
-	public LoginController(AppCompatActivity activity){
-		this.activity = (LoginActivity) activity;
-		settings = AppSettings.getInstance(activity);
-		sessionManager = SessionManager.getInstance(activity);
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		Log.d("ATTACHED", "LoginPresenter");
+		findViews();
+	}
+
+
+	@Override
+	public void onResume() { }
+
+	@Override
+	public void onPause() { }
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) { }
+
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		settings = AppSettings.getInstance(getApplicationContext());
+		sessionManager = SessionManager.getInstance(getApplicationContext());
 		request = new UsersRequest();
 	}
 
 
-	@Override
-	public void activate() {
-		this.activity = (LoginActivity) activity;
-		Log.d("ATTACHED", "LoginController");
 
-		etUsername = this.activity.getETUsername();
-		etPassword = this.activity.getETPassword();
-		layoutUsername = this.activity.getLayoutUsername();
-		layoutPassword = this.activity.getLayoutPassword();
-		setListeners();
+
+	@Override
+	public void onStop() {
+		settings = null;
+		sessionManager = null;
+		request = null;
+		user = null;
 	}
 
 
-	@Override
-	public void setListeners() {
+
+	public void findViews() {
+		LoginActivity activity = ((LoginActivity) getActivity());
+
+		etUsername = activity.getETUsername();
+		etPassword = activity.getETPassword();
+		layoutUsername = activity.getLayoutUsername();
+		layoutPassword = activity.getLayoutPassword();
+
 		activity.getBLogin().setOnClickListener(this);
 		activity.getTVRegister().setOnClickListener(this);
 	}
@@ -80,10 +106,9 @@ public class LoginController implements Controller{
 	@Override
 	public void onClick(View v){
 		Log.d("View class: ", v.getClass().toString());
-
 		if(v instanceof AppCompatTextView){
-			Intent intent = new Intent(activity, RegisterActivity.class);
-			activity.startActivity(intent);
+			Intent intent = new Intent(getActivity(), RegisterActivity.class);
+			getActivity().startActivity(intent);
 		}
 		else{
 			handleLogin();
@@ -99,7 +124,7 @@ public class LoginController implements Controller{
 		layoutPassword.setError(sPassword.isEmpty() ? MSG_EMPTY : null);
 
 		if(!sUsername.isEmpty() && !sPassword.isEmpty()){
-			loginTask = new BackgroundTask(activity, "Prijava", new BackgroundOperation() {
+			BackgroundTask task = new BackgroundTask(getActivity(), "Prijava", new BackgroundOperation() {
 				@Override
 				public Object execInBackground() {
 					boolean isError = false;
@@ -133,16 +158,15 @@ public class LoginController implements Controller{
 				}
 			});
 
-			loginTask.execute();
+			task.execute();
 		}//if
 	}
 
 
 	private void redirectToMain(){
-		Class c = this.getClass();
-		Intent intent = new Intent(activity, MainActivity.class);
-		activity.startActivity(intent);
-		activity.finish();
+		Intent intent = new Intent(getActivity(), MainActivity.class);
+		getActivity().startActivity(intent);
+		getActivity().finish();
 	}
 
 }

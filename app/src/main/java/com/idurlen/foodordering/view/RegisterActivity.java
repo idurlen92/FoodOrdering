@@ -9,7 +9,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.factory.ControllerFactory;
+import com.idurlen.foodordering.factory.PresenterFactory;
+import com.idurlen.foodordering.presenter.Presenter;
 
 
 
@@ -32,6 +33,8 @@ public class RegisterActivity extends AppCompatActivity {
 	Spinner sCity;
 	Toolbar toolbar;
 
+	Presenter presenter;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +42,35 @@ public class RegisterActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_register);
 		findWidgets();
 		setSupportActionBar(toolbar);
-		ControllerFactory.newInstance(this).activate();
+
+		presenter = PresenterFactory.newInstance(this);
+		presenter.onCreate(savedInstanceState);
 	}
+
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.onStart();
+	}
+
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.onStop();
+	}
+
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		presenter.onDestroy();
+		presenter = null;
+		toolbar = null;
+	}
+
+
 
 
 	private void findWidgets(){

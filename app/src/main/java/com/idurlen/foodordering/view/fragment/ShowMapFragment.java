@@ -5,8 +5,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.MapFragment;
-import com.idurlen.foodordering.controller.Controller;
-import com.idurlen.foodordering.factory.ControllerFactory;
+import com.idurlen.foodordering.presenter.Presenter;
+import com.idurlen.foodordering.factory.PresenterFactory;
 
 
 
@@ -16,19 +16,39 @@ import com.idurlen.foodordering.factory.ControllerFactory;
  */
 public class ShowMapFragment extends MapFragment{
 
-	Controller controller;
+	Presenter presenter;
+
 
 	public ShowMapFragment() {
-		// Required empty constructor
-		controller = ControllerFactory.newInstance(this);
+		presenter = PresenterFactory.newInstance(this);
 	}
 
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		presenter.onCreate(savedInstanceState);
+	}
 
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		controller.activate();
+		presenter.onActivityCreated(savedInstanceState);
+	}
+
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		presenter.onStop();
+	}
+
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		presenter.onDestroy();
+		presenter = null;
 	}
 }

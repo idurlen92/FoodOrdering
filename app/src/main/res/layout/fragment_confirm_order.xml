@@ -10,7 +10,7 @@
         android:id="@+id/pbConfirmOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
     <ScrollView
         android:id="@+id/layoutConfirmOrder"
         android:layout_width="match_parent"

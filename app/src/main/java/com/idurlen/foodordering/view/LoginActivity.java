@@ -9,7 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.factory.ControllerFactory;
+import com.idurlen.foodordering.factory.PresenterFactory;
+import com.idurlen.foodordering.presenter.Presenter;
+
+
 
 
 /**
@@ -24,14 +27,41 @@ public class LoginActivity extends AppCompatActivity {
 	private TextInputLayout layoutUsername;
 	private TextInputLayout layoutPassword;
 
+	Presenter presenter;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		findWidgets();
-		ControllerFactory.newInstance(this).activate();
+
+		presenter = PresenterFactory.newInstance(this);
+		presenter.onCreate(savedInstanceState);
 	}
+
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.onStart();
+	}
+
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.onStop();
+	}
+
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		presenter = null;
+	}
+
+
 
 
 	private void findWidgets(){

@@ -9,19 +9,13 @@
         android:id="@+id/pbHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/layoutHome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/tvHomeTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="PERO"/>
+        android:visibility="visible">
         <ListView
             android:id="@+id/lvRestaurants"
             android:layout_width="match_parent"

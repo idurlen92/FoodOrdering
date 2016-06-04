@@ -1,8 +1,8 @@
-package com.idurlen.foodordering.controller;
+package com.idurlen.foodordering.presenter;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
-import android.view.View;
+import android.os.Bundle;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -26,29 +26,53 @@ import java.util.List;
 /**
  * @author Ivan Durlen
  */
-public class ShowMapController implements Controller, OnMapReadyCallback{
+public class ShowMapPresenter extends Presenter implements OnMapReadyCallback{
+
+	private static final String TITLE = "Mapa";
 
 	List<Restaurant> lRestaurants;
 
 	DatabaseManager databaseManager;
 	SessionManager session;
 
-	BackgroundTask loadRestaurantsTask;
 
-	ShowMapFragment fragment;
-
-
-	public ShowMapController(MapFragment fragment) {
-		this.fragment = (ShowMapFragment) fragment;
-		this.databaseManager = DatabaseManager.getInstance(fragment.getActivity());
-		session = SessionManager.getInstance(fragment.getActivity());
+	public ShowMapPresenter(MapFragment fragment) {
+		super(fragment, TITLE);
 	}
 
 
 	@Override
-	public void activate() {
-		loadRestaurantsTask = new BackgroundTask(new BackgroundOperation() {
+	public void onCreate(Bundle savedInstanceState) { }
 
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		databaseManager = DatabaseManager.getInstance(getApplicationContext());
+		session = SessionManager.getInstance(getApplicationContext());
+		getRestaurants();
+	}
+
+
+	@Override
+	public void onPause() { }
+
+
+	@Override
+	public void onStop() {
+		databaseManager = null;
+		session = null;
+	}
+
+
+	@Override
+	public void onMapReady(GoogleMap googleMap) {
+		googleMap.setMyLocationEnabled(true);
+		setMarkersAsync(googleMap);
+	}
+
+
+	private void getRestaurants(){
+		BackgroundTask task = new BackgroundTask(new BackgroundOperation() {
 			@Override
 			public Object execInBackground() {
 				SQLiteDatabase db = databaseManager.getReadableDatabase();
@@ -60,50 +84,25 @@ public class ShowMapController implements Controller, OnMapReadyCallback{
 
 			@Override
 			public void execAfter(Object object) {
-				fragment.getMapAsync(ShowMapController.this);
+				((ShowMapFragment) ShowMapPresenter.this.getFragment()).getMapAsync(ShowMapPresenter.this);
+				setIsActivated(true);
 			}
 		});
 
-		loadRestaurantsTask.execute();
+		task.execute();
 	}
-
-
-
-
-	@Override
-	public void setListeners() {
-
-	}
-
-
-
-
-	@Override
-	public void onClick(View v) {
-
-	}
-
-
-
-
-	@Override
-	public void onMapReady(GoogleMap googleMap) {
-		googleMap.setMyLocationEnabled(true);
-		setMarkersAsync(googleMap);
-	}
-
 
 
 	private void setMarkersAsync(final GoogleMap map){
 		Thread thr = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Geocoder geocoder = new Geocoder(fragment.getActivity());
+				Geocoder geocoder = new Geocoder(getActivity());
 				for(final Restaurant restaurant : lRestaurants){
 					try {
-						for(final Address address : geocoder.getFromLocationName(restaurant.getAddress() + ", "
-								+ session.getCity(), 1)){
-							fragment.getActivity().runOnUiThread(new Runnable() {
+						for(final Address address : geocoder.getFromLocationName(restaurant.getAddress() +
+								", " + session.getCity(), 1)){
+							getActivity().runOnUiThread(new Runnable() {
                                  @Override
                                  public void run() {
                                      map.addMarker(new MarkerOptions().position(new LatLng(address.getLatitude(),

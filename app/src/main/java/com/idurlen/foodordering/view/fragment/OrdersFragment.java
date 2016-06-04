@@ -10,8 +10,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.controller.Controller;
-import com.idurlen.foodordering.factory.ControllerFactory;
+import com.idurlen.foodordering.presenter.Presenter;
+import com.idurlen.foodordering.factory.PresenterFactory;
 
 
 
@@ -24,19 +24,17 @@ public class OrdersFragment extends Fragment {
 	private ProgressBar pbUserOrders;
 	private ListView lvUserOrders;
 
-	Controller controller;
+	Presenter presenter;
 
 	public OrdersFragment() {
-		// Required empty public constructor
+		presenter = PresenterFactory.newInstance(this);
 	}
-
-
 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		controller = ControllerFactory.newInstance(this);
+		presenter.onCreate(savedInstanceState);
 	}
 
 
@@ -49,14 +47,36 @@ public class OrdersFragment extends Fragment {
 	}
 
 
-
-
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		findViews();
-		controller.activate();
+		presenter.onActivityCreated(savedInstanceState);
 	}
+
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		presenter.onStart();
+	}
+
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		presenter.onStop();
+	}
+
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		presenter.onDestroy();
+		presenter = null;
+	}
+
+
 
 
 	private void findViews(){

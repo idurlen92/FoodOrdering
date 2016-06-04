@@ -36,7 +36,7 @@ public class FactoryMethod {
 	 *
 	 * @param arg Object witch calls Factory Method or String option for Fragments
 	 * @param subPackage Subpackage name without start and end dots
-	 * @param suffix Instance Class suffix e.g. Controller, Fragment
+	 * @param suffix Instance Class suffix e.g. Presenter, Fragment
 	 * @return {@link Class} of new Component
 	 * @throws Exception
 	 */

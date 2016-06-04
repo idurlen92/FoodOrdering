@@ -1,9 +1,9 @@
-package com.idurlen.foodordering.controller;
+package com.idurlen.foodordering.presenter;
 import android.app.ProgressDialog;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.idurlen.foodordering.database.DatabaseManager;
@@ -19,6 +19,7 @@ import com.idurlen.foodordering.net.OrdersRequest;
 import com.idurlen.foodordering.net.RestaurantsRequest;
 import com.idurlen.foodordering.utils.AppSettings;
 import com.idurlen.foodordering.utils.DateTimeUtils;
+import com.idurlen.foodordering.utils.MenuController;
 import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.utils.async.DownloadThread;
 import com.idurlen.foodordering.view.MainActivity;
@@ -32,7 +33,7 @@ import java.util.List;
 /**
  * @author Ivan Durlen
  */
-public class MainController  implements Controller{
+public class MainPresenter extends Presenter {
 
 	boolean isErrorOccurred = false;
 
@@ -50,40 +51,69 @@ public class MainController  implements Controller{
 	SessionManager session;
 	DatabaseManager databaseManager;
 
-	MainActivity activity;
 
-
-	public MainController(AppCompatActivity activity) {
-		this.activity = (MainActivity) activity;
-
-		settings = AppSettings.getInstance(activity);
-		session = SessionManager.getInstance(activity);
-		databaseManager = DatabaseManager.getInstance(activity);
+	public MainPresenter(AppCompatActivity activity) {
+		super(activity);
 	}
 
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		isErrorOccurred = false;
+	}
+
 
 	@Override
-	public void activate() {
+	public void onStart() {
+		super.onStart();
+		settings = AppSettings.getInstance(getApplicationContext());
+		session = SessionManager.getInstance(getApplicationContext());
+		databaseManager = DatabaseManager.getInstance(getApplicationContext());
+
+		checkForDownload();
+	}
+
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) { }
+
+
+	@Override
+	public void onPause() { }
+
+
+	@Override
+	public void onStop() {
+		progressDialog = null;
+		settings = null;
+		session = null;
+		databaseManager = null;
+	}
+
+
+	@Override
+	public void onDestroy() { }
+
+
+	public void checkForDownload() {
 		if(settings.isAutoSync() && settings.isSyncRequired()) {
-			progressDialog = new ProgressDialog(activity);
+			progressDialog = new ProgressDialog(getActivity());
 			progressDialog.setTitle("Preuzimanje podataka");
 			progressDialog.setIndeterminate(true);
 			progressDialog.show();
 
-			performDownload();
+			Thread thread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					performDownload();
+				}
+			});
+			thread.start();
 		}
 		else{
-			activity.pushFragment(MenuController.OPTION_HOME);
+			((MainActivity) getActivity()).pushFragment(MenuController.OPTION_HOME);
 		}
 	}
-
-
-	@Override
-	public void setListeners() { /* ----- Nothing to do ----- */}
-
-	@Override
-	public void onClick(View v) { /* ----- Nothing to do ----- */}
 
 
 	private void performDownload(){
@@ -93,7 +123,6 @@ public class MainController  implements Controller{
 		lOrders = new ArrayList<>();
 		lOrderItems = new ArrayList<>();
 
-		SQLiteDatabase db = databaseManager.getWritableDatabase();
 		isErrorOccurred = false;
 
 		try {
@@ -107,27 +136,29 @@ public class MainController  implements Controller{
 				thread.join();
 			}
 
+			lThreads.clear();
+
 			// ----- 2) Insert data into Database -----
-			db.beginTransactionNonExclusive();
-			performDatabaseInsert(db);
-			db.setTransactionSuccessful();
+			performDatabaseInsert(databaseManager.getWritableDatabase());
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					progressDialog.dismiss();
+					((MainActivity) getActivity()).pushFragment(MenuController.OPTION_HOME);
+				}
+			});
+
 		}
 		catch(InterruptedException e){
 			e.printStackTrace();
 			Log.d("THREAD", "Interuppted");
-		}
-		finally{
-			progressDialog.dismiss();
-			lThreads.clear();
 
-			if(!isErrorOccurred) {
-				db.endTransaction();
-				activity.pushFragment(MenuController.OPTION_HOME);
-			}
-			else{
-				Toast.makeText(activity, "Greška u preuzimanju podataka", Toast.LENGTH_SHORT).show();
-			}
-			db.close();
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(getActivity(), "Greška u preuzimanju podataka", Toast.LENGTH_SHORT).show();
+				}
+			});
 		}
 	}
 
@@ -151,13 +182,13 @@ public class MainController  implements Controller{
 		List<DownloadThread> lThreads = new ArrayList<>();
 
 		if(!settings.isMainDataSynced()) {
-			lThreads.add(new DownloadThread(activity, this, new RestaurantsRequest(), lRestaurants));
-			lThreads.add(new DownloadThread(activity, this, new DishTypesRequest(), lDishTypes));
-			lThreads.add(new DownloadThread(activity, this, new DishesRequest(), lDishes));
+			lThreads.add(new DownloadThread(getActivity(), this, new RestaurantsRequest(), lRestaurants));
+			lThreads.add(new DownloadThread(getActivity(), this, new DishTypesRequest(), lDishTypes));
+			lThreads.add(new DownloadThread(getActivity(), this, new DishesRequest(), lDishes));
 		}
 		if(settings.isUserChanged()){
-			lThreads.add(new DownloadThread(activity, this, new OrdersRequest(), lOrders));
-			lThreads.add(new DownloadThread(activity, this, new OrderItemsRequest(), lOrderItems));
+			lThreads.add(new DownloadThread(getActivity(), this, new OrdersRequest(), lOrders));
+			lThreads.add(new DownloadThread(getActivity(), this, new OrderItemsRequest(), lOrderItems));
 		}
 
 		return lThreads;
@@ -173,6 +204,8 @@ public class MainController  implements Controller{
 	private void performDatabaseInsert(SQLiteDatabase db){
 		settings.setLastSyncTime(DateTimeUtils.getCurrentTimeStampString());
 
+		db.beginTransactionNonExclusive();
+
 		if(!settings.isMainDataSynced()) {
 			Restaurants.insertRestaurants(db, lRestaurants);
 			DishTypes.insertDishTypes(db, lDishTypes);
@@ -187,6 +220,10 @@ public class MainController  implements Controller{
 
 			settings.setIsUserChanged(false);
 		}
+
+		db.setTransactionSuccessful();
+		db.endTransaction();
+		db.close();
 	}
 
 }

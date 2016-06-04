@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.idurlen.foodordering.R;
-import com.idurlen.foodordering.controller.OrdersController;
+import com.idurlen.foodordering.presenter.OrdersPresenter;
 import com.idurlen.foodordering.database.model.Order;
 import com.idurlen.foodordering.database.model.Restaurant;
 import com.idurlen.foodordering.utils.DateTimeUtils;
@@ -32,11 +32,11 @@ public class OrdersAdapter extends BaseAdapter{
 	private Map<Integer, String> mPosToGroupTitle = new HashMap<>();
 	private Map<Integer, Order> mPosToOrder = new HashMap<>();
 
-	OrdersController controller;
+	OrdersPresenter controller;
 	LayoutInflater inflater;
 
 
-	public OrdersAdapter(OrdersController controller, LayoutInflater inflater, List<Order> lOrders, Map<Integer, Restaurant> mIdToRestaurant){
+	public OrdersAdapter(OrdersPresenter controller, LayoutInflater inflater, List<Order> lOrders, Map<Integer, Restaurant> mIdToRestaurant){
 		this.controller = controller;
 		this.inflater = inflater;
 		this.mIdToRestaurant = mIdToRestaurant;

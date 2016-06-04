@@ -10,12 +10,12 @@
         android:id="@+id/pbUserOrders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
     <ListView
         android:id="@+id/lvUserOrders"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </LinearLayout>

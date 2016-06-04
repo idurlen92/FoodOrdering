@@ -1,5 +1,6 @@
-package com.idurlen.foodordering.controller;
+package com.idurlen.foodordering.presenter;
 import android.app.DatePickerDialog;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -30,9 +31,9 @@ import java.util.regex.Pattern;
 
 
 /**
- * MVC Controller component for RegisterActivity
+ * MVC Presenter component for RegisterActivity
  */
-public class RegisterController implements Controller, View.OnTouchListener{
+public class RegisterPresenter extends Presenter implements View.OnTouchListener, View.OnClickListener{
 
 	private final String ERROR_EMPTY = "Ispunite ovo polje";
 	private final String ERROR_EMAIL = "Nevažeća adresa pošte";
@@ -65,26 +66,35 @@ public class RegisterController implements Controller, View.OnTouchListener{
 
 	Spinner spCity;
 
-	BackgroundTask registerTask;
 	UsersRequest request;
 
-	RegisterActivity activity;
 
-
-	public RegisterController(AppCompatActivity activity){
-		this.activity = (RegisterActivity) activity;
-		request = new UsersRequest();
+	public RegisterPresenter(AppCompatActivity activity){
+		super(activity);
 		//TODO: check network state ConnectivityManager manager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 	}
 
 
-	@Override
-	public void activate() {
-		Log.d("ATTACHED", "RegisterController");
 
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		Log.d("ATTACHED", "RegisterPresenter");
 		setWidgets();
 		setListeners();
-		datePicker = new DatePicker(activity, new DatePickerDialog.OnDateSetListener() {
+	}
+
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) { }
+
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		request = new UsersRequest();
+		datePicker = new DatePicker(getActivity(), new DatePickerDialog.OnDateSetListener() {
 			@Override
 			public void onDateSet(android.widget.DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				StringBuilder builder = new StringBuilder();
@@ -101,7 +111,21 @@ public class RegisterController implements Controller, View.OnTouchListener{
 	}
 
 
+	@Override
+	public void onPause() { }
+
+
+	@Override
+	public void onStop() {
+		datePicker = null;
+		request = null;
+	}
+
+
+
 	private void setWidgets(){
+		RegisterActivity activity = (RegisterActivity) getActivity();
+
 		bRegister = activity.getBRegister();
 		etFirstName = activity.getEtFirstName();
 		etLastName = activity.getEtLastName();
@@ -122,7 +146,8 @@ public class RegisterController implements Controller, View.OnTouchListener{
 	}
 
 
-	@Override
+
+
 	public void setListeners() {
 		TextWatcher watcher = new TextWatcher() {
 			@Override
@@ -236,7 +261,7 @@ public class RegisterController implements Controller, View.OnTouchListener{
 
 
 	private void registerUser(final User user){
-		registerTask = new BackgroundTask(activity, "Registracija", new BackgroundOperation() {
+		BackgroundTask task = new BackgroundTask(getActivity(), "Registracija", new BackgroundOperation() {
 			@Override
 			public Object execInBackground() {
 				boolean isError = false;
@@ -262,12 +287,13 @@ public class RegisterController implements Controller, View.OnTouchListener{
 				}
 				else{
 					Snackbar.make(bRegister, MESSAGE_REGISTER_SUCCESS, Snackbar.LENGTH_SHORT).show();
-					activity.finish();
+					getActivity().finish();
 				}
 			}
 		});
 
-		registerTask.execute();
+		task.execute();
 	}
+
 
 }
