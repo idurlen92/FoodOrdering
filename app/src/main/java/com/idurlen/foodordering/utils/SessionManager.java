@@ -86,26 +86,70 @@ public class SessionManager {
 	 * If the user is logged in, returns his username.
 	 * @return
 	 */
-	public String getEmail(){
-		return preferences.getString(KEY_EMAIL, "none");
-	}
+	public String getEmail(){ return preferences.getString(KEY_EMAIL, "none"); }
 
 	/**
 	 * If the user is logged in, returns his city.
 	 * @return
 	 */
-	public String getCity(){
-		return preferences.getString(KEY_CITY, "none");
-	}
+	public String getCity(){ return preferences.getString(KEY_CITY, "none"); }
 
 	/**
 	 * If the user is logged in, returns his city.
 	 * @return
 	 */
-	public String getAddress(){
-		return preferences.getString(KEY_ADDRESS, "none");
+	public String getAddress(){ return preferences.getString(KEY_ADDRESS, "none"); }
+
+
+	/**
+	 * Sets First Name of user.
+	 * @return String
+	 */
+	public void setFirstName(String firstName){
+		Editor editor = preferences.edit();
+		editor.putString(KEY_FIRST_NAME, firstName);
+		editor.commit();
 	}
 
+	/**
+	 * Sets Last Name of user.
+	 * @return
+	 */
+	public void setLastName(String lastName){
+		Editor editor = preferences.edit();
+		editor.putString(KEY_LAST_NAME, lastName);
+		editor.commit();
+	}
+
+	/**
+	 * Sets users email.
+	 * @return
+	 */
+	public void setEmail(String email){
+		Editor editor = preferences.edit();
+		editor.putString(KEY_EMAIL, email);
+		editor.commit();
+	}
+
+	/**
+	 * Sets users city.
+	 * @return
+	 */
+	public void setCity(String city){
+		Editor editor = preferences.edit();
+		editor.putString(KEY_CITY, city);
+		editor.commit();
+	}
+
+	/**
+	 * Sets users address.
+	 * @return
+	 */
+	public void setAddress(String address){
+		Editor editor = preferences.edit();
+		editor.putString(KEY_ADDRESS, address);
+		editor.commit();
+	}
 
 
 	/**

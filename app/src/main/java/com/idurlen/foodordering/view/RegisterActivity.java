@@ -40,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
-		findWidgets();
+		findViews();
 		setSupportActionBar(toolbar);
 
 		presenter = PresenterFactory.newInstance(this);
@@ -73,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-	private void findWidgets(){
+	private void findViews(){
 		bRegister = (Button) findViewById(R.id.bRegister);
 		etFirstName = (EditText) findViewById(R.id.etRegisterFirstName);
 		etLastName = (EditText) findViewById(R.id.etRegisterLastName);

@@ -24,7 +24,7 @@ import java.lang.reflect.Type;
 public class JSONResponse {
 
 	public static final String KEY_INSERT_ID = "insertId";
-	public static final String KEY_IS_UPDATED = "isUpdated";
+	public static final String KEY_UPDATE_ID = "updateId";
 
 	private final String KEY_IS_ERROR = "isError";
 	private final String KEY_ERROR_MESSAGE = "errorMessage";

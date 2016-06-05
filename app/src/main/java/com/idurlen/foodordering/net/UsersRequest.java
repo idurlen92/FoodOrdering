@@ -43,7 +43,7 @@ public class UsersRequest extends RestClient{
 		mRequestParams.put(Users.COL_ADDRESS, user.getAddress());
 		mRequestParams.put(Users.COL_BIRTH_DATE, user.getBirthDate());
 
-		int iResult = RestService.REST_NO_INSERT;
+		int iResult = RestService.REST_NO_INSERT_UPDATE;
 		RestService service = new RestService(RestService.HttpMethod.POST, ENDPOINT_ADDRESS, mRequestParams);
 
 		try {
@@ -53,7 +53,7 @@ public class UsersRequest extends RestClient{
 				Log.e("REST", jsonResponse.getErrorMessage());
 			}
 			else{
-				iResult = (int) jsonResponse.getDataObject(JSONResponse.KEY_INSERT_ID, int.class);
+				iResult = (int) jsonResponse.getDataObject(JSONResponse.KEY_UPDATE_ID, int.class);
 			}
 		}
 		catch(Exception e){
@@ -80,7 +80,46 @@ public class UsersRequest extends RestClient{
 
 	@Override
 	public int update(Object theObject) throws Exception {
-		return 0;
+		User user = (User) theObject;
+
+		Map<String, String> mRequestParams = new HashMap<>();
+		if(user.getFirstName() != null && !user.getFirstName().isEmpty()) {
+			mRequestParams.put(Users.COL_FIRST_NAME, user.getFirstName());
+		}
+		if(user.getLastName() != null && !user.getLastName().isEmpty()) {
+			mRequestParams.put(Users.COL_LAST_NAME, user.getLastName());
+		}
+		if(user.getCity() != null && !user.getCity().isEmpty()) {
+			mRequestParams.put(Users.COL_CITY, user.getCity());
+		}
+		if(user.getAddress() != null && !user.getAddress().isEmpty()) {
+			mRequestParams.put(Users.COL_ADDRESS, user.getAddress());
+		}
+
+		RestService service = new RestService(RestService.HttpMethod.PUT,
+				ENDPOINT_ADDRESS + "/" + Integer.toString(user.getId()),
+				mRequestParams);
+
+		int iResult = RestService.REST_NO_INSERT_UPDATE;
+		try {
+			service.call();
+			JSONResponse jsonResponse = service.getJSONResponse();
+			if(jsonResponse.isError()) {
+				Log.e("REST", jsonResponse.getErrorMessage());
+			}
+			else{
+				iResult = (int) jsonResponse.getDataObject(JSONResponse.KEY_UPDATE_ID, int.class);
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			throw new Exception("Network error");
+		}
+		finally{
+			service.close();
+		}
+
+		return iResult;
 	}
 
 

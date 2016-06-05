@@ -18,8 +18,8 @@ import java.util.Map;
  */
 public class RestService {
 
-	public static int REST_NO_INSERT = 0;
-	public static int REST_INSERT_ERROR = -1;
+	public static int REST_NO_INSERT_UPDATE = 0;
+	public static int REST_INSERT_UPDATE_ERROR = -1;
 
 	public enum HttpMethod { GET, POST, PUT, DELETE };
 

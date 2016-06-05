@@ -18,7 +18,6 @@ import com.idurlen.foodordering.net.OrderItemsRequest;
 import com.idurlen.foodordering.net.OrdersRequest;
 import com.idurlen.foodordering.net.RestaurantsRequest;
 import com.idurlen.foodordering.utils.AppSettings;
-import com.idurlen.foodordering.utils.DateTimeUtils;
 import com.idurlen.foodordering.utils.MenuController;
 import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.utils.async.DownloadThread;
@@ -111,7 +110,7 @@ public class MainPresenter extends Presenter {
 			thread.start();
 		}
 		else{
-			((MainActivity) getActivity()).pushFragment(MenuController.OPTION_HOME);
+			((MainActivity) getActivity()).pushFragment(MenuController.OPTION_HOME, true);
 		}
 	}
 
@@ -144,7 +143,7 @@ public class MainPresenter extends Presenter {
 				@Override
 				public void run() {
 					progressDialog.dismiss();
-					((MainActivity) getActivity()).pushFragment(MenuController.OPTION_HOME);
+					((MainActivity) getActivity()).pushFragment(MenuController.OPTION_HOME, true);
 				}
 			});
 
@@ -202,8 +201,6 @@ public class MainPresenter extends Presenter {
 	 * @return
 	 */
 	private void performDatabaseInsert(SQLiteDatabase db){
-		settings.setLastSyncTime(DateTimeUtils.getCurrentTimeStampString());
-
 		db.beginTransactionNonExclusive();
 
 		if(!settings.isMainDataSynced()) {

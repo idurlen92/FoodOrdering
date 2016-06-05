@@ -1,35 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.idurlen.foodordering.view.SettingsActivity"
-    tools:showIn="@layout/activity_settings">
-
+    tools:showIn="@layout/activity_settings"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp">
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+        <!-- ########## Section 1 ########## -->
         <TextView
-            android:id="@+id/tvSync"
+            android:id="@+id/tvSectionAppTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:text="@string/title_settings_section_app"/>
+        <View
+            android:id="@+id/vLine1"
+            android:layout_below="@id/tvSectionAppTitle"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:background="#808080"/>
+        <!-- ########## App settings ########## -->
+        <TextView
+            android:id="@+id/tvSettingsSync"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="Auto Sinkronizacija"/>
-        <ToggleButton
-            android:id="@+id/tbAutoSync"
-            android:layout_toRightOf="@id/tvSync"
+            android:layout_below="@id/vLine1"
+            android:text="@string/title_settings_sync"/>
+        <Switch
+            android:id="@+id/swSettingsAutoSync"
+            android:layout_below="@id/vLine1"
+            android:layout_toRightOf="@id/tvSettingsSync"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
+        <!-- ########## Section 2 ########## -->
+        <TextView
+            android:id="@+id/tvSectionDataTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvSettingsSync"
+            android:layout_marginTop="30dp"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:text="@string/title_settings_section_data"/>
+        <View
+            android:id="@+id/vLine2"
+            android:layout_below="@id/tvSectionDataTitle"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:background="#808080"/>
+        <!-- ########## Data settings ########## -->
+        <!-- ***** First Name ***** -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layoutSettingsFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/vLine2">
+            <EditText
+                android:id="@+id/etSettingsFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ime"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <!-- ***** Last Name ***** -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layoutSettingsLastName"
+            android:layout_below="@id/layoutSettingsFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/etSettingsLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Prezime"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <!-- *****  City  ***** -->
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvSettingsCity"
+            android:layout_below="@id/layoutSettingsLastName"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="Grad"/>
+        <Spinner
+            android:id="@+id/spSettingsCity"
+            android:layout_below="@id/tvSettingsCity"
+            android:layout_marginTop="5dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/cities"
+            android:prompt="@string/prompt_city"/>
+        <!-- ***** Address ***** -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layoutSettingsAddress"
+            android:layout_below="@id/spSettingsCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/etSettingsAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Adresa"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </android.support.design.widget.TextInputLayout>
     </RelativeLayout>
 
-</LinearLayout>
+
+</ScrollView>

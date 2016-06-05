@@ -48,7 +48,9 @@ public class RegisterPresenter extends Presenter implements View.OnTouchListener
 	boolean isPassValid = false;
 	boolean isPassRepValid = false;
 
-	int insertStatus = RestService.REST_NO_INSERT;
+	boolean isBirthDateFocused = false;
+
+	int insertStatus = RestService.REST_NO_INSERT_UPDATE;
 
 	String sBirthDate = "";
 
@@ -179,8 +181,21 @@ public class RegisterPresenter extends Presenter implements View.OnTouchListener
 		etEmail.addTextChangedListener(watcher);
 		etPassword.addTextChangedListener(watcher);
 		etPasswordRepeat.addTextChangedListener(watcher);
-		etBirthDate.setOnTouchListener(this);
+		//etBirthDate.setOnTouchListener(this);
 		bRegister.setOnClickListener(this);
+
+		etBirthDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(!isBirthDateFocused && hasFocus){
+					isBirthDateFocused = true;
+					datePicker.showPicker();
+				}
+				else if(!hasFocus){
+					isBirthDateFocused = false;
+				}
+			}
+		});
 	}
 
 
@@ -282,7 +297,7 @@ public class RegisterPresenter extends Presenter implements View.OnTouchListener
 				if(isError){
 					Snackbar.make(bRegister, MESSAGE_NETWORK_ERROR, Snackbar.LENGTH_SHORT).show();
 				}
-				else if(insertStatus == RestService.REST_INSERT_ERROR || insertStatus == RestService.REST_NO_INSERT){
+				else if(insertStatus == RestService.REST_INSERT_UPDATE_ERROR || insertStatus == RestService.REST_NO_INSERT_UPDATE){
 					Snackbar.make(bRegister, MESSAGE_REGISTER_ERROR, Snackbar.LENGTH_SHORT).show();
 				}
 				else{

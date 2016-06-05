@@ -23,6 +23,7 @@ public class Messenger {
 
 	public static final String KEY_RESTAURANT_OBJECT = "restaurant_obj";
 	public static final String KEY_SELECTED_DISHES_MAP = "selected_dishes";
+	public static final String KEY_USER_DATA = "user_data";
 
 
 	// ---------- Getters ----------

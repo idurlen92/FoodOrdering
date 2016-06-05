@@ -43,8 +43,6 @@ public abstract class Presenter{
 	}
 
 
-
-
 	// ############### Abstract methods ###############
 	/**
 	 * Called in Activity/Fragment {@code onCreate}
@@ -59,18 +57,10 @@ public abstract class Presenter{
 	public abstract void onActivityCreated(Bundle savedInstanceState);
 
 	/**
-	 * Called in Activity/Fragment {@code onStart}
-	 */
-	public void onStart(){
-		if(!title.isEmpty()) {
-			getActivity().getSupportActionBar().setTitle(title);
-		}
-	}
-
-	/**
 	 * Called in Activity/Fragment {@code Pause}
 	 */
 	public abstract void onPause();
+
 	/**
 	 * Called in Activity/Fragment {@code onStop}
 	 */
@@ -107,6 +97,16 @@ public abstract class Presenter{
 	 * @param isActivated
 	 */
 	protected void setIsActivated(boolean isActivated){ this.isActivated = isActivated; }
+
+
+	/**
+	 * Called in Activity/Fragment {@code onStart}
+	 */
+	public void onStart(){
+		if(!title.isEmpty()) {
+			getActivity().getSupportActionBar().setTitle(title);
+		}
+	}
 
 	/**
 	 * Called in Activity/Fragment {@code onResume}

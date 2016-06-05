@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		findWidgets();
+		findViews();
 
 		presenter = PresenterFactory.newInstance(this);
 		presenter.onCreate(savedInstanceState);
@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-	private void findWidgets(){
+	private void findViews(){
 		bLogin = (Button) findViewById(R.id.bLogin);
 		etUsername = (EditText) findViewById(R.id.etLoginUsername);
 		etPassword = (EditText) findViewById(R.id.etLoginPassword);

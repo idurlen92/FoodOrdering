@@ -18,9 +18,7 @@ public class AppSettings {
 	private final String KEY_IS_AUTO_SYNC = "is_auto_sync";
 	private final String KEY_IS_MAIN_DATA_SYNCED = "is_main_data_synced";
 	private final String KEY_IS_USER_CHANGED = "is_user_changed";
-	private final String KEY_LAST_SYNC_TIME = "last_sync_time";
 	private final String KEY_LAST_USER_ID = "last_user_id";
-
 
 	private static AppSettings instance = null;
 
@@ -49,8 +47,6 @@ public class AppSettings {
 	}
 
 
-
-
 	/**
 	 * TODO - more
 	 * Creates and stores initial Keys/Values.
@@ -61,12 +57,10 @@ public class AppSettings {
 		editor.putBoolean(KEY_IS_AUTO_SYNC, true);
 		editor.putBoolean(KEY_IS_MAIN_DATA_SYNCED, false);
 		editor.putBoolean(KEY_IS_USER_CHANGED, true);
-		editor.putString(KEY_LAST_SYNC_TIME, "");
 		editor.putInt(KEY_LAST_USER_ID, -1);
 
 		editor.commit();
 	}
-
 
 
 	public boolean isAutoSync(){ return preferences.getBoolean(KEY_IS_AUTO_SYNC, false); }
@@ -75,13 +69,10 @@ public class AppSettings {
 
 	public boolean isUserChanged(){ return preferences.getBoolean(KEY_IS_USER_CHANGED, true); }
 
-	public String getLastSyncTime(){ return preferences.getString(KEY_LAST_SYNC_TIME, ""); }
-
 	public int getLastUserId(){ return preferences.getInt(KEY_LAST_USER_ID, - 1); }
 
 
 	public boolean isSyncRequired(){ return !isMainDataSynced() || isUserChanged(); }
-
 
 
 	public void setAutoSync(boolean isAutoSync){
@@ -105,12 +96,6 @@ public class AppSettings {
 	}
 
 
-	public void setLastSyncTime(String syncTime){
-		Editor editor = preferences.edit();
-		editor.putString(KEY_LAST_SYNC_TIME, syncTime);
-		editor.commit();
-	}
-
 	public void setLastUserId(int lastUserId){
 		if(lastUserId != getLastUserId()){
 			setIsUserChanged(true);
@@ -118,7 +103,6 @@ public class AppSettings {
 		Editor editor = preferences.edit();
 		editor.putInt(KEY_LAST_USER_ID, lastUserId);
 		editor.commit();
-
 	}
 
 

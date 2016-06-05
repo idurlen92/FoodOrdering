@@ -16,6 +16,9 @@
 
     <!-- ######### Settings ######### -->
     <string name="title_activity_settings">Postavke</string>
+    <string name="title_settings_section_app">Postavke aplikacije</string>
+    <string name="title_settings_section_data">Osobni podaci</string>
+    <string name="title_settings_sync">Auto sinkronizacija</string>
 
     <!-- ######### Main Activity ######### -->
     <string name="title_activity_main"></string>
