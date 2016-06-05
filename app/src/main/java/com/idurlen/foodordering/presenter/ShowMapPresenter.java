@@ -4,9 +4,11 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.idurlen.foodordering.database.DatabaseManager;
@@ -30,10 +32,12 @@ public class ShowMapPresenter extends Presenter implements OnMapReadyCallback{
 
 	private static final String TITLE = "Mapa";
 
-	List<Restaurant> lRestaurants;
+	private boolean isLocationSet = false;
 
-	DatabaseManager databaseManager;
-	SessionManager session;
+	private List<Restaurant> lRestaurants;
+
+	private DatabaseManager databaseManager;
+	private SessionManager session;
 
 
 	public ShowMapPresenter(MapFragment fragment) {
@@ -98,18 +102,31 @@ public class ShowMapPresenter extends Presenter implements OnMapReadyCallback{
 			@Override
 			public void run() {
 				Geocoder geocoder = new Geocoder(getActivity());
+
 				for(final Restaurant restaurant : lRestaurants){
 					try {
-						for(final Address address : geocoder.getFromLocationName(restaurant.getAddress() +
-								", " + session.getCity(), 1)){
+						for(final Address address : geocoder.getFromLocationName(restaurant.getAddress() + ", " + session.getCity(), 1)){
 							getActivity().runOnUiThread(new Runnable() {
                                  @Override
                                  public void run() {
-                                     map.addMarker(new MarkerOptions().position(new LatLng(address.getLatitude(),
-		                                     address.getLongitude())).title(restaurant.getName()));
+	                                 LatLng locationPosition = new LatLng(address.getLatitude(), address.getLongitude());
+	                                 MarkerOptions marker = new MarkerOptions().position(locationPosition).title(restaurant.getName());
+
+	                                 if(!isLocationSet) {
+		                                 map.addMarker(marker).showInfoWindow();
+		                                 // ---- Set location to first restaurant ----
+		                                 CameraPosition locationCamera = new CameraPosition.Builder().target(locationPosition).zoom(14).build();
+		                                 map.animateCamera(CameraUpdateFactory.newCameraPosition(locationCamera), 1000, null);
+										 // ----- Update flag -----
+		                                 isLocationSet = true;
+	                                 }
+	                                 else{
+		                                 map.addMarker(marker);
+	                                 }
                                  }
                              });
 						}
+
 					}
 					catch(IOException e){
 						e.printStackTrace();
@@ -117,7 +134,6 @@ public class ShowMapPresenter extends Presenter implements OnMapReadyCallback{
 					catch(Exception e){
 						e.printStackTrace();
 					}
-
 				}//for
 			}
 		});
