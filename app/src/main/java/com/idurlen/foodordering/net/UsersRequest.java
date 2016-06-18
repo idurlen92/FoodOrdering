@@ -53,7 +53,7 @@ public class UsersRequest extends RestClient{
 				Log.e("REST", jsonResponse.getErrorMessage());
 			}
 			else{
-				iResult = (int) jsonResponse.getDataObject(JSONResponse.KEY_UPDATE_ID, int.class);
+				iResult = (int) jsonResponse.getDataObject(JSONResponse.KEY_INSERT_ID, int.class);
 			}
 		}
 		catch(Exception e){

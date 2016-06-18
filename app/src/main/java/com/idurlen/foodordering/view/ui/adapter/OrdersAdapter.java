@@ -41,15 +41,12 @@ public class OrdersAdapter extends BaseAdapter{
 		this.inflater = inflater;
 		this.mIdToRestaurant = mIdToRestaurant;
 
-		mPosToGroupTitle.put(0, "Današnje narudžbe");
-		int k = 1;
-
+		int k = 0;
 		for(Order ord : lOrders){
-			if(!DateTimeUtils.isTodayDate(ord.getOrderTime())){
-				String sOrderDate = DateTimeUtils.getDateFromTimestamp(ord.getOrderTime());
-				if(! mPosToGroupTitle.containsValue(sOrderDate)) {
-					mPosToGroupTitle.put(k++, sOrderDate);
-				}
+			String sOrderDate = DateTimeUtils.isTodayDate(ord.getOrderTime()) ?
+								"Današnje narudžbe" : DateTimeUtils.getDateFromTimestamp(ord.getOrderTime());
+			if( ! mPosToGroupTitle.containsValue(sOrderDate)) {
+				mPosToGroupTitle.put(k++, sOrderDate);
 			}
 			mPosToOrder.put(k++, ord);
 		}

@@ -1,17 +1,21 @@
 package com.idurlen.foodordering.presenter;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.idurlen.foodordering.database.DatabaseManager;
 import com.idurlen.foodordering.database.helper.Orders;
 import com.idurlen.foodordering.database.helper.Restaurants;
 import com.idurlen.foodordering.database.model.Order;
 import com.idurlen.foodordering.database.model.Restaurant;
+import com.idurlen.foodordering.utils.DateTimeUtils;
 import com.idurlen.foodordering.utils.SessionManager;
 import com.idurlen.foodordering.utils.async.BackgroundOperation;
 import com.idurlen.foodordering.utils.async.BackgroundTask;
@@ -27,15 +31,14 @@ import java.util.TreeSet;
 
 
 /**
- * Created by Duky on 22.5.2016..
+ * @author Ivan Durlen
  */
-public class OrdersPresenter extends Presenter implements AdapterView.OnItemLongClickListener{
+public class OrdersPresenter extends Presenter implements ListView.OnItemLongClickListener{
 
 	private static final String TITLE = "Izvršene narudžbe";
 
 	List<Order> lOrders;
-
-	Map<Integer, Restaurant> mRestaurants;
+	Map<Integer, Restaurant> mIdToRestaurant;
 
 	DatabaseManager databaseManager;
 	SessionManager session;
@@ -69,20 +72,19 @@ public class OrdersPresenter extends Presenter implements AdapterView.OnItemLong
 		if(lOrders != null) {
 			lOrders.clear();
 		}
-		if(mRestaurants != null) {
-			mRestaurants.clear();
+		if(mIdToRestaurant != null) {
+			mIdToRestaurant.clear();
 		}
-	}
-
-
-	public void setListeners() {
-		((OrdersFragment) getFragment()).getLvUserOrders().setOnItemLongClickListener(OrdersPresenter.this);
 	}
 
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		//TODO:
+		Order order = (Order) ((OrdersFragment) getFragment()).getLvUserOrders().getItemAtPosition(position);
+		if( DateTimeUtils.isTodayDate(order.getOrderTime()) ){
+			AlertDialog dialog = createAlertDialog(order);
+			dialog.show();
+		}
 		return false;
 	}
 
@@ -95,7 +97,7 @@ public class OrdersPresenter extends Presenter implements AdapterView.OnItemLong
 			public Object execInBackground() {
 				SQLiteDatabase db = databaseManager.getReadableDatabase();
 				lOrders = Orders.getOrdersOfUser(db, session.getUserId());
-				mRestaurants = Restaurants.getRestaurantsMapByIds(db, getRestaurantIdsFromOrders());
+				mIdToRestaurant = Restaurants.getRestaurantsMapByIds(db, getRestaurantIdsFromOrders());
 				db.close();
 
 				return null;
@@ -105,7 +107,6 @@ public class OrdersPresenter extends Presenter implements AdapterView.OnItemLong
 			public void execAfter(Object object) {
 				super.execAfter(object);
 				setListAdapter();
-				setListeners();
 				setIsActivated(true);
 			}
 		});
@@ -135,8 +136,34 @@ public class OrdersPresenter extends Presenter implements AdapterView.OnItemLong
 	private void setListAdapter(){
 		OrdersAdapter adapter = new OrdersAdapter(OrdersPresenter.this,
 				(LayoutInflater) getFragment().getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE),
-				lOrders, mRestaurants);
+				lOrders, mIdToRestaurant);
 		((OrdersFragment) getFragment()).getLvUserOrders().setAdapter(adapter);
+		((OrdersFragment) getFragment()).getLvUserOrders().setOnItemLongClickListener(this);
+	}
+
+
+	private AlertDialog createAlertDialog(Order order){
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle("Otkazivanje narudžbe").setMessage("Otkazati narudžbu: " +
+				mIdToRestaurant.get(order.getRestaurantId()).getName() + ", " +
+				order.getDeliveryTime() + "?");
+
+		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if(which == DialogInterface.BUTTON_POSITIVE){
+					//TODO
+					dialog.dismiss();
+				}
+				else{
+					dialog.dismiss();
+				}
+			}
+		};
+		builder.setPositiveButton("Da", listener);
+		builder.setNegativeButton("Ne", listener);
+
+		return builder.create();
 	}
 
 

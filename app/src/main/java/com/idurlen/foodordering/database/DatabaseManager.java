@@ -36,7 +36,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	}
 
 
-
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.d("DB MANGER", "Upgrading database");
@@ -51,17 +50,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	}
 
 
-
 	private void recreateTables(SQLiteDatabase db){
 		String[] tableNames = new String[]{
-				OrderItems.TABLE_NAME, Orders.TABLE_NAME, Dishes.TABLE_NAME, DishTypes.TABLE_NAME, Restaurants.TABLE_NAME, Users.TABLE_NAME};
+				OrderItems.TABLE_NAME, Orders.TABLE_NAME, Dishes.TABLE_NAME,
+				DishTypes.TABLE_NAME, Restaurants.TABLE_NAME, Users.TABLE_NAME};
 		for(String tableName : tableNames){
 			db.execSQL("DROP TABLE IF EXISTS " + tableName);
 		}
 		onCreate(db);
 	}
-
-
 
 
 	/**
@@ -74,7 +71,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	}
 
 
-
 	/**
 	 * Returns {@code DatabaseManager} instance.
 	 * @param context current Context.
@@ -85,7 +81,5 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			instance = new DatabaseManager(context.getApplicationContext());
 		return instance;
 	}
-
-
 
 }

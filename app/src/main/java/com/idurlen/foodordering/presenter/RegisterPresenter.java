@@ -239,6 +239,7 @@ public class RegisterPresenter extends Presenter implements View.OnTouchListener
 				TextInputLayout tiLayout = (TextInputLayout) rootLayout.getChildAt(i);
 				EditText etCurrent = (EditText) tiLayout.getChildAt(0);
 				tiLayout.setError(etCurrent.getText().length() > 0 ? null : ERROR_EMPTY);
+				isAllFilledOut = (etCurrent.getText().length() > 0);
 			}
 		}//for
 
